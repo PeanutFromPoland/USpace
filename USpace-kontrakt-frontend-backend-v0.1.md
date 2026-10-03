@@ -1,8 +1,9 @@
 # USpace — kontrakt frontend–backend v0.1
 
 Status: propozycja do uzgodnienia w zespole, nie opis istniejącego API.
+Aktualizacja testowa 2026-10-03: UC-09 zatwierdza głos na pojedynczą obserwację. Tymczasowa ścieżka takiego głosu jest zapisana w sekcji 4. Pole `rating` w odpowiedzi recenzji i podsumowaniu cechy jest obiektem; nazwy wymiarów i sposób obliczania średniej pozostają do ustalenia.
 Zakres: dane i zachowania potrzebne frontendowi mobilnemu/responsywnemu PoC. Bez projektu bazy, algorytmów moderacji, reputacji ani integracji z operatorem karty.
-Źródła: aktualny opis produktu oraz dostarczone UC-01–UC-12. Rozbieżności są wskazane w sekcji 10; nie traktujemy ich jako uzgodnionych.
+Źródła: aktualny opis produktu oraz UC-01–UC-17. Rozbieżności są wskazane w sekcji 10; poza zaznaczonymi decyzjami nie traktujemy ich jako uzgodnionych.
 
 ## 1. Podział odpowiedzialności
 
@@ -82,18 +83,20 @@ Frontend korzysta z identyfikatorów katalogu. Lista potrzeb obejmuje także pod
 
 `Part`: `id`, `kind` (`entrance | other`), `name`, `description`, `location` (opcjonalna).
 
-`FeatureSummary`: `featureId`, `targetId` (null dla całego obiektu), `presence` (`present | absent | unknown | disputed`), `operationalState` (`working | not_working | limited | unknown` lub null), `rating` (liczba lub null), `ratingCount`, `observedAt` (null dozwolone), `lastVerifiedAt` (null dozwolone), `sourceLabel`. Sposób agregacji jest odpowiedzialnością backendu.
+`FeatureSummary`: `featureId`, `targetId` (null dla całego obiektu), `presence` (`present | absent | unknown | disputed`), `operationalState` (`working | not_working | limited | unknown` lub null), `rating` (obiekt lub null; wzór poniżej), `ratingCount`, `observedAt` (null dozwolone), `lastVerifiedAt` (null dozwolone), `sourceLabel`. Sposób agregacji jest odpowiedzialnością backendu.
 
 `TemporaryIssue`: `id`, `featureId`, `targetId`, `kind` (`construction | outage | other`), `description`, `status` (`active | resolved | needs_recheck`), `reportedAt`.
 
 ### Recenzja i jej statusy
 
-`Review`: `id`, `placeId`, `author {id, displayName, appearance, badges[]}`, `visitedOn`, `visitedAtLocalTime`, `timeZone`, `createdAt`, `mode` (`quick | detailed`), `answers[]`, `temporaryIssues[]`, `publicationStatus`, `verificationStatus`, `communitySummary`, `allowedActions[]`.
+`Review`: `id`, `placeId`, `author {id, displayName, appearance, badges[]}`, `visitedOn`, `visitedAtLocalTime`, `timeZone`, `createdAt`, `mode` (`quick | detailed`), `answers[]`, `temporaryIssues[]`, `publicationStatus`, `verificationStatus`, `allowedActions[]`. Zbiorcze `communitySummary` wymaga ponownego uzgodnienia.
 
-`Answer`: `featureId`, `targetId`, `presence` (`present | absent | unknown`), `operationalState` (jak wyżej lub null), `rating` (integer 1–5 lub null), `comment` (string lub null).
+`Answer`: `id` (trwały identyfikator po zapisie; tymczasowa nazwa), `featureId`, `targetId`, `presence` (`present | absent | unknown`), `operationalState` (jak wyżej lub null), `rating` (obiekt lub null; wzór poniżej), `comment` (string lub null), `communitySummary` (liczniki dla tej obserwacji). Identyfikator jest wymagany do głosu per cecha.
 
-- `rating = 3` jest oceną pośrednią zgodną z etykietą danej cechy, nie brakiem zdania.
-- `unknown` i pominięcie pytania nie są oceną 3.
+Tymczasowy wzór `rating` dla `Answer` i `FeatureSummary`: `{ "blinds": 4, "asd": 2, "adhd": 4, "average_rating": 3.33 }`. Klucze `blinds`, `asd` i `adhd` są wyłącznie przykładem. Dokładny katalog wymiarów, sposób wyliczania i zaokrąglania `average_rating` zostaną uzgodnione przed implementacją modelu produkcyjnego.
+
+- Wartość `3` w wymiarze oceny jest oceną pośrednią, nie brakiem zdania.
+- `unknown` i pominięcie pytania nie są oceną `3` w żadnym wymiarze.
 - Pytanie pominięte nie występuje w `answers`; jawne „nie wiem” ma presence unknown.
 - Przy absent/unknown: rating i operationalState są null. Przy unknown komentarz może być opcjonalny.
 - Minimum jedna merytoryczna odpowiedź (present albo absent), aby wysłać recenzję. Dokładne granice długości pól zwraca konfiguracja.
@@ -104,13 +107,15 @@ Frontend korzysta z identyfikatorów katalogu. Lista potrzeb obejmuje także pod
 `verificationStatus`: `pending | needs_community | under_moderation | accepted | rejected`.
 Widoczna recenzja może nadal oczekiwać na weryfikację. Accepted nie oznacza gwarancji dostępności miejsca. Propozycja: zwykłe zgłoszenie nie usuwa recenzji; decyzję publikuje backend.
 
-`communitySummary`: `confirmedCount`, `disputedCount`, `unableToAssessCount`, `agreementPercent` (null przy braku głosów merytorycznych). Proponowany mianownik procentu: confirmed + disputed, bez unableToAssess. Frontend pokazuje liczby razem z procentem.
+`Answer.communitySummary`: `confirmedCount`, `disputedCount`. Liczniki dotyczą tej obserwacji i wskazanego wejścia/części. Dawny zbiorczy `Review.communitySummary` oraz `agreementPercent` wymagają nowej definicji; nie stanowią podstawy testów do czasu uzgodnienia agregacji.
 
 Dla autora osobno: `pointAward {status: pending | granted | not_granted | reversed, amount, reasonCode}`. Zmiana oceny społeczności nie powoduje samodzielnej aktualizacji punktów przez frontend.
 
 ### Weryfikacja, punkty i nagrody
 
-`Verification`: `id`, `reviewId`, `verdict` (`confirm | dispute | unable_to_assess`), `reason` (opcjonalny), `createdAt`, `pointAward`. Propozycja v0.1: głos dotyczy całej recenzji; weryfikacja per odpowiedź wymaga rozszerzenia kontraktu.
+`Verification` (do aktualizacji modelu): `id`, `reviewId`, identyfikator pojedynczej obserwacji, `verdict` (`confirm | dispute`), `reason` (opcjonalny), `createdAt`, `pointAward`. Zatwierdzony UC-09 wiąże głos z jedną obserwacją cechy i jej wejściem/częścią. Brak wiedzy oznacza pominięcie głosu, bez trzeciego werdyktu. Liczniki potwierdzeń i niepotwierdzeń są potrzebne przy każdej obserwacji. Agregacja procentu całej recenzji pozostaje otwarta.
+
+Głos może zapisać tylko użytkownik zakwalifikowany przez backend do tej obserwacji; szczegółowy sposób kwalifikacji pozostaje do ustalenia. `allowedActions` i lista zadań pomagają frontendowi pokazać dostępne działania, lecz backend egzekwuje uprawnienie również przy POST. Autor nie może głosować na własną recenzję.
 
 `PointsEntry`: `id`, `delta` (signed integer), `reasonCode`, `relatedReviewId` (null dozwolone), `relatedVerificationId` (null dozwolone), `relatedRedemptionId` (null dozwolone), `createdAt`. Oczekujące punkty nie są częścią salda do wydania.
 
@@ -145,8 +150,8 @@ Tabela określa payload i rezultat; modele są zdefiniowane w sekcji 3. Odpowied
 | 05–06 | POST `/places/{id}/reviews` | ReviewCreate; Idempotency-Key | 201: Review z faktycznymi statusami i pointAward autora |
 | 07 | POST `/review-assistance` | placeId, draft: ReviewCreate | suggestions[]: id, answerClientId?, field, question, required:false |
 | 08–10 | GET `/reviews/{id}` | brak | Review; pointAward tylko dla autora |
-| 09 | GET `/me/verification-tasks` | cursor, limit | zadania: id, review, allowedActions; bez historii lokalizacji innych osób |
-| 09 | POST `/reviews/{id}/verifications` | verdict, reason?; Idempotency-Key | 201: Verification i communitySummary |
+| 09 | GET `/me/verification-tasks` | cursor, limit | zadania: id, review, answerId, allowedActions; bez historii lokalizacji innych osób |
+| 09 | POST `/reviews/{id}/answers/{answerId}/votes` | verdict (`confirm \| dispute`), reason?; Idempotency-Key | 201: głos i zaktualizowane liczniki obserwacji; ścieżka tymczasowa zatwierdzona do testów, pełny model API do dopracowania |
 | uzupełnienie | POST `/reviews/{id}/reports` | reasonCode, description? | 201: reportId, status received |
 | 10 | GET `/me/points` | brak | balance, pendingAmount (null jeśli nieustalone) |
 | 10 | GET `/me/points/history` | cursor, limit | lista PointsEntry |
@@ -204,7 +209,7 @@ Raporty: reasonCode `suspected_false | offensive | spam | other`. Zgłoszenie i 
       "targetClientId": "part_local_1",
       "presence": "present",
       "operationalState": "working",
-      "rating": 4,
+      "rating": {"blinds": 4, "asd": 2, "adhd": 4, "average_rating": 3.33},
       "comment": "Podjazd dostępny, ale trudno było wjechać samodzielnie."
     }
   ],
@@ -214,7 +219,7 @@ Raporty: reasonCode `suspected_false | offensive | spam | other`. Zgłoszenie i 
 
 `newParts` i `temporaryIssues` mogą być puste. `clientId` odpowiedzi służy wiązaniu pytań UC-07 i błędów z formularzem. Dla istniejącej części podajemy targetId; dla nowej targetClientId; dla całego miejsca oba null. Nie wolno wskazać obu naraz. Backend zapisuje części razem z recenzją, zwraca ich trwałe ID i rozwiązuje duplikaty. `temporaryIssues` w ReviewCreate zawiera featureId, targetId/targetClientId, kind i description; serwer nadaje id/status/reportedAt.
 
-Przykład odpowiedzi po utworzeniu: Review z `publicationStatus=visible`, `verificationStatus=pending`, `pointAward.status=pending`, `communitySummary` z zerowymi licznikami i null procentu. Status nie jest zaszyty na stałe: treść zatrzymana przez moderację może mieć hidden_pending_moderation.
+Przykład odpowiedzi po utworzeniu: Review z `publicationStatus=visible`, `verificationStatus=pending`, `pointAward.status=pending` oraz licznikami `confirmedCount=0` i `disputedCount=0` przy każdej obserwacji. Status nie jest zaszyty na stałe: treść zatrzymana przez moderację może mieć hidden_pending_moderation.
 
 UC-07 nie modyfikuje szkicu automatycznie. Frontend pokazuje opcjonalne pytanie, użytkownik edytuje wskazane pole i wysyła zaktualizowany szkic. Odpowiedź pomocy nie zapisuje recenzji. Błąd pomocy nie blokuje poprawnej ankiety. Frontend ignoruje odpowiedzi dotyczące starszej wersji edytowanego szkicu.
 
@@ -272,7 +277,7 @@ Przykładowe dane powinny obejmować: miejsce dopasowane, niespełniające warun
 | UC-08            | Bot akceptuje i przyznaje punkty na podstawie analizy                      | Backend zwraca niezależne statusy publikacji/weryfikacji/punktów; decyzję o wystarczalności bota trzeba zatwierdzić produktowo tak zatwierdzam wystarczalność bota                                                |
 | UC-08 / opis     | Publikacja od razu kontra blokada spamu                                    | Zwykła recenzja visible/pending; wyjątek hidden_pending_moderation. Jawne powiadomienie autora tak                                                                                                                |
 | UC-09 / opis     | Społeczność akceptuje/odrzuca kontra głosy jako sugestie                   | Propozycja: głosy aktualizują liczniki; nie usuwają same recenzji. Ostateczna polityka wymaga decyzji zespołu do ustalnia                                                                                         |
-| UC-09            | Weryfikacja całości kontra pojedynczych cech                               | v0.1: cała recenzja z unable_to_assess. Jeśli potrzebne głosy per cecha, rozszerzyć model przed wdrożeniem - pojedyńczych cech i będzie lajk dislajk                                                              |
+| UC-09            | Weryfikacja całości kontra pojedynczych cech                               | Zatwierdzono głos `confirm`/`dispute` per obserwacja; tymczasowy endpoint jest w sekcji 4. Brak wiedzy oznacza pominięcie głosu. Agregacja całej recenzji pozostaje otwarta. |
 | UC-09            | Wybór osób na podstawie pobytu                                             | Backend zwraca zadania/uprawnienia. Sposób kwalifikacji i zgód nie jest zadaniem frontendu; bez pozorowania, że QR czy okolica potwierdzają znajomość cechy - wyjaśnij                                            |
 | UC-10            | Reputacja i punkty mogą być mylone                                         | Ukryta reputacja niewidoczna; saldo i pointAward jawne; brak automatycznej nagrody za sam głos - tak                                                                                                              |
 | UC-11            | Brak nieudanej realizacji po pobraniu punktów                              | Dodać processing/failed i pointsStatus; brak dobrowolnych zwrotów nie oznacza utraty punktów po awarii - dodać                                                                                                    |
