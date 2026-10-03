@@ -5,6 +5,7 @@ import '../data/catalog.dart';
 import '../domain/matching.dart';
 import '../domain/models.dart';
 import 'components.dart';
+import 'review_survey.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   const PlaceDetailsScreen({
@@ -74,7 +75,27 @@ class PlaceDetailsScreen extends StatelessWidget {
           ),
         const SectionTitle('Recenzje'),
         const Notice(
-          'Ankieta, dodawanie recenzji i weryfikowanie obserwacji zostaną przygotowane w późniejszym etapie.',
+          'Ankieta działa w wersji demonstracyjnej: recenzja nie jest wysyłana do systemu. '
+          'Weryfikowanie obserwacji zostanie przygotowane w późniejszym etapie.',
+        ),
+        const SizedBox(height: 12),
+        FilledButton.icon(
+          onPressed: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) =>
+                    ReviewSurveyScreen(controller: controller, place: place),
+              ),
+            );
+            // Po powrocie przycisk pokazuje, czy jest rozpoczęty szkic.
+            controller.refreshReviewDrafts();
+          },
+          icon: const Icon(Icons.rate_review_outlined),
+          label: Text(
+            controller.reviewDraft(place.id)?.started ?? false
+                ? 'Kontynuuj recenzję'
+                : 'Dodaj recenzję',
+          ),
         ),
       ]),
     ),

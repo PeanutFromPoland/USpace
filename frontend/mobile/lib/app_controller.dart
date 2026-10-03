@@ -4,6 +4,7 @@ import 'data/catalog.dart';
 import 'data/demo_repository.dart';
 import 'domain/matching.dart';
 import 'domain/models.dart';
+import 'domain/review.dart';
 
 class AppController extends ChangeNotifier {
   AppController(
@@ -23,6 +24,27 @@ class AppController extends ChangeNotifier {
   DemoProfile get profile => snapshot.profile;
   List<SearchHit> search(String query) =>
       searchDemoPlaces(demoPlaces, profile, query);
+
+  // Szkice recenzji tylko w pamięci, po jednym na miejsce: wyjście z ankiety
+  // nie kasuje odpowiedzi. Zasady trwałego szkicu: DO-USTALENIA.md.
+  final Map<String, ReviewDraft> _reviewDrafts = {};
+  final List<Map<String, dynamic>> demoSubmittedReviews = [];
+  ReviewDraft? reviewDraft(String placeId) => _reviewDrafts[placeId];
+  void keepReviewDraft(ReviewDraft draft) =>
+      _reviewDrafts[draft.place.id] = draft;
+  void discardReviewDraft(String placeId) => _reviewDrafts.remove(placeId);
+  void refreshReviewDrafts() => notifyListeners();
+
+  /// Wersja demonstracyjna: recenzja nie trafia do systemu. Statusy
+  /// publikacji, sprawdzania i punktów pochodzą wyłącznie z backendu.
+  Map<String, dynamic> submitDemoReview(ReviewDraft draft) {
+    final payload = reviewCreateJson(draft);
+    demoSubmittedReviews.add(payload);
+    _reviewDrafts.remove(draft.place.id);
+    notifyListeners();
+    return payload;
+  }
+
   Future<void> load() async {
     loading = true;
     loadError = null;

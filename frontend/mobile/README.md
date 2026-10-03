@@ -1,6 +1,6 @@
 # KindSpot — szkielet Flutter
 
-Interfejs po polsku. Źródła wymagań w `../docs`: `Teoria Aplikacji.md` i `use-cases.md`. Aktualny etap: szkielet aplikacji; ankieta jest odłożona na prośbę użytkownika.
+Interfejs po polsku. Źródła wymagań w `../docs`: `Teoria Aplikacji.md` i `use-cases.md`. Aktualny etap: szkielet aplikacji i przykładowa ankieta recenzji (wznowiona 2026-10-03).
 
 ## Działające elementy
 
@@ -90,3 +90,11 @@ Końcowe sprawdzenie: analiza bez uwag, 35 testów standardowych, 36 testów z r
 Podglądy z Fluttera, bez urządzenia: build/cp02/*.png. Regeneracja opcjonalna: flutter test test/visual_capture_test.dart --dart-define=CAPTURE_CP02=true --concurrency=1. Potrzebny FLUTTER_ROOT ustawiony skryptem środowiska; test używa fontów SDK i mocka katalogu cache, nie testuje integracji Android.
 
 Aktualne APK zawiera końcowe poprawki CP-02. Użytkownik z działającym emulatorem instaluje je ponownie komendami adb install -r, force-stop i am start podanymi wyżej; nie kasuje ustawień. Ankieta i tworzenie recenzji nadal odłożone; niedostępne funkcje są opisane jawnie.
+
+## Ankieta recenzji — 2026-10-03
+
+Na karcie miejsca przycisk „Dodaj recenzję” otwiera ankietę (`lib/ui/review_survey.dart`). Pytania wynikają z potrzeb w profilu (`lib/data/survey_catalog.dart`), jedno na ekran; każde wymaga odpowiedzi: 1–5, „0 – Brak funkcji” albo „Nie mogłem sprawdzić”. Szczegóły: uzasadnienie, utrudnienie tymczasowe, konkretne wejście lub nowa część. Dane zamienia na `ReviewCreate` z kontraktu `lib/domain/review.dart`.
+
+Wersja demonstracyjna: recenzja nie jest wysyłana; ekran wyniku pokazuje statusy jako niedostępne i dane w formacie kontraktu. Szkic jest w pamięci aplikacji.
+
+Sprawdzenie 2026-10-03 (Flutter 3.47.6): `flutter analyze` bez uwag, `flutter test --concurrency=1` — 46 testów przeszło (11 nowych: model, przebieg ankiety, zachowanie szkicu, wytyczne dostępności Fluttera, 320 px i tekst 200%). Bez emulatora, TalkBack i testów z użytkownikami. APK nie przebudowano.
