@@ -1,4 +1,4 @@
-"""PostgreSQL storage and versioned schema bootstrap for the USpace demo."""
+"""PostgreSQL storage and versioned schema bootstrap for the KindSpot demo."""
 
 from __future__ import annotations
 

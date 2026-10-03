@@ -66,3 +66,13 @@ Pytania otwarte (PoC zastosował propozycję, nie regułę):
 5. Etykiety potrzeb i „Nie mogłem sprawdzić” mają formy męskie; propozycja form neutralnych płciowo czeka na decyzję.
 6. Tryb spokojny: zakres i pole `calmMode`. Zdjęcia w recenzji: decyzja otwarta.
 7. Identyfikatory techniczne (pakiety, identyfikator aplikacji, skrypty, infrastruktura) nadal zawierają „uspace” — ewentualna zmiana wymaga osobnej decyzji ze względu na wdrożenie demo.
+
+## Backend z dev (f771626) a ankieta i kontrakt — 2026-10-03
+
+Backend zespołu nie jest jeszcze zgodny z kontraktem v0.1 ani z decyzjami o ankiecie. Frontend nie jest do niego podłączony; ankieta PoC wysyła dane tylko lokalnie. Do uzgodnienia z zespołem backendu:
+
+1. `Answer.rating` w backendzie to obiekt wymiarów 1–5; kontrakt i Teoria aplikacji: liczba 1–5, a dla `absent` ocena 0.
+2. Backend odrzuca ocenę przy `absent`; decyzja: „Brak funkcji” = 0, bez wliczania do średniej.
+3. Backend wymaga co najmniej jednej odpowiedzi innej niż `unknown`; Teoria aplikacji uznaje to za nieustalone.
+4. Brak pola `recommendation` w backendzie.
+5. Różne identyfikatory: backend `elevator`, `quiet_environment`, `walking_difficulty`, `no_stairs`, `low_vision`, `crowds`, `simple_text`, `hand_mobility`, `assisted_travel`, `child_stroller`; frontend `lift`, `quiet`, `walking`, `stairs`, `vision`, `crowd`, `reading`, `hands`, `companion`, `child`. Backend ma 5 cech, frontend 12.

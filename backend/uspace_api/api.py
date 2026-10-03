@@ -1,4 +1,4 @@
-"""Asynchronous USpace v1 product routes."""
+"""Asynchronous KindSpot v1 product routes."""
 # ruff: noqa: B008  FastAPI dependency and parameter declarations use call defaults.
 
 from __future__ import annotations
