@@ -9,7 +9,7 @@ Aktualizacja decyzji użytkownika: 2026-10-03. Ustalenia zapisano poniżej; kwes
 
 ## A. Cel i odbiorcy
 
-USpace to aplikacja mobilna pomagająca osobom z niepełnosprawnościami i innymi potrzebami dostępności znaleźć odpowiednie miejsca. Recenzowanie, weryfikowanie informacji i zdobywanie nagród łączą pomoc innym z elementami zabawy.
+KindSpot to aplikacja mobilna pomagająca osobom z niepełnosprawnościami i innymi potrzebami dostępności znaleźć odpowiednie miejsca. Recenzowanie, weryfikowanie informacji i zdobywanie nagród łączą pomoc innym z elementami zabawy.
 
 Użytkownik może wskazać kilka potrzeb jednocześnie:
 
@@ -150,7 +150,7 @@ Powiadomienia i panel moderatora pozostają do ustalenia. Zapisane miejsca są z
 
 Usunięto opis działania bota, zmiany ukrytej reputacji, doboru weryfikatorów na podstawie pobytu, progów moderacji, mechanizmu naliczania punktów oraz technicznego wykorzystania API karty i nagród.
 
-Zachowano ich skutki widoczne w interfejsie: statusy, ograniczenia dostępnych działań, informacje o punktach i sposobach odbioru nagród. Szczegóły komunikacji pozostają w osobnym dokumencie USpace-kontrakt-frontend-backend-v0.1.md. Decyzje użytkownika aktualizują także use-cases.md i odpowiednie założenia kontraktu; nie potwierdzają istnienia działającego API.
+Zachowano ich skutki widoczne w interfejsie: statusy, ograniczenia dostępnych działań, informacje o punktach i sposobach odbioru nagród. Szczegóły komunikacji pozostają w osobnym dokumencie KindSpot-kontrakt-frontend-backend-v0.1.md. Decyzje użytkownika aktualizują także use-cases.md i odpowiednie założenia kontraktu; nie potwierdzają istnienia działającego API.
 
 
 ## Decyzja użytkownika — funkcjonalność i dostępność CP-02, 2026-10-03

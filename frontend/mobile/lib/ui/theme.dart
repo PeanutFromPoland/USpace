@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/models.dart';
 
-ThemeData uspaceTheme(DemoProfile profile) {
+ThemeData kindSpotTheme(DemoProfile profile) {
   final seed = switch (profile.theme) {
     'orange' => const Color(0xFFF5B98F),
     'pink' => const Color(0xFFF1B6CA),

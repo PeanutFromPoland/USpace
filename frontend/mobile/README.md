@@ -1,4 +1,4 @@
-# USpace — szkielet Flutter
+# KindSpot — szkielet Flutter
 
 Interfejs po polsku. Źródła wymagań w `../docs`: `Teoria Aplikacji.md` i `use-cases.md`. Aktualny etap: szkielet aplikacji; ankieta jest odłożona na prośbę użytkownika.
 
@@ -11,7 +11,7 @@ Interfejs po polsku. Źródła wymagań w `../docs`: `Teoria Aplikacji.md` i `us
 - Akcent pomarańczowy/różowy/jasnoniebieski w jasnym i ciemnym motywie, wyższy kontrast i ograniczenie animacji; respektowane skalowanie tekstu telefonu.
 - Profil i lokalny podgląd prywatności. Zapisane miejsca, proponowane miejsca oraz nagrody mają jawne stany wymagające ustaleń/API.
 
-To PoC: fikcyjne miejsca i dane dostępności nie służą planowaniu rzeczywistych podróży. Rzeczywisty podkład OSM wymaga internetu; aplikacja nie obiecuje trybu offline. Tile URL można ustawić przez `--dart-define=MAP_TILE_URL=...`; produkcyjny dostawca pozostaje do wyboru. Atrybucja OSM jest widoczna na mapie. Backend USpace, logowanie, karty, ankieta, głosowanie, saldo i zakup nagród nie są podłączone.
+To PoC: fikcyjne miejsca i dane dostępności nie służą planowaniu rzeczywistych podróży. Rzeczywisty podkład OSM wymaga internetu; aplikacja nie obiecuje trybu offline. Tile URL można ustawić przez `--dart-define=MAP_TILE_URL=...`; produkcyjny dostawca pozostaje do wyboru. Atrybucja OSM jest widoczna na mapie. Backend KindSpot, logowanie, karty, ankieta, głosowanie, saldo i zakup nagród nie są podłączone.
 
 ## Uruchomienie na przygotowanym Windows
 
@@ -33,7 +33,7 @@ Emulator uruchamia wyłącznie użytkownik. Stała komenda z ograniczonymi zasob
 
 Skrypt zawsze przekazuje 1 vCPU i 1536 MB RAM Androida, wyłącza snapshoty/animację startową/dźwięk oraz próbuje ustawić priorytet procesów emulatora i QEMU na BelowNormal. Pamięć hosta obejmuje także dodatkowe koszty emulatora i grafiki; 1536 MB to pamięć urządzenia, nie limit całego procesu Windows. Uruchamianie będzie wolniejsze przy jednym rdzeniu.
 
-`-Restart` zamyka istniejący emulator USpace na porcie 5554 przed uruchomieniem nowego. Bez tej opcji skrypt odmawia uruchomienia, jeśli USpace już działa. Nie otwiera drugiej instancji i nie kompiluje aplikacji. `-Preview` pokazuje ustawienia bez uruchamiania.
+`-Restart` zamyka istniejący emulator KindSpot na porcie 5554 przed uruchomieniem nowego. Bez tej opcji skrypt odmawia uruchomienia, jeśli KindSpot już działa. Nie otwiera drugiej instancji i nie kompiluje aplikacji. `-Preview` pokazuje ustawienia bez uruchamiania.
 
 Nie używaj wcześniejszego `flutter emulators --launch` do tego demo — ta komenda pomija limity skryptu. Sprawdzono składnię i tryb Preview w Windows PowerShell 5; nie wykonano uruchomienia ani restartu emulatora.
 Poczekaj na pulpit Androida. Zainstaluj aktualną wersję:

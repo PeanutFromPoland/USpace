@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class USpaceNavigation extends StatelessWidget {
-  const USpaceNavigation({
+class KindSpotNavigation extends StatelessWidget {
+  const KindSpotNavigation({
     super.key,
     required this.selected,
     required this.onSelect,

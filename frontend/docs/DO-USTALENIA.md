@@ -1,4 +1,4 @@
-# USpace — ustalenia przed kolejnymi etapami
+# KindSpot — ustalenia przed kolejnymi etapami
 
 Aktualizacja: 2026-10-03. Źródła: `Teoria Aplikacji.md` i `use-cases.md`. Ten plik rejestruje pytania, nie ustanawia nowych reguł.
 

@@ -62,7 +62,7 @@ Anonimowości badania nie zapewnia sama deklaracja ani brak pola imienia. HTML z
 - Są już polskie lokalizacje, komunikaty demo, odczyt profilu z etykietą semantyczną i komunikaty Snackbar z liveRegion.
 - Kod uwzględnia systemowe disableAnimations i ustawienie reduceMotion. To częściowy mechanizm, nie pełny audyt animacji.
 - Są tekstowe etykiety statusów; sam kolor nie jest jedyną informacją.
-- Widoczne nazwy w app.dart nadal brzmią USpace: zmiana na KindSpot jest następną poprawką interfejsu, nie wykonano jej w tej analizie.
+- Widoczne nazwy w app.dart nadal brzmią KindSpot: zmiana na KindSpot jest następną poprawką interfejsu, nie wykonano jej w tej analizie.
 - Nie sprawdzono wszystkich kontrastów, wymiarów, kolejności TalkBack ani skalowania na aktualnej wersji. Te pozycje mają status „do sprawdzenia”, nie „spełnione”.
 
 ## Oddanie checkpointu

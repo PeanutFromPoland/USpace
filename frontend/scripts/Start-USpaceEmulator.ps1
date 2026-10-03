@@ -1,4 +1,4 @@
-# Uruchamianie emulatora USpace z niezmiennymi limitami zasobów.
+# Uruchamianie emulatora KindSpot z niezmiennymi limitami zasobów.
 [CmdletBinding()]
 param(
     [switch]$Restart,
@@ -31,12 +31,12 @@ function Get-USpaceEmulatorProcesses {
 $uspaceExisting = @(Get-USpaceEmulatorProcesses)
 if ($uspaceExisting.Count -gt 0) {
     if (-not $Restart) {
-        throw 'Emulator USpace już działa. Aby uruchomić go ponownie z limitami, użyj: ..\scripts\Start-USpaceEmulator.ps1 -Restart. Nie uruchomiono drugiej instancji.'
+        throw 'Emulator KindSpot już działa. Aby uruchomić go ponownie z limitami, użyj: ..\scripts\Start-USpaceEmulator.ps1 -Restart. Nie uruchomiono drugiej instancji.'
     }
     if (-not ($uspaceExisting | Where-Object { $_.CommandLine -match '(?:^|\s)-port\s+5554(?:\s|$)' })) {
-        throw 'Istniejący emulator USpace ma inny port. Zamknij jego okno, a następnie ponów komendę. Nie zatrzymano innego urządzenia.'
+        throw 'Istniejący emulator KindSpot ma inny port. Zamknij jego okno, a następnie ponów komendę. Nie zatrzymano innego urządzenia.'
     }
-    Write-Host 'Zamykam poprzednią instancję USpace...'
+    Write-Host 'Zamykam poprzednią instancję KindSpot...'
     & $uspaceAdbExe -s emulator-5554 emu kill
     if ($LASTEXITCODE -ne 0) {
         throw 'Nie udało się zamknąć poprzedniej instancji. Zamknij jej okno i ponów komendę.'
@@ -50,7 +50,7 @@ if ($uspaceExisting.Count -gt 0) {
     }
 }
 
-Write-Host 'Uruchamiam USpace: 1 vCPU, 1536 MB RAM Androida, bez snapshotów.'
+Write-Host 'Uruchamiam KindSpot: 1 vCPU, 1536 MB RAM Androida, bez snapshotów.'
 $uspaceEmulatorProcess = Start-Process -FilePath $uspaceEmulatorExe `
     -ArgumentList $uspaceEmulatorArgs -WindowStyle Normal -PassThru
 try {

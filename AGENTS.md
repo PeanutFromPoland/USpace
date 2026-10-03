@@ -1,4 +1,4 @@
-# USpace
+# KindSpot
 
 Przed każdą pracą nad funkcjami przeczytaj oba pliki: `frontend/docs/Teoria Aplikacji.md` oraz `frontend/docs/use-cases.md`. To stała instrukcja użytkownika. Sprawdzaj także `frontend/docs/DO-USTALENIA.md`; dopisuj niejasności, nie ustanawiaj brakujących reguł. Kontrakt v0.1 jest propozycją, nie dowodem działającego API.
 

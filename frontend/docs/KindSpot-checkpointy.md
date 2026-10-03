@@ -1,7 +1,7 @@
-# USpace — tworzenie aplikacji przez checkpointy
+# KindSpot — tworzenie aplikacji przez checkpointy
 
-Data: 2026-10-03. Folder projektu: D:\Github\USpace. Platforma: Flutter (Dart). Komunikacja i UI: polski.
-Status: CP-01 odebrany przez użytkownika („Akcpetuje, Dawaj dalej”, 2026-10-03). CP-02 — dostępność funkcjonalna — w trakcie po zmianie zakresu przez użytkownika. Końcowy projekt graficzny wykona później inna osoba. Produkt nosi zatwierdzoną nazwę KindSpot; folder i identyfikatory techniczne pozostają USpace. Konto testowe: Test Hackaton.
+Data: 2026-10-03. Folder projektu: D:\Github\KindSpot. Platforma: Flutter (Dart). Komunikacja i UI: polski.
+Status: CP-01 odebrany przez użytkownika („Akcpetuje, Dawaj dalej”, 2026-10-03). CP-02 — dostępność funkcjonalna — w trakcie po zmianie zakresu przez użytkownika. Końcowy projekt graficzny wykona później inna osoba. Produkt nosi zatwierdzoną nazwę KindSpot; folder i identyfikatory techniczne pozostają KindSpot. Konto testowe: Test Hackaton.
 
 ## Zasada współpracy
 
@@ -33,9 +33,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Wykonuję:** sprawdzam istniejący katalog mobile i zachowuję zastaną pracę; przygotowuję lub uzupełniam bazę Fluttera, podział warstw UI/logiki/danych oraz uruchomienie na uzgodnionym urządzeniu. Przed komendami Flutter aktywuję zapisany skrypt środowiska.
 
-**Pokazuję:** działającą aplikację na emulatorze/telefonie, sposób uruchomienia i rzeczywisty wynik analizy/kompilacji. Nie uznaję istniejącego szablonu kontrolnego za USpace.
+**Pokazuję:** działającą aplikację na emulatorze/telefonie, sposób uruchomienia i rzeczywisty wynik analizy/kompilacji. Nie uznaję istniejącego szablonu kontrolnego za KindSpot.
 
-**Użytkownik sprawdza:** otwarcie aplikacji i to, czy uruchomiony projekt jest właściwym USpace.
+**Użytkownik sprawdza:** otwarcie aplikacji i to, czy uruchomiony projekt jest właściwym KindSpot.
 
 ### CP-02 — dostępność funkcjonalna (WCAG 2.2 A/AA)
 
@@ -188,7 +188,7 @@ Stany: częściowo, poza bieżącym zakresem, nierozpoczęty, zaplanowany, w tra
 
 ## Zasady pracy w repozytorium
 
-- Pracujemy w D:\Github\USpace, na aktualnie uzgodnionym lokalnym branchu. Przed zmianami odczytujemy stan Git i instrukcje repozytorium. Nie nadpisujemy zastanej pracy.
+- Pracujemy w D:\Github\KindSpot, na aktualnie uzgodnionym lokalnym branchu. Przed zmianami odczytujemy stan Git i instrukcje repozytorium. Nie nadpisujemy zastanej pracy.
 - Commit, merge/rebase, push, publikacja brancha i wdrożenie nie wynikają automatycznie z odebrania ekranu. Wykonujemy je, gdy użytkownik zleci albo ustali dla nich stałą regułę.
 - Frontend ma pozostać lokalny, jeśli użytkownik nie zmieni tej decyzji.
 - Przed implementacją etapu czytamy wymagania, pamięć, środowisko i aktualny kontrakt; wymagania użytkownika są nadrzędne wobec niezatwierdzonych propozycji.

@@ -1,4 +1,4 @@
-# USpace — kontrakt frontend–backend v0.1
+# KindSpot — kontrakt frontend–backend v0.1
 
 Status: propozycja do uzgodnienia w zespole, nie opis istniejącego API.
 Zakres: dane i zachowania potrzebne frontendowi mobilnemu/responsywnemu PoC. Bez projektu bazy, algorytmów moderacji, reputacji ani integracji z operatorem karty.
@@ -12,7 +12,7 @@ Backend: autoryzacja i walidacja ostateczna, zapis danych, wyszukiwanie i dopaso
 
 Frontend nie wylicza wiarygodności, nie przyznaje punktów i nie uznaje lokalnej zmiany salda za potwierdzenie zakupu. Ukryta reputacja nie jest zwracana klientowi. Bot sprawdza jakość/ryzyko nadużycia; pozytywna analiza tekstu nie jest dowodem dostępności miejsca.
 
-OSM jest podkładem/źródłem danych geograficznych. Frontend otrzymuje miejsca i informacje USpace z naszego API, z trwałym identyfikatorem USpace. Nie pobiera prywatnych danych ani recenzji z OSM. Dostawca mapy i atrybucja pozostają osobnym uzgodnieniem.
+OSM jest podkładem/źródłem danych geograficznych. Frontend otrzymuje miejsca i informacje KindSpot z naszego API, z trwałym identyfikatorem KindSpot. Nie pobiera prywatnych danych ani recenzji z OSM. Dostawca mapy i atrybucja pozostają osobnym uzgodnieniem.
 
 ## 2. Wspólne zasady API
 
@@ -263,7 +263,7 @@ Przykładowe dane powinny obejmować: miejsce dopasowane, niespełniające warun
 | UC-01/02         | Turysta jest domyślny; karta ma automatycznie dowodzić bycia mieszkańcem   | Zwracać status weryfikacji powiązany z miastem; etykieta Turysta do uzgodnienia. Sam ważny numer nie potwierdza posiadacza ani zamieszkania. Backend zapewnia potwierdzenie zgodne z przyjętym założeniem API tak |
 | UC-02            | Typy kart wymienione jakby dawały identyczne uprawnienia                   | Backend zwraca obsługiwane cardTypes i eligibility nagród; frontend nie zakłada rzeczywistych uprawnień tych kart tak                                                                                             |
 | UC-03            | Brak Pomocnika, psa przewodnika i jawnego upublicznienia potrzeb           | Uzupełnić katalog, niezależny helperOptIn i privacy; psa terapeutycznego uzgodnić osobno tak                                                                                                                      |
-| UC-04            | Tylko mapa, brak ręcznego obszaru i rozróżnienia błędu OSM od pustej listy | Lista równoważna mapie; dane USpace z API; miasto/obszar wybrane ręcznie; brak wyników nie jest awarią tak                                                                                                        |
+| UC-04            | Tylko mapa, brak ręcznego obszaru i rozróżnienia błędu OSM od pustej listy | Lista równoważna mapie; dane KindSpot z API; miasto/obszar wybrane ręcznie; brak wyników nie jest awarią tak                                                                                                        |
 | UC-05            | 3 = brak zdania                                                            | Wycofać; 3 jest oceną pośrednią, unknown/pominięcie to osobne odpowiedzi tak                                                                                                                                      |
 | UC-05            | QR nie było w ostatnim opisie                                              | Oznaczyć jako opcjonalne rozszerzenie; QR identyfikuje miejsce, nie potwierdza wizyty wyjebać                                                                                                                     |
 | UC-06            | Obowiązkowa godzina i możliwe obowiązkowe gwiazdki                         | Godzina opcjonalna; ocena tylko gdy możliwa; formularz wspólny z ankietą tak                                                                                                                                      |

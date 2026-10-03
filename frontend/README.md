@@ -21,15 +21,15 @@ Dokumentacja:
 
 - [Teoria aplikacji](docs/Teoria%20Aplikacji.md) i [przypadki użycia](docs/use-cases.md) — przeczytaj przed zmianami funkcji.
 - [Otwarte decyzje](docs/DO-USTALENIA.md).
-- [Kontrakt frontend–backend v0.1](docs/USpace-kontrakt-frontend-backend-v0.1.md) — propozycja, nie potwierdzenie działającego API.
-- [Checkpointy](docs/USpace-checkpointy.md).
+- [Kontrakt frontend–backend v0.1](docs/KindSpot-kontrakt-frontend-backend-v0.1.md) — propozycja, nie potwierdzenie działającego API.
+- [Checkpointy](docs/KindSpot-checkpointy.md).
 - [Macierz WCAG](docs/KindSpot-CP02-WCAG.md) i [materiały dostępności](docs/KindSpot-dostepnosc-checkpoint.md).
 - [Szczegółowa instrukcja aplikacji](mobile/README.md).
 
 ## Polecenia na Windows
 
 ```powershell
-cd D:\Github\USpace\frontend\mobile
+cd D:\Github\KindSpot\frontend\mobile
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned -Force
 . ..\scripts\Use-USpaceEnvironment.ps1
 flutter pub get
