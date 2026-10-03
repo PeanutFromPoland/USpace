@@ -1,23 +1,25 @@
-# USpace
+# KindSpot
 
-Platforma dla osób o szczególnych potrzebach poszukujących miejsca dla siebie w metropoliach.
+Mobilna aplikacja dla osób z potrzebami dostępności i ich bliskich, pomagająca znaleźć odpowiednie miejsca w mieście. Wcześniejsza nazwa: USpace.
 
-Repozytorium zawiera szkielet Fluttera, FastAPI oraz środowisko Docker Compose
-z PostgreSQL i pgvector. Publiczne demo uruchamia wersję webową Fluttera, a
-kod aplikacji pozostaje przeznaczony także dla urządzeń mobilnych. Strona
-startowa i API pokazują wyłącznie gotowość infrastruktury; funkcje produktu
-powstaną po uzgodnieniu zaktualizowanego kontraktu.
+## Frontend mobilny
 
-## Lokalnie
+Aplikacja Flutter znajduje się w `frontend/mobile`, dokumentacja w `frontend/docs`, a skrypty w `frontend/scripts`. Uruchomienie i ograniczenia PoC: [instrukcja frontendu](frontend/README.md).
 
-1. Skopiuj `.env.example` do `.env` i ustaw własne hasło bazy oraz nazwę
-   modelu Ollama.
+- [Opis produktu](frontend/docs/Teoria%20Aplikacji.md)
+- [Przypadki użycia](frontend/docs/use-cases.md)
+- [Propozycja kontraktu frontend–backend](frontend/docs/USpace-kontrakt-frontend-backend-v0.1.md)
+- [Plan i checkpointy](frontend/docs/USpace-checkpointy.md)
+
+Mobilny PoC korzysta z danych i konta demonstracyjnego. Integracje z backendem, kartą miejską i nagrodami nie są podłączone. Instrukcje dla agentów: AGENTS.md.
+
+## Backend, demo webowe i infrastruktura
+
+Repozytorium zawiera także szkielet FastAPI oraz Docker Compose z PostgreSQL i pgvector. Osobny szkielet Fluttera bezpośrednio w `frontend/` jest używany przez istniejące demo webowe, Dockerfile i CI/CD. Nie jest mobilnym PoC w `frontend/mobile/`. Strona startowa i API pokazują gotowość infrastruktury; nie potwierdzają integracji funkcji produktu.
+
+1. Skopiuj `.env.example` do `.env` i ustaw własne hasło bazy oraz nazwę modelu Ollama.
 2. Uruchom `docker compose up --build -d`.
 3. Pobierz wybrany model przez `docker compose exec ollama ollama pull <model>`.
 4. Sprawdź `http://localhost:8000/health/ready`.
-5. W katalogu `frontend` uruchom `flutter create --platforms=web,android
-   --project-name=uspace_app .`, następnie `flutter run -d chrome` albo
-   uruchom aplikację na urządzeniu Android.
 
-Proces CI/CD, konfiguracja VPS, sekrety i sposób odzyskania wdrożenia są
-opisane w [instrukcji infrastruktury](infra/README.md).
+Proces CI/CD, konfiguracja VPS, sekrety i odzyskanie wdrożenia: [instrukcja infrastruktury](infra/README.md). Instrukcje generowania platform i budowania demo webowego: `.github/workflows/ci-cd.yml`.
