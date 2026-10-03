@@ -1,3 +1,3 @@
 # YouSpace
 
-Platforma dla osób o szczególnych potrzebach poszukujących miejsca dla siebie w metropoliach
+Platforma dla osób o szczególnych potrzebach poszukujących miejsca dla siebie w metropoliach uj
