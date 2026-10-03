@@ -23,7 +23,9 @@ Dokumentacja:
 - [Otwarte decyzje](docs/DO-USTALENIA.md).
 - [Kontrakt frontend–backend v0.1](docs/KindSpot-kontrakt-frontend-backend-v0.1.md) — propozycja, nie potwierdzenie działającego API.
 - [Checkpointy](docs/KindSpot-checkpointy.md).
-- [Macierz WCAG](docs/KindSpot-CP02-WCAG.md) i [materiały dostępności](docs/KindSpot-dostepnosc-checkpoint.md).
+- [Macierz WCAG](docs/KindSpot-CP02-WCAG.md), [materiały dostępności](docs/KindSpot-dostepnosc-checkpoint.md) i [instrukcja dostępności](docs/kindspot-instrukcja-dostepnosc.md).
+- [Ankieta recenzji](docs/KindSpot-ankieta-recenzji.md), [mapowanie pytań](docs/KindSpot-mapowanie-pytan.md), [badanie potrzeb](docs/KindSpot-badanie-potrzeb.md) i [propozycje zmian kontraktu](docs/KindSpot-kontrakt-propozycje-zmian.md).
+- [Problem i statystyki](docs/KindSpot-problem-i-statystyki.md) oraz [istniejące rozwiązania](docs/KindSpot-konkurencja.md).
 - [Szczegółowa instrukcja aplikacji](mobile/README.md).
 
 ## Polecenia na Windows
@@ -53,7 +55,7 @@ Launcher zachowuje 1 vCPU i 1536 MB RAM Androida. Aktualne APK po kompilacji zna
 
 Kod, testy, konfiguracja platform, dokumentacja, skrypty i `pubspec.lock`. Lokalne ustawienia Obsidiana/IDE, `.dart_tool`, katalogi `build`, logi oraz lokalna konfiguracja narzędzi są ignorowane. Nie dodawaj ignorowanych plików przez `git add -f`.
 
-Przeniesienie katalogów nie zmienia reguł aplikacji ani stanu checkpointów. Ankieta i dodawanie recenzji pozostają odłożone. Dane i konto testowe są demonstracyjne; backend i nagrody nie są zintegrowane.
+Przeniesienie katalogów nie zmienia reguł aplikacji ani stanu checkpointów. Ankieta recenzji działa w wersji demonstracyjnej, bez wysyłania do systemu. Dane i konto testowe są demonstracyjne; backend i nagrody nie są zintegrowane.
 
 ## Istniejące demo webowe zespołu
 

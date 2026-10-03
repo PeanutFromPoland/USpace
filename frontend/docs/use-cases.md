@@ -1,6 +1,6 @@
 # Przypadki użycia KindSpot
 
-Nowa nazwa zatwierdzona 2026-10-03: KindSpot (wcześniej USpace). Starsze nazwy w dokumentacji i kontrakcie odnoszą się do tego samego projektu; ankieta pozostaje odłożona.
+Nowa nazwa zatwierdzona 2026-10-03: KindSpot (wcześniej USpace). Starsze nazwy w dokumentacji i kontrakcie odnoszą się do tego samego projektu. Ankietę wznowiono 2026-10-03 (Teoria aplikacji, sekcja końcowa).
 
 
 Aktualizacja: 2026-10-03, zgodnie z dopiskami użytkownika do tabeli rozbieżności kontraktu v0.1.

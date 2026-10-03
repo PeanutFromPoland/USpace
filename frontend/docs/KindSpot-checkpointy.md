@@ -169,7 +169,7 @@ Aktualizacja: 2026-10-03. Użytkownik zaakceptował CP-01 i zlecił dalszą prac
 
 | Checkpoint | Stan techniczny | Zrobione / pozostaje | Odbiór |
 |---|---|---|---|
-| CP-00 — decyzje | częściowo | Niejasności zebrane w DO-USTALENIA.md; układ nawigacji i kolejność szczegółów są propozycjami. Ankieta odłożona. | brak |
+| CP-00 — decyzje | częściowo | Niejasności zebrane w DO-USTALENIA.md; układ nawigacji i kolejność szczegółów są propozycjami. Ankietę wznowiono 2026-10-03 (PoC bez wysyłania). | brak |
 | CP-01 — baza projektu | odebrany | Flutter, podział UI/logika/dane, analiza, testy, APK i wcześniejsze uruchomienie Android; automatyczne konto Test Hackaton. | akceptacja użytkownika 2026-10-03 |
 | CP-02 — dostępność funkcjonalna | w trakcie, nowy zakres | Macierz 55 kryteriów A/AA i przegląd szkieletu; wykryty słaby kontrast ciemnych kart, niepełne dowody błędów/fokusu/czytnika. Poprawki i testy ręczne pozostają. Końcowa grafika odłożona. | nieodebrany |
 | CP-03 — konto | częściowo, demo | Automatycznie otwierane lokalne konto Test Hackaton na potrzeby testów; bez uwierzytelniania, rejestracji i sesji backendu. Manualne wejście dostępne po wyłączeniu flagi testowej. | brak |

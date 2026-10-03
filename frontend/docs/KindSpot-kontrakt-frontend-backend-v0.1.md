@@ -88,7 +88,7 @@ Frontend korzysta z identyfikatorów katalogu. Lista potrzeb obejmuje także pod
 
 ### Recenzja i jej statusy
 
-`Review`: `id`, `placeId`, `author {id, displayName, appearance, badges[]}`, `visitedOn`, `visitedAtLocalTime`, `timeZone`, `createdAt`, `mode` (`quick | detailed`), `answers[]`, `temporaryIssues[]`, `publicationStatus`, `verificationStatus`, `communitySummary`, `allowedActions[]`.
+`Review`: `id`, `placeId`, `author {id, displayName, appearance, badges[]}`, `visitedOn`, `visitedAtLocalTime`, `timeZone`, `createdAt`, `mode` (`quick | detailed`), `answers[]`, `temporaryIssues[]`, `recommendation`, `publicationStatus`, `verificationStatus`, `communitySummary`, `allowedActions[]`.
 
 `Answer`: `featureId`, `targetId`, `presence` (`present | absent | unknown`), `operationalState` (jak wyżej lub null), `rating` (integer 0–5 lub null; 0 tylko przy absent), `comment` (string lub null).
 
@@ -96,6 +96,8 @@ Frontend korzysta z identyfikatorów katalogu. Lista potrzeb obejmuje także pod
 - `unknown` i pominięcie pytania nie są oceną 3.
 - Każde pytanie prezentowanej ankiety wymaga odpowiedzi. „Niewiedza” ma presence=unknown i rating=null, publikowana jako „Nie mogłem sprawdzić”. Lista pytań i identyfikacja wersji ankiety do uzgodnienia; klient nie powinien wysyłać braku odpowiedzi jako oceny.
 - Zatwierdzone: absent oznacza „Brak funkcji” z rating=0 i operationalState=null. Unknown oznacza „Nie mogłem sprawdzić”, z rating=null i operationalState=null. Rating 1–5 dotyczy ocenianej istniejącej cechy. Niewiedza nie jest oceną 0.
+- Decyzja użytkownika 2026-10-03: ocena 0 (absent) nie wlicza się do średniej oceny cechy.
+- Decyzja użytkownika 2026-10-03: `recommendation` w `ReviewCreate` i `Review` to integer 1–5 lub null, odpowiedź na pytanie „Czy polecisz to miejsce osobom z podobnymi potrzebami?”. Nie jest odpowiedzią o cechę i nie wpływa na `FeatureSummary`.
 - Czy ankieta z samą niewiedzą może być publikowana, pozostaje do ustalenia; wcześniejszy warunek jednej merytorycznej odpowiedzi nie jest zatwierdzoną decyzją. Dokładne granice długości pól zwraca konfiguracja.
 - Działająca/zepsuta cecha i jakość są osobne; ankieta nie wymusza gwiazdek, gdy jakości nie można ocenić.
 - Data nie może być przyszła względem strefy wizyty; godzina jest opcjonalna, bez automatycznego wpisywania godziny wysłania.
@@ -207,7 +209,8 @@ Raporty: reasonCode `suspected_false | offensive | spam | other`. Zgłoszenie i 
       "comment": "Podjazd dostępny, ale trudno było wjechać samodzielnie."
     }
   ],
-  "temporaryIssues": []
+  "temporaryIssues": [],
+  "recommendation": 4
 }
 ```
 

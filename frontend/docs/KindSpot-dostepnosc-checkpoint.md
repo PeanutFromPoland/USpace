@@ -9,7 +9,7 @@ Przeczytano treść i tabele KindSpot-ankiety.docx oraz kod index.html z Downloa
 
 Nie otrzymano pełnego kindspot-instrukcja-dostepnosc.md; nie znaleziono go w Downloads ani repozytorium. Wklejone podsumowanie nie pozwala sprawdzić wszystkich oznaczeń KONIECZNE/ZALECANE. Nie deklarujemy wglądu w płatną część ISO ani zgodności z nią.
 
-Aktualny zakres pozostaje: szkielet i jego działanie; ankieta i dodawanie recenzji odłożone. Emulator uruchamia wyłącznie użytkownik. Ten checkpoint przygotowuje zasady i odbiór dostępności, nie uruchamia urządzenia.
+Aktualny zakres pozostaje: szkielet i jego działanie; ankieta wznowiona 2026-10-03 jako PoC bez wysyłania do systemu. Emulator uruchamia wyłącznie użytkownik. Ten checkpoint przygotowuje zasady i odbiór dostępności, nie uruchamia urządzenia.
 
 ## Klasyfikacja zasad
 
@@ -44,7 +44,7 @@ Usuwanie lub możliwość zatrzymania niektórych ruchomych treści i ograniczen
 | DOCX: brak elementu bez oceny | „Brak funkcji” jest 0 gwiazdek; istnienie pozostaje osobnym polem |
 | HTML/DOCX: „Pomiń” i brak odpowiedzi | Obowiązkowa odpowiedź może być niewiedzą; publikujemy „Nie mogłem sprawdzić”, nie usuwamy informacji o niewiedzy |
 | DOCX/HTML: domyślnie „Dziś, teraz” | Domyślnie dzień; godzina opcjonalna i podana przez użytkownika, bez automatycznej godziny wysłania |
-| Ankieta po jednym pytaniu, 5–8 z 24, zdjęcia, dyktowanie | Referencja do odłożonego etapu; nie zatwierdzono implementacji tych rozszerzeń |
+| Ankieta po jednym pytaniu, 5–8 z 24, zdjęcia, dyktowanie | Ankieta po jednym pytaniu wdrożona w PoC (2026-10-03) na 12 cechach katalogu; zestaw 24 pytań, zdjęcia i dyktowanie nadal do decyzji |
 | Ankieta B — badanie potrzeb | Oddzielne badanie, nie ankieta recenzji i nie część obowiązkowego konta aplikacji; publikacja/rekrutacja nie jest zlecona |
 
 Anonimowości badania nie zapewnia sama deklaracja ani brak pola imienia. HTML zachowuje odpowiedzi w localStorage i pobiera zewnętrzną czcionkę. Przed rzeczywistym badaniem trzeba ustalić środowisko, retencję, logi, dostęp do odpowiedzi, administratora i zgody. Nie usuwamy ani nie publikujemy załączników.

@@ -1,6 +1,6 @@
 # KindSpot — teoria wyglądu i działania frontendu
 
-Nowa nazwa zatwierdzona 2026-10-03: KindSpot (wcześniej USpace). Starsze nazwy w dokumentacji i kontrakcie odnoszą się do tego samego projektu; ankieta pozostaje odłożona.
+Nowa nazwa zatwierdzona 2026-10-03: KindSpot (wcześniej USpace). Starsze nazwy w dokumentacji i kontrakcie odnoszą się do tego samego projektu. Ankietę wznowiono 2026-10-03 (sekcja na końcu).
 
 
 Notatka projektowa oparta na pliku „Teoria Aplikacji.md”. Zakres: to, co użytkownik widzi i robi w aplikacji. Sposób działania usług i reguły przetwarzania danych opisuje osobny kontrakt frontend–backend.
@@ -160,3 +160,13 @@ Końcowy projekt graficzny wykona później inna osoba. Teraz rozwijamy działan
 Czytnik, duży tekst/kontrast, klawiatura/przełączniki, obsługa bez złożonych gestów, przewidywalne cofanie, czytelne trwałe błędy i zachowanie wyborów muszą być sprawdzane w istniejących ścieżkach. Brak informacji przekazywanej wyłącznie dźwiękiem, kolorem lub wymagającej mówienia. Nie wymagamy deklaracji niepełnosprawności dla ustawień dostępności. Kontrast i rozmiary/fokus są wymaganiami funkcjonalnymi również przed grafiką.
 
 Nie deklarujemy „wszystkich potrzeb wszystkich osób obsłużonych” na podstawie samych testów automatycznych. Testy urządzenia/czytnika i z użytkownikami pozostają potrzebne. Brakujące funkcje mają późniejsze checkpointy, nie fikcyjny wynik zgodności. Ankieta i recenzje nadal odłożone. Emulator uruchamia wyłącznie użytkownik. Po zmianie grafiki ponownie sprawdzamy dostępność.
+
+## Decyzja użytkownika — ankieta, 2026-10-03
+
+Prace nad ankietą wznowiono. Przykładowa ankieta PoC: KindSpot-ankieta-recenzji.md, pytania i cechy: KindSpot-mapowanie-pytan.md. Recenzja w PoC nie jest wysyłana do systemu.
+
+- Ocena 0 („Brak funkcji”) nie wlicza się do średniej oceny cechy.
+- Etykieta niewiedzy pozostaje „Nie mogłem sprawdzić”.
+- Ekran „Czy polecisz to miejsce osobom z podobnymi potrzebami?” zostaje; pole `recommendation` dopisano do kontraktu.
+- Tryb spokojny (`calmMode`) wstępnie przyjęty; zdjęcia w recenzji pozostają decyzją otwartą.
+- Nazwa KindSpot obowiązuje we wszystkich tekstach; identyfikatory techniczne bez zmian.
