@@ -1,7 +1,7 @@
 import os
 
-from fastapi.testclient import TestClient
 import psycopg
+from fastapi.testclient import TestClient
 
 from uspace_api.main import app
 
