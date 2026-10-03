@@ -20,7 +20,7 @@ void main() {
     await tester.tap(find.text('Profil'));
     await tester.pumpAndSettle();
     expect(find.text('Test Hackaton'), findsOneWidget);
-    expect(find.text('Zamknij konto demonstracyjne'), findsNothing);
+    expect(controller.isDemoSignedIn, isTrue);
     expect(controller.profile.publicNeeds, isFalse);
     await controller.saveProfile(
       controller.profile.copyWith(
@@ -123,7 +123,12 @@ void main() {
     );
     await tester.tap(find.text('Na wózku'));
     await tester.pump();
-    expect(find.text('Warunek konieczny'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Wymagam'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Wymagam'), findsOneWidget);
     expect(tester.takeException(), isNull);
     final button = find.text('Zapisz i pokaż miejsca');
     await tester.scrollUntilVisible(

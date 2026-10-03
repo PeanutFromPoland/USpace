@@ -8,14 +8,14 @@ Najpierw szkielet i działanie aplikacji. Ankietę wznowiono 2026-10-03 (sekcja 
 
 ## Pytania do wskazania w plikach źródłowych
 
-1. Ostateczne rozmieszczenie pięciu sekcji i środkowego przycisku mapy. Obecny szkielet pokazuje Zapisane, Nagrody, Mapę, Filtry i Profil. Proponowane miejsca mają osobny dostęp z ekranu miejsc; ranking i promień nie są implementowane.
+1. Ostateczne rozmieszczenie pięciu sekcji i środkowego przycisku mapy. Obecny szkielet pokazuje Zapisane, Nagrody, Mapę, Filtry i Profil. Proponowane miejsca mają osobny dostęp z ekranu miejsc; okolica to całe miasto w happy case, ranking średnia → liczba recenzji wdrożony jako jawne demo.
 2. Sposób dodawania/usuwania zapisanych miejsc (UC-18), sortowanie i niedostępne miejsce. Obecnie tylko sekcja informacyjna.
-3. Sortowanie po najlepszej ocenie: jaka agregacja? Kierunek sortowania po liczbie recenzji? Brak zatwierdzonej agregacji nie jest zastąpiony średnią wymyśloną przez klienta.
+3. Rozstrzygnięto ranking: średnia malejąco → liczba recenzji malejąco; osobne sortowanie liczbą malejąco. Do kontraktu pozostaje zakres recenzji w agregacie/API. Nie zastępujemy średniej miejsca średnią cech klienta.
 4. Pierwszy filtr, presety, znaczenie progów i skali cech. Obecne reguły i katalog są przykładami PoC. Zapis dotyczy urządzenia, bez synchronizacji z kontem. Wskazanie potrzeb nie powinno automatycznie nadpisywać szczegółowych reguł.
 5. Stała kolejność informacji o miejscu i zestaw danych udostępnianych przez API.
 6. Mechanizm logowania/rejestracji, sesji, odzyskania konta i API. Adres lokalnego callbacku OAuth przekazany w czacie nie jest kontraktem API; parametry uwierzytelniania nie są utrwalane.
 7. Docelowe platformy, identyfikator aplikacji, podpisywanie i operator podkładu mapy. Obecny identyfikator `com.example.uspace` jest wyłącznie demonstracyjny.
-8. Lokalizacja urządzenia: uprawnienia i wybór miasta. Obecna wersja ma ręczny wybór, bez pytania o lokalizację.
+8. W demo lokalizacja na żądanie z uprawnieniem podczas używania, tylko przybliżona na Androidzie; systemowa nazwa Krakowa/Warszawy w PL albo ręczny wybór. Bez współrzędnych w zapisie i bez śledzenia w tle. Produkcyjne dane miast i dostawca mapy pozostają do kontraktu; przebieg na urządzeniu do ręcznego sprawdzenia.
 9. Cofnięcie z niezapisanych formularzy ustawień; obecny szkielet zapisuje dopiero przyciskiem. Cofnięcie zamyka edycję bez zmiany potwierdzonych ustawień.
 10. Pies terapeutyczny jako osobna potrzeba.
 
@@ -76,3 +76,44 @@ Backend zespołu nie jest jeszcze zgodny z kontraktem v0.1 ani z decyzjami o ank
 3. Backend wymaga co najmniej jednej odpowiedzi innej niż `unknown`; Teoria aplikacji uznaje to za nieustalone.
 4. Brak pola `recommendation` w backendzie.
 5. Różne identyfikatory: backend `elevator`, `quiet_environment`, `walking_difficulty`, `no_stairs`, `low_vision`, `crowds`, `simple_text`, `hand_mobility`, `assisted_travel`, `child_stroller`; frontend `lift`, `quiet`, `walking`, `stairs`, `vision`, `crowd`, `reading`, `hands`, `companion`, `child`. Backend ma 5 cech, frontend 12.
+
+- Pełnego kindspot-instrukcja-dostepnosc.md nadal nie otrzymano. Ogólny przegląd A/AA wykonano według W3C; ewentualne dodatkowe zasady z brakującego pliku wymagają wskazania.
+## CP-03 — zależności i granice
+
+Użytkownik zlecił przejście do CP-03 i rozdzielenie macierzy, bez odbioru pełnego WCAG. Obecny backend ma jedynie health; rzeczywisty mechanizm uwierzytelnienia, wymagane dane, rejestracja, odnowienie/wygaśnięcie i odzyskanie dostępu nadal wymagają ustalenia. Propozycja email/hasło w kontrakcie nie jest decyzją. Wdrożono wyłącznie lokalny przebieg Test Hackaton, bez haseł. Auto-start jest funkcją testową: po jawnym zamknięciu sesji pozostaje wejście do końca uruchomienia; po restarcie auto-start wraca. Dane demo pozostają na urządzeniu; nie jest to ochrona kont wielu użytkowników.
+
+Braki dostępności przeniesiono do adekwatnych checkpointów i kolumny macierzy. Kontrast opisów kart pozostaje zadaniem CP-06 / wspólnego motywu CP-02; nie został poprawiony w ramach sesji CP-03. Testy ręczne nadal wymagają urządzenia uruchomionego przez użytkownika.
+
+
+## Decyzje CP-04 i CP-05 — 2026-10-03
+
+Użytkownik zlecił równoległe wykonanie CP-04 i CP-05 z dodatkowym agentem. Nie oznacza to odbioru pełnego CP-02/WCAG ani produkcyjnego uwierzytelnienia CP-03.
+
+- Najlepsze miejsca: średnia ocen malejąco ma bezwzględny priorytet; przy tej samej średniej wyżej jest więcej recenzji. Osobna opcja „Najwięcej recenzji” sortuje liczbę malejąco. Nie wyliczamy średniej miejsca ze średnich cech.
+- Na potrzeby happy case okolica obejmuje całe wybrane miasto. Proponowane miejsca stosują zapisane filtry i wybraną kolejność, bez dodatkowego promienia ani potwierdzania wizyty.
+- Komentarze: użytkownik wskazał największy stosunek lajków do dislajków. Implementacja należy do CP-08; zero dislajków, remisy i powiązanie z głosami per obserwacja nadal wymagają doprecyzowania. Nie zmieniamy teraz jednostki głosowania ani nie tworzymy komentarzy.
+- Demo ma jawnie fikcyjne średnie i liczby recenzji; brak średniej/licznika pozostaje brakiem danych. Domyślna kolejność demo to najlepsza ocena, ostatni wybór jest zapisany lokalnie. Dla sortowania liczby techniczny remis rozstrzyga średnia, potem nazwa/ID; ostatnie klucze nie stanowią nowej reguły produktu.
+- Miasto można ustalić po wybraniu „Użyj lokalizacji telefonu”. Demo rozpoznaje systemową nazwę miejscowości dla Krakowa/Warszawy w Polsce; nie zgaduje najbliższego miasta. Odmowa, wyłączona usługa, brak rozpoznania i inne miasta pozostawiają ręczny wybór. Zapisujemy tylko identyfikator miasta, bez współrzędnych/śledzenia w tle. Geokodowanie systemowe może użyć sieci.
+- Potrzeby/filtry: zapis dopiero przyciskiem, czyszczenie zmienia szkic i wyłącza dołączenie braków danych; bez zapisu potwierdzone filtry pozostają. Trwały błąd zachowuje wybory. Presety oraz sugestie cech pozostają przykładami PoC, nie zatwierdzoną klasyfikacją potrzeb. Potrzeby prywatne domyślnie.
+
+Operator produkcyjnej mapy, dane API i zakres agregacji recenzji dla średniej nadal należą do kontraktu CP-11. Synchronizacja filtrów i scenariusz szkicu po cofnięciu pozostają otwarte. Wyniki automatyczne nie zastępują testów lokalizacji/TalkBack na urządzeniu; emulator uruchamia tylko użytkownik. Szczegóły odbioru: KindSpot-CP04-CP05.md.
+## Pozostałe checkpointy — decyzje użytkownika 2026-10-03
+
+Użytkownik zlecił równoległą pracę nad pozostałymi etapami, po jednym agencie na checkpoint i z pytaniami przy niepewności. Etapy powstają w falach z uwagi na dostępne sloty i zależności; integracja wspólnych modeli i testy końcowe należą do agenta głównego. Nie wymaga się kolejnego odbioru każdego poprzednika przed przygotowaniem tych jawnie zleconych etapów; ukończenie techniczne nadal nie oznacza odbioru użytkownika.
+
+- CP-06 zatwierdzony przebieg: nazwa/adres i dopasowanie → utrudnienia i aktualność → wejścia → cechy → recenzje. Przycisk Zapisz miejsce/Usuń z zapisanych w szczegółach; lokalna lista demo od ostatnio zapisanego. Lista zapisanych pozostaje niezależna od wyszukiwanych miast/filtrów; wpis bez danych katalogowych jest jawnie niedostępny i można go usunąć. Dostępność wejścia nie jest domyślnie dostępnością całego miejsca.
+- CP-07 pozostaje odłożony: ankietę przygotowuje inna osoba we Flutterze. Nie tworzymy zastępczej ankiety ani formularza publikacji. Przygotowujemy sposób przekazania/włączenia modułu oraz wymagania dostępności i danych, bez narzucania niezatwierdzonych pytań.
+- CP-11: użytkownik potwierdził brak API i przewiduje jego brak dla PoC. Rzeczywista integracja jest jawnie odroczona na potrzeby PoC. Można przygotować adaptery i testy kontraktu; ich istnienie nie oznacza połączenia aplikacji z backendem. Backend pozostaje odpowiedzialnością innego członka zespołu.
+- CP-08/09/10 obejmują zatwierdzone prezentacje i jawne przebiegi demo. Nie tworzymy prawdziwych potwierdzeń karty, punktów, nagród ani skutków moderacji w kliencie. Potrzeby nadal prywatne domyślnie. Pytania o zmianę głosu i szczegóły rankingu zapisujemy oddzielnie.
+- CP-12: testy automatyczne i przygotowanie APK/przebiegu pokazu w rzeczywistym zakresie. Urządzenie/czytnik oraz iOS pozostają niewykonane do uzyskania rzeczywistych dowodów. Emulator uruchamia wyłącznie użytkownik.
+## CP-08 — oczekujące doprecyzowanie
+
+Pytanie przekazane użytkownikowi: czy głos demo można cofnąć/zmienić oraz jak traktować 0 dislajków, 0/0 i remisy stosunku lajków do dislajków? Do odpowiedzi głosy w aplikacji pozostają niedostępne; kolejność przykładów nie jest rankingiem najlepszych komentarzy. Nie dopisujemy niezatwierdzonej reguły. Lokalne zgłoszenie jest tylko zapisanym przykładem z powodem, bez wysyłania do moderatora i ukrycia recenzji.
+
+## Stan po połączeniu Frontend z dev — 2026-10-03
+
+Na dev dostępne są teraz backend i niezależny moduł ankiety z dokumentami (review_survey.dart, review.dart, survey_catalog.dart). Zachowano ich kod, metody szkicu w kontrolerze oraz testy. Zachowano lokalne CP-04–12 i nieukończony sklep/filtry. Konflikt szczegółów rozstrzygnięto na rzecz nowego ekranu CP-06 z opcjonalnym SurveyBuilder; moduł ankiety można podłączyć przez ten punkt po wznowieniu pracy. Nie zintegrowano rzeczywistego API. Zapisy historyczne o braku kodu backendu/ankiety dotyczą wcześniejszego stanu, nie obecnego repozytorium.
+
+Zachowano nazwę KindSpotApp z dev oraz alias USpaceApp dla wcześniejszych testów. Fizyczny folder to D:\Github\USpace, pakiet Dart uspace i identyfikator com.example.uspace pozostają bez zmian. Nazwy dokumentów zmienione na KindSpot-checkpointy.md i KindSpot-kontrakt-frontend-backend-v0.1.md. Nazwa produktu: KindSpot.
+
+Aktualny commit jest WIP. Znane błędy parsowania kontrolera i nieukończone testy sklepu/filtrów pozostają do dokończenia po synchronizacji Git. Rebase nie jest dowodem działającej kompilacji i nie zmienia wcześniejszego APK.

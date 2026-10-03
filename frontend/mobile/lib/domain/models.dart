@@ -1,3 +1,7 @@
+import 'named_filters.dart';
+
+enum PlaceSort { bestRated, reviewCount }
+
 enum Importance { required, preferred, ignored }
 
 enum Presence { present, absent, unknown, disputed }
@@ -76,6 +80,8 @@ class Place {
     required this.features,
     this.parts = const [],
     this.issue,
+    this.aggregateRating,
+    this.reviewCount,
     required this.observedOn,
   });
   final String id, name, category, cityId, address, description, observedOn;
@@ -83,6 +89,9 @@ class Place {
   final List<FeatureFact> features;
   final List<PlacePart> parts;
   final String? issue;
+  // Aggregate values supplied by the data source; never averaged from feature facts.
+  final double? aggregateRating;
+  final int? reviewCount;
   FeatureFact? fact(String id) {
     for (final fact in features) {
       if (fact.featureId == id) return fact;
@@ -117,6 +126,10 @@ class DemoProfile {
     this.reduceMotion = false,
     this.cityId = 'krakow',
     this.includeUnknown = false,
+    this.placeSort = PlaceSort.bestRated,
+    this.savedPlaceIds = const [],
+    this.reviewReports = const {},
+    this.namedFilters = const [],
   });
   final bool onboarded,
       helper,
@@ -126,8 +139,11 @@ class DemoProfile {
       reduceMotion,
       includeUnknown;
   final String theme, cityId;
-  final List<String> needIds;
+  final PlaceSort placeSort;
+  final List<String> needIds, savedPlaceIds;
   final List<FilterRule> rules;
+  final Map<String, String> reviewReports;
+  final List<NamedFilter> namedFilters;
   DemoProfile copyWith({
     bool? onboarded,
     List<String>? needIds,
@@ -140,6 +156,10 @@ class DemoProfile {
     bool? reduceMotion,
     String? cityId,
     bool? includeUnknown,
+    PlaceSort? placeSort,
+    List<String>? savedPlaceIds,
+    Map<String, String>? reviewReports,
+    List<NamedFilter>? namedFilters,
   }) => DemoProfile(
     onboarded: onboarded ?? this.onboarded,
     needIds: needIds ?? this.needIds,
@@ -152,6 +172,10 @@ class DemoProfile {
     reduceMotion: reduceMotion ?? this.reduceMotion,
     cityId: cityId ?? this.cityId,
     includeUnknown: includeUnknown ?? this.includeUnknown,
+    placeSort: placeSort ?? this.placeSort,
+    savedPlaceIds: savedPlaceIds ?? this.savedPlaceIds,
+    reviewReports: reviewReports ?? this.reviewReports,
+    namedFilters: namedFilters ?? this.namedFilters,
   );
   Map<String, dynamic> toJson() => {
     'onboarded': onboarded,
@@ -165,6 +189,10 @@ class DemoProfile {
     'reduceMotion': reduceMotion,
     'cityId': cityId,
     'includeUnknown': includeUnknown,
+    'placeSort': placeSort.name,
+    'savedPlaceIds': savedPlaceIds,
+    'reviewReports': reviewReports,
+    'namedFilters': namedFilters.map((f) => f.toJson()).toList(),
   };
   factory DemoProfile.fromJson(Map<String, dynamic> json) => DemoProfile(
     onboarded: json['onboarded'] as bool? ?? false,
@@ -180,6 +208,17 @@ class DemoProfile {
     reduceMotion: json['reduceMotion'] as bool? ?? false,
     cityId: json['cityId'] as String? ?? 'krakow',
     includeUnknown: json['includeUnknown'] as bool? ?? false,
+    savedPlaceIds: List<String>.from(json['savedPlaceIds'] as List? ?? []),
+    reviewReports: Map<String, String>.from(
+      json['reviewReports'] as Map? ?? {},
+    ),
+    namedFilters: (json['namedFilters'] as List? ?? [])
+        .map((f) => NamedFilter.fromJson(Map<String, dynamic>.from(f as Map)))
+        .toList(),
+    // Explicit demo default, also used for older local profiles.
+    placeSort: json['placeSort'] == null
+        ? PlaceSort.bestRated
+        : PlaceSort.values.byName(json['placeSort'] as String),
   );
 }
 
@@ -202,3 +241,8 @@ String matchLabel(MatchStatus value) => switch (value) {
   MatchStatus.notEvaluated => 'Bez personalizacji',
 };
 String dateLabel(String value) => value.split('-').reversed.join('.');
+
+String placeSortLabel(PlaceSort value) => switch (value) {
+  PlaceSort.bestRated => 'Najlepsza średnia ocen',
+  PlaceSort.reviewCount => 'Najwięcej recenzji',
+};

@@ -83,16 +83,26 @@ List<SearchHit> searchDemoPlaces(
                 h.match.status != MatchStatus.insufficientData),
       )
       .toList();
+  // Approved ranking has priority over preference counts and match status.
+  // Review-count mode uses rating as a technical demo tie-breaker.
   hits.sort((a, b) {
-    final unknown = (a.match.status == MatchStatus.insufficientData ? 1 : 0)
-        .compareTo(b.match.status == MatchStatus.insufficientData ? 1 : 0);
-    if (unknown != 0) return unknown;
-    final preferences = b.match.preferenceCount.compareTo(
-      a.match.preferenceCount,
-    );
-    return preferences != 0
-        ? preferences
-        : a.place.name.compareTo(b.place.name);
+    final primary = profile.placeSort == PlaceSort.bestRated
+        ? _descendingNullable(a.place.aggregateRating, b.place.aggregateRating)
+        : _descendingNullable(a.place.reviewCount, b.place.reviewCount);
+    if (primary != 0) return primary;
+    final secondary = profile.placeSort == PlaceSort.bestRated
+        ? _descendingNullable(a.place.reviewCount, b.place.reviewCount)
+        : _descendingNullable(a.place.aggregateRating, b.place.aggregateRating);
+    if (secondary != 0) return secondary;
+    final name = a.place.name.compareTo(b.place.name);
+    return name != 0 ? name : a.place.id.compareTo(b.place.id);
   });
   return hits;
+}
+
+// Unknown statistics are not zero; known values come before missing ones.
+int _descendingNullable(num? a, num? b) {
+  if (a == null) return b == null ? 0 : 1;
+  if (b == null) return -1;
+  return b.compareTo(a);
 }

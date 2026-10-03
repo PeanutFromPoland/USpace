@@ -1,7 +1,7 @@
 # KindSpot — tworzenie aplikacji przez checkpointy
 
-Data: 2026-10-03. Folder projektu: D:\Github\KindSpot. Platforma: Flutter (Dart). Komunikacja i UI: polski.
-Status: CP-01 odebrany przez użytkownika („Akcpetuje, Dawaj dalej”, 2026-10-03). CP-02 — dostępność funkcjonalna — w trakcie po zmianie zakresu przez użytkownika. Końcowy projekt graficzny wykona później inna osoba. Produkt nosi zatwierdzoną nazwę KindSpot; folder i identyfikatory techniczne pozostają KindSpot. Konto testowe: Test Hackaton.
+Data: 2026-10-03. Folder projektu: D:\Github\USpace. Platforma: Flutter (Dart). Komunikacja i UI: polski.
+Status: CP-01 odebrany przez użytkownika („Akcpetuje, Dawaj dalej”, 2026-10-03). CP-02 — dostępność funkcjonalna — w trakcie po zmianie zakresu przez użytkownika. Końcowy projekt graficzny wykona później inna osoba. Produkt nosi zatwierdzoną nazwę KindSpot; folder i identyfikatory techniczne pozostają USpace. Konto testowe: Test Hackaton. CP-03 — lokalna sesja demo — przygotowany do weryfikacji; rzeczywiste uwierzytelnienie zależy od ustaleń/API.
 
 ## Zasada współpracy
 
@@ -63,6 +63,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Przed etapem rozstrzygamy:** mechanizm logowania/sesji i zakres demonstracyjny kontra rzeczywiste API.
 
+
+**Dostępność przypisana do tego etapu:** 1.3.5/3.3.8 dla uzgodnionego logowania; 2.1.1, 2.4.3/7/11, 4.1.2 dla wejścia i fokusu; 2.2.1, 3.3.1/3/7 i 4.1.3 dla sesji, trwałych błędów i ponowienia. Teraz jawne demo bez haseł; rzeczywiste uwierzytelnienie pozostaje zależne od decyzji/API.
+
 ### CP-04 — mapa, lista i miasto
 
 **Wykonuję:** podkład OSM z uzgodnionym dostawcą/atrybucją, listę tych samych miejsc, wybór miasta z lokalizacji i ręcznie, sekcję miejsc w okolicy. Dane demonstracyjne wyraźnie opisane.
@@ -71,7 +74,10 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Użytkownik sprawdza:** zgodność wyników, zmianę miasta, listę bez mapy, brak wyników i komunikat przy niedostępności.
 
-**Przed etapem rozstrzygamy:** dostawcę mapy i warunki korzystania, dane miejsc oraz znaczenie okolicy. Nie wymagamy offline.
+**Ustalono 2026-10-03:** okolica to całe miasto w happy case. Demonstrator korzysta z obecnego podkładu OSM z atrybucją. Produkcyjny dostawca/warunki i dane API pozostają do CP-11; nie wymagamy offline.
+
+
+**Dostępność przypisana do tego etapu:** 1.1.1, 2.5.1/7: równoważna lista i obsługa bez gestów. 2.4.4/3.1.2: odnośnik i język atrybucji. 4.1.3: odczyt liczby wyników/błędu mapy, bez nadmiarowych ogłoszeń. Cele dotykowe pinezek/zoom 2.5.8.
 
 ### CP-05 — potrzeby, filtry i sortowanie
 
@@ -81,7 +87,10 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Użytkownik sprawdza:** jeden klik presetu, edycję szczegółów, powrót do ostatniego filtra i czy brak wiedzy nie wygląda jak potwierdzona dostępność.
 
-**Przed etapem rozstrzygamy:** pierwsze użycie, znaczenie oceny do sortowania, reset/zapis oraz zakres pamiętania filtra. Wynik rzeczywistego dopasowania pochodzi z backendu; demo nie udaje rzeczywistych ocen.
+**Ustalono 2026-10-03:** średnia malejąco ma priorytet, remis rozstrzyga liczba recenzji malejąco; drugą opcją jest liczba recenzji malejąco. Demo pamięta wybór lokalnie, filtry/clear wymagają zapisu. Pierwsze użycie produktu, synchronizacja/zakres między miastami i cofnięcie szkicu nadal otwarte. Wynik rzeczywistego dopasowania pochodzi z backendu; demo nie udaje rzeczywistych ocen.
+
+
+**Dostępność przypisana do tego etapu:** 1.3.1, 2.4.6, 4.1.2: odczyt konkretnej cechy i wybranej reguły/progu. 1.4.4/10: długie opcje przy dużym tekście. 3.3.1/3/7, 4.1.3: trwały błąd, zachowane wybory, ponowienie. Przed scenariuszem szkicu rozstrzygnąć cofnięcie.
 
 ### CP-06 — szczegóły i zapisane miejsca
 
@@ -93,6 +102,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Przed etapem rozstrzygamy:** sposób zapisu i działania na liście zapisanych; model/API albo jawny demonstrator.
 
+
+**Dostępność przypisana do tego etapu:** 1.4.3: poprawa potwierdzonego niskiego kontrastu opisów/dat na ciemnych kartach. 1.1.1/1.3.1, 4.1.2: nazwy kart i powiązania cech. 1.4.4/10 i 2.4.3/7/11: pełne szczegóły przy dużym tekście i fokusie. Odczyt potwierdzonego zapisu/usunięcia.
+
 ### CP-07 — ankieta i recenzja szczegółowa
 
 **Wykonuję:** odebraną ankietę, warunkowe pola, 0 przy braku funkcji i null przy niewiedzy, przykładowe uzasadnienia, opcjonalną godzinę, datę, wejścia/elementy, utrudnienia, podsumowanie i szkic.
@@ -102,6 +114,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 **Użytkownik sprawdza:** łatwość ankiety, obowiązkowe odpowiedzi, rozróżnienie 0/niewiedzy, zachowanie danych i wynik wysłania.
 
 **Przed etapem rozstrzygamy:** publikację ankiety z samą niewiedzą, edycję własnej recenzji i zasady szkicu. QR wyłączone.
+
+
+**Dostępność przypisana do tego etapu:** Etap nadal odłożony. Przy rozpoczęciu: 1.3.1, 2.4.6, 3.3.1/2/3/7, 4.1.2/3 — kontekst pytań, skala, błędy/szkic, wynik. 2.5.1/7/8 — odpowiedzi bez precyzyjnych gestów. Ponowna ocena 1.1.1/1.2 po dodaniu mediów.
 
 ### CP-08 — recenzje, głosy i zgłoszenia
 
@@ -113,6 +128,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Przed etapem rozstrzygamy:** zmianę głosu, kwalifikację weryfikatorów, procenty oraz skutki głosów. Akceptacja bota może uruchomić punkty po stronie systemu; frontend sam ich nie przyznaje.
 
+
+**Dostępność przypisana do tego etapu:** 4.1.2/3: nazwy i stany głosów dla obserwacji, odczyt wyniku zgłoszenia. 1.4.1: statusy bez samego koloru. 2.5.8: cele głosowania. Fokus i obsługa klawiaturą we wszystkich dialogach.
+
 ### CP-09 — profil, prywatność, karta i punkty
 
 **Wykonuję:** profil i wygląd, Pomocnika, prywatność/podgląd publiczny, połączenie karty i Turystę dla miasta, saldo i historię punktów. Ukryta reputacja pozostaje niewidoczna.
@@ -123,6 +141,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Przed etapem rozstrzygamy:** integrację karty albo jawne demo, wagę recenzji turysty i wpływ na wynik, bez wymyślania współczynnika lub zmniejszania punktów.
 
+
+**Dostępność przypisana do tego etapu:** 3.3.4: zrozumiałe potwierdzenia prywatności/usunięcia. 3.3.1/3/7 i 4.1.3: trwałe błędy i zachowane dane podczas operacji karty/profilu. 1.3.1/4.1.2: nazwane pola i stany. Nie ujawniać prywatnych danych po zakończeniu sesji.
+
 ### CP-10 — nagrody jako teoretyczny PoC
 
 **Wykonuję:** katalog, koszt, potwierdzenie zakupu, moje nagrody, kod/instrukcję oraz stany przetwarzania, sukcesu i błędu. Na obecnym etapie przebieg pozostaje demonstracyjny/teoretyczny.
@@ -130,6 +151,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 **Pokazuję:** normalny odbiór oraz brak punktów, niedostępną nagrodę, nieznany wynik i przywrócenie punktów po błędzie, z oznaczeniem symulacji.
 
 **Użytkownik sprawdza:** jasność kosztu, odbioru i błędów. Pokaz nie wydaje prawdziwego biletu ani nie udaje realnej operacji na karcie.
+
+
+**Dostępność przypisana do tego etapu:** 3.3.4: potwierdzenie kosztu i zapobieganie pomyłce zakupu. 2.2.1/3.3.3/4.1.3: bez presji czasu, ponowienie bez podwójnego zakupu, odczyt przetwarzania/wyniku. Kod i instrukcja jako tekst, dostępne do kopiowania. Cele dotykowe i fokus.
 
 ### CP-11 — połączenie z uzgodnionym backendem
 
@@ -141,6 +165,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 
 **Warunek:** uzgodniony kontrakt i działające środowisko backendu. Jeśli ich brak, zgłaszamy zależność; użytkownik może jawnie odroczyć integrację i odebrać frontendowy PoC. Nie oznaczamy integracji jako ukończonej.
 
+
+**Dostępność przypisana do tego etapu:** 3.3.8 i 1.3.5: rzeczywisty mechanizm konta i autofill po uzgodnieniu. 3.3.1/3/4/7 oraz 4.1.3: rozróżnienie błędów, bezpieczne ponowienie, zachowanie właściwego konta i odczyt statusu systemu. Nie zastępować odpowiedzi API domysłem.
+
 ### CP-12 — odbiór całości i przygotowanie pokazu
 
 **Wykonuję:** przegląd wszystkich odebranych ścieżek, istotne testy całości, analizę i kompilację, regresję dostępności, czytnik ekranu, powiększony tekst, sześć motywów i listę bez mapy. Przygotowuję instrukcję uruchomienia, zakres demo oraz listę ograniczeń/odroczonych etapów.
@@ -148,6 +175,9 @@ Nie ustalamy teraz zamkniętej listy funkcji, które muszą powstać przed preze
 **Pokazuję:** przejście konto → potrzeby → miejsce → recenzja → status → profil/punkty → demonstracyjna nagroda, w zakresie rzeczywiście przygotowanych funkcji.
 
 **Użytkownik sprawdza:** pełny przepływ na emulatorze/telefonie i akceptuje zakres, z którym idziemy na pokaz. Dla niezaimplementowanych funkcji nie pokazujemy fałszywego sukcesu.
+
+
+**Dostępność przypisana do tego etapu:** Pełna regresja wszystkich 55 pozycji z macierzy: TalkBack/Switch Access/klawiatura, VoiceOver dla iOS po uzyskaniu środowiska, pion/poziom, duży tekst, fokus, multimedia jeśli dodane, testy z użytkownikami. Osobna ponowna ocena po końcowej grafice; nie zaliczać brakujących testów.
 
 ## Format oddania checkpointu w chacie
 
@@ -169,21 +199,21 @@ Aktualizacja: 2026-10-03. Użytkownik zaakceptował CP-01 i zlecił dalszą prac
 
 | Checkpoint | Stan techniczny | Zrobione / pozostaje | Odbiór |
 |---|---|---|---|
-| CP-00 — decyzje | częściowo | Niejasności zebrane w DO-USTALENIA.md; układ nawigacji i kolejność szczegółów są propozycjami. Ankietę wznowiono 2026-10-03 (PoC bez wysyłania). | brak |
+| CP-00 — decyzje | częściowo | Kolejność szczegółów i zapisane zatwierdzone; ankieta oraz API odłożone dla PoC. Zasady zmiany głosu/zera w rankingu nadal otwarte. | brak pełnego odbioru |
 | CP-01 — baza projektu | odebrany | Flutter, podział UI/logika/dane, analiza, testy, APK i wcześniejsze uruchomienie Android; automatyczne konto Test Hackaton. | akceptacja użytkownika 2026-10-03 |
-| CP-02 — dostępność funkcjonalna | w trakcie, nowy zakres | Macierz 55 kryteriów A/AA i przegląd szkieletu; wykryty słaby kontrast ciemnych kart, niepełne dowody błędów/fokusu/czytnika. Poprawki i testy ręczne pozostają. Końcowa grafika odłożona. | nieodebrany |
-| CP-03 — konto | częściowo, demo | Automatycznie otwierane lokalne konto Test Hackaton na potrzeby testów; bez uwierzytelniania, rejestracji i sesji backendu. Manualne wejście dostępne po wyłączeniu flagi testowej. | brak |
-| CP-04 — mapa/lista/miasto | częściowo | OSM, równoważna lista, pinezki, wyszukiwanie, miasta ręcznie, komunikat błędu podkładu. Brak geolokalizacji, rekomendacji okolicy i danych API. | brak |
-| CP-05 — potrzeby/filtry | częściowo | Prywatne potrzeby, Pomocnik, presety i reguły filtrów, braki danych, lokalny zapis. Brak uzgodnionego sortowania i synchronizacji API. | brak |
-| CP-06 — szczegóły/zapisane | częściowo | Szczegóły, wejścia, cechy, aktualność i utrudnienia demo. Zapisane to ekran informacyjny; brak dodawania/usuwania. | brak |
-| CP-07 — ankieta | odroczony decyzją użytkownika | Prośba o pominięcie ankiety na etapie szkieletu; niezaimplementowana w aplikacji. | odroczenie, nie odbiór |
-| CP-08 — recenzje/głosy/zgłoszenia | poza bieżącym zakresem | Niezaimplementowane. | brak |
-| CP-09 — profil/karta/punkty | częściowo | Profil, Pomocnik, prywatność i lokalny podgląd. Brak integracji karty, salda i historii z systemu. | brak |
-| CP-10 — nagrody | częściowo, widok informacyjny | Przykładowy katalog i komunikaty zależności API; brak pełnego przebiegu zakupu/odbioru. | brak |
-| CP-11 — backend | nierozpoczęty | Potrzebny uzgodniony kontrakt i działające API. | brak |
-| CP-12 — odbiór/pokaz | nierozpoczęty w pełnym zakresie | Są testy szkieletu, APK i instrukcja; brak odbioru, pełnej ścieżki, testów czytnika/iOS i z użytkownikami. | brak |
+| CP-02 — dostępność funkcjonalna | częściowo zweryfikowany | Macierz 55 kryteriów, poprawiony kontrast kart; nowe dowody błędów/fokusu/skali. Ręczne testy czytnika/urządzenia pozostają. Końcowa grafika odłożona. | nieodebrany |
+| CP-03 — konto | demo do weryfikacji; produkcyjne auth nierozpoczęte | Auto-start Test Hackaton, jawne wejście/wyjście, błędy i ponowienie, blokada powtórnej operacji, usunięcie prywatnych tras po zamknięciu; brak haseł i API auth. | oczekuje |
+| CP-04 — mapa/lista/miasto | demo do weryfikacji | Mapa/lista tych samych wyników, miasta ręcznie i lokalizacja na żądanie, odmowa/błąd bez blokowania ręcznego wyboru, retry mapy/zapisu, odczyt wyników, Proponowane dla całego miasta. Dane fikcyjne; lokalizacja na urządzeniu i API pozostają. | oczekuje |
+| CP-05 — potrzeby/filtry | demo do weryfikacji | Prywatne potrzeby/Pomocnik, presety, trzy ważności/progi, clear szkicu, trwały błąd/retry, blokada ponownego zapisu, zapis sortowania: średnia → liczba lub liczba. Brak synchronizacji API; szkic po cofnięciu otwarty. | oczekuje |
+| CP-06 — szczegóły/zapisane | demo do weryfikacji | Zatwierdzona kolejność szczegółów, zapis/usuwanie/retry, lokalna lista od najnowszego, niezależna od miast i filtrów. | oczekuje |
+| CP-07 — ankieta | odroczony decyzją użytkownika | Moduł tworzy inna osoba; opcjonalny SurveyBuilder i instrukcja przekazania gotowe. Brak ankiety zastępczej i publikacji. | odroczenie, nie odbiór |
+| CP-08 — recenzje/głosy/zgłoszenia | demo częściowo do weryfikacji | Odczyt fikcyjnych recenzji, cech/wejść i niezależnych statusów; lokalne zgłoszenia. Głosy i ranking oczekują zasad zmiany oraz zera/remisów. | oczekuje; pytanie otwarte |
+| CP-09 — profil/karta/punkty | demo do weryfikacji | Prywatność z potwierdzeniem, podgląd, Pomocnik, reset/retry; stany karty jako przykłady, brak API historii/salda odróżniony od zera. | oczekuje |
+| CP-10 — nagrody | symulacja do weryfikacji | Interaktywny fikcyjny koszt, potwierdzenie, zmiana ceny, stany realizacji, nieznany wynik/retry, nieważny kod. Bez pobrania punktów i wydania benefitów. | oczekuje |
+| CP-11 — backend | integracja odroczona dla PoC | Brak API potwierdzony przez użytkownika. Adapter transportu/health i testy lokalnego kontraktu przygotowane; aplikacja nie łączy się z API funkcjonalnym. | odroczenie, nie odbiór integracji |
+| CP-12 — odbiór/pokaz | automatyczna regresja gotowa | Pełne ścieżki demo, reset/reload, Tab, poziom 200%, analiza i APK. Protokół ręczny gotowy; urządzenie/czytniki/iOS i odbiór użytkownika oczekują. | oczekuje |
 
-Nie podajemy procentu ukończenia aplikacji: checkpointy mają różną wielkość, a ukończony szkielet nie oznacza ukończonych integracji. Kolejna praca funkcjonalna wymaga wskazania najbliższego zakresu; ankieta pozostaje odłożona.
+Nie podajemy procentu ukończenia aplikacji: checkpointy mają różną wielkość, a ukończony szkielet nie oznacza ukończonych integracji. Użytkownik zlecił wszystkie pozostałe checkpointy równolegle; ankieta i rzeczywiste API pozostają odłożone zgodnie z późniejszymi odpowiedziami.
 Stany: częściowo, poza bieżącym zakresem, nierozpoczęty, zaplanowany, w trakcie, do weryfikacji, poprawki, odebrany, odroczony decyzją użytkownika. Po odpowiedzi użytkownika aktualizujemy rejestr i pamięć projektu. Po przerwaniu rozmowy kontynuujemy bieżący etap, nie rozpoczynamy planu od nowa.
 
 ## Zasady pracy w repozytorium
@@ -222,3 +252,58 @@ Cały frontend przeniesiono do frontend/: projekt Flutter do mobile/, dokumentac
 Źródła były w schowku GitHub Desktop; przywrócono je na dev. Rozwiązano konflikty .gitignore, README i spisu treści use case’ów, zachowując wymagania mobilne oraz istniejący backend, demo webowe i CI/CD zespołu. Lokalne pliki Obsidiana zachowano na dysku, usunięto z indeksu. Build/cache/APK i lokalne SDK ignorowane. Kod aplikacji nie został zmieniony; poprawiono jedynie nadmiarowe puste linie w konfiguracji Android/iOS.
 
 Weryfikacja: flutter pub get — sukces, flutter analyze — bez uwag, 35 testów przeszło. Launcher sprawdzony przez -Preview bez uruchamiania emulatora. Nie oznacza to odbioru CP-02 ani pełnego audytu WCAG. Osobny szkielet webowy w frontend/ zachowany; mobilny projekt pozostaje w frontend/mobile/. Nie publikujemy zmian podczas porządkowania branchy.
+
+## Przejście do CP-03 na polecenie użytkownika
+
+Nowa struktura: frontend/mobile, frontend/docs, frontend/scripts. Użytkownik zlecił CP-03 oraz rozdzielenie braków macierzy do odpowiednich etapów. Nie oznacza to odbioru CP-02 ani pełnego WCAG. CP-03 realizowany jako lokalna sesja demonstracyjna: backend ma tylko health, nie ma operacji auth. Auto-start Test Hackaton pozostaje na początku uruchomienia; jawne zamknięcie sesji prowadzi do wejścia i ukrywa prywatne trasy do ponownego wejścia. Przy kolejnym starcie automatyczny tryb testowy wraca, ręczny wariant można włączyć flagą USPACE_AUTO_DEMO_LOGIN=false.
+
+## CP-03 — wynik zakresu demonstracyjnego
+
+Wdrożono: zamknięcie sesji także przy automatycznym starcie, wejście ponowne, usunięcie historii tras i fokusu poprzedniej sesji, trwałe błędy wejścia/wyjścia, przyciski zablokowane na czas zapisu. Ustawienia demo zachowane; po wyjściu nie są pokazywane w prywatnych ekranach. Auto-start wraca przy nowym uruchomieniu zgodnie z poleceniem testowym. To nie jest zabezpieczenie prawdziwego konta ani rejestracja w backendzie.
+
+Analiza bez uwag; 41 testów przeszło, w tym 6 testów CP-03: wyjście i restart/manualna flaga, nieudany zapis wyjścia, ukrycie tras/cofnięcie, trwały błąd wejścia i Enter, blokada podwójnego wejścia, skala 200% przy szerokości 320. Kompilacja flutter build apk --debug zakończona sukcesem. Aktualne APK: frontend/mobile/build/app/outputs/flutter-apk/app-debug.apk (Gradle heap 1536 MB, 2 workery). Emulator nie był uruchamiany. TalkBack/VoiceOver/Switch Access pozostają niezweryfikowane.
+
+Odbiór CP-03 dotyczy przygotowanego zakresu demo: domyślny start Test Hackaton → Profil / Zamknij konto demonstracyjne → brak prywatnego profilu i powrotu do niego przez cofnięcie → dostępne ustawienia interfejsu → ponowne wejście. Produkcyjne auth pozostaje niewdrożone, nie jest częścią deklaracji sukcesu. Kolejny etap po odbiorze przygotowanego demo: CP-04 mapa/lista/miasto, z przypisanymi brakami dostępności.
+
+
+## Decyzje CP-04 i CP-05 — 2026-10-03
+
+Użytkownik zlecił równoległe wykonanie CP-04 i CP-05 z dodatkowym agentem. Nie oznacza to odbioru pełnego CP-02/WCAG ani produkcyjnego uwierzytelnienia CP-03.
+
+- Najlepsze miejsca: średnia ocen malejąco ma bezwzględny priorytet; przy tej samej średniej wyżej jest więcej recenzji. Osobna opcja „Najwięcej recenzji” sortuje liczbę malejąco. Nie wyliczamy średniej miejsca ze średnich cech.
+- Na potrzeby happy case okolica obejmuje całe wybrane miasto. Proponowane miejsca stosują zapisane filtry i wybraną kolejność, bez dodatkowego promienia ani potwierdzania wizyty.
+- Komentarze: użytkownik wskazał największy stosunek lajków do dislajków. Implementacja należy do CP-08; zero dislajków, remisy i powiązanie z głosami per obserwacja nadal wymagają doprecyzowania. Nie zmieniamy teraz jednostki głosowania ani nie tworzymy komentarzy.
+- Demo ma jawnie fikcyjne średnie i liczby recenzji; brak średniej/licznika pozostaje brakiem danych. Domyślna kolejność demo to najlepsza ocena, ostatni wybór jest zapisany lokalnie. Dla sortowania liczby techniczny remis rozstrzyga średnia, potem nazwa/ID; ostatnie klucze nie stanowią nowej reguły produktu.
+- Miasto można ustalić po wybraniu „Użyj lokalizacji telefonu”. Demo rozpoznaje systemową nazwę miejscowości dla Krakowa/Warszawy w Polsce; nie zgaduje najbliższego miasta. Odmowa, wyłączona usługa, brak rozpoznania i inne miasta pozostawiają ręczny wybór. Zapisujemy tylko identyfikator miasta, bez współrzędnych/śledzenia w tle. Geokodowanie systemowe może użyć sieci.
+- Potrzeby/filtry: zapis dopiero przyciskiem, czyszczenie zmienia szkic i wyłącza dołączenie braków danych; bez zapisu potwierdzone filtry pozostają. Trwały błąd zachowuje wybory. Presety oraz sugestie cech pozostają przykładami PoC, nie zatwierdzoną klasyfikacją potrzeb. Potrzeby prywatne domyślnie.
+
+Operator produkcyjnej mapy, dane API i zakres agregacji recenzji dla średniej nadal należą do kontraktu CP-11. Synchronizacja filtrów i scenariusz szkicu po cofnięciu pozostają otwarte. Wyniki automatyczne nie zastępują testów lokalizacji/TalkBack na urządzeniu; emulator uruchamia tylko użytkownik. Szczegóły odbioru: KindSpot-CP04-CP05.md.
+
+CP-04/05 — sprawdzenia końcowe: flutter analyze bez uwag, 80 testów standardowych, APK debug zbudowane poprawnie (Gradle 1536 MB, 2 workery). Odbiór: KindSpot-CP04-CP05.md. Brak uruchomienia emulatora i ręcznych testów lokalizacji/czytnika; dane i statystyki pozostają demo.
+
+## Pozostałe checkpointy — decyzje użytkownika 2026-10-03
+
+Użytkownik zlecił równoległą pracę nad pozostałymi etapami, po jednym agencie na checkpoint i z pytaniami przy niepewności. Etapy powstają w falach z uwagi na dostępne sloty i zależności; integracja wspólnych modeli i testy końcowe należą do agenta głównego. Nie wymaga się kolejnego odbioru każdego poprzednika przed przygotowaniem tych jawnie zleconych etapów; ukończenie techniczne nadal nie oznacza odbioru użytkownika.
+
+- CP-06 zatwierdzony przebieg: nazwa/adres i dopasowanie → utrudnienia i aktualność → wejścia → cechy → recenzje. Przycisk Zapisz miejsce/Usuń z zapisanych w szczegółach; lokalna lista demo od ostatnio zapisanego. Lista zapisanych pozostaje niezależna od wyszukiwanych miast/filtrów; wpis bez danych katalogowych jest jawnie niedostępny i można go usunąć. Dostępność wejścia nie jest domyślnie dostępnością całego miejsca.
+- CP-07 pozostaje odłożony: ankietę przygotowuje inna osoba we Flutterze. Nie tworzymy zastępczej ankiety ani formularza publikacji. Przygotowujemy sposób przekazania/włączenia modułu oraz wymagania dostępności i danych, bez narzucania niezatwierdzonych pytań.
+- CP-11: użytkownik potwierdził brak API i przewiduje jego brak dla PoC. Rzeczywista integracja jest jawnie odroczona na potrzeby PoC. Można przygotować adaptery i testy kontraktu; ich istnienie nie oznacza połączenia aplikacji z backendem. Backend pozostaje odpowiedzialnością innego członka zespołu.
+- CP-08/09/10 obejmują zatwierdzone prezentacje i jawne przebiegi demo. Nie tworzymy prawdziwych potwierdzeń karty, punktów, nagród ani skutków moderacji w kliencie. Potrzeby nadal prywatne domyślnie. Pytania o zmianę głosu i szczegóły rankingu zapisujemy oddzielnie.
+- CP-12: testy automatyczne i przygotowanie APK/przebiegu pokazu w rzeczywistym zakresie. Urządzenie/czytnik oraz iOS pozostają niewykonane do uzyskania rzeczywistych dowodów. Emulator uruchamia wyłącznie użytkownik.
+
+## CP-06–12 — końcowe sprawdzenie PoC
+
+Analiza bez uwag; 131 testów przeszło; APK debug zbudowane (189263704 bajtów, 2026-10-03 21:59:03). Emulator nie był uruchamiany. Raport: KindSpot-CP06-CP12.md. Ankieta odłożona i przygotowany SurveyBuilder, brak API dla PoC, głosy/ranking oczekują odpowiedzi. CP-02 i odbiór ręczny CP-12 niezamknięte.
+
+## Zmiana testowego konta i sklepu — praca w toku
+
+Decyzja użytkownika 2026-10-03: przy nowym uruchomieniu saldo testowe 1000 pkt, zakupy i pozostałe dane konta od nowa; nazwane filtry i ustawienia dostępności zachowane. Przykładowy Ogród ciszy wraca w Zapisanych przy każdym starcie. Sklep ma odejmować punkty testowe, Moje nagrody obejmują niezrealizowane nagrody oraz historię zakupów. Poradnik punktów i mini regulamin na osobnym ekranie. Filtry: pomoc na górze, Zapisz filtr z nazwą oraz Użyj filtru tylko w sesji. Profil: pojedyncza adnotacja konta testowego, wejścia do przyszłej personalizacji; zarządzanie sesją i danymi na osobnym ekranie.
+
+Użytkownik następnie przerwał implementację dla commita Frontend i rebase względem dev. To stan WIP: ostatnia analiza ma błędy parsowania app_controller.dart i uwagi lint; zmienione ścieżki wymagają dalszej implementacji oraz testów. Wynik 131 testów i istniejące APK dotyczą wcześniejszego stanu CP-06–12, nie aktualnych niedokończonych zmian. Ankieta i nowe moduły z dev nie są automatycznie podłączane przez rebase.
+## Stan po połączeniu Frontend z dev — 2026-10-03
+
+Na dev dostępne są teraz backend i niezależny moduł ankiety z dokumentami (review_survey.dart, review.dart, survey_catalog.dart). Zachowano ich kod, metody szkicu w kontrolerze oraz testy. Zachowano lokalne CP-04–12 i nieukończony sklep/filtry. Konflikt szczegółów rozstrzygnięto na rzecz nowego ekranu CP-06 z opcjonalnym SurveyBuilder; moduł ankiety można podłączyć przez ten punkt po wznowieniu pracy. Nie zintegrowano rzeczywistego API. Zapisy historyczne o braku kodu backendu/ankiety dotyczą wcześniejszego stanu, nie obecnego repozytorium.
+
+Zachowano nazwę KindSpotApp z dev oraz alias USpaceApp dla wcześniejszych testów. Fizyczny folder to D:\Github\USpace, pakiet Dart uspace i identyfikator com.example.uspace pozostają bez zmian. Nazwy dokumentów zmienione na KindSpot-checkpointy.md i KindSpot-kontrakt-frontend-backend-v0.1.md. Nazwa produktu: KindSpot.
+
+Aktualny commit jest WIP. Znane błędy parsowania kontrolera i nieukończone testy sklepu/filtrów pozostają do dokończenia po synchronizacji Git. Rebase nie jest dowodem działającej kompilacji i nie zmienia wcześniejszego APK.

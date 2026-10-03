@@ -7,12 +7,20 @@ import 'components.dart';
 import 'discovery.dart';
 import 'preferences.dart';
 import 'profile.dart';
+import 'saved_places.dart';
 import 'navigation.dart';
 import 'theme.dart';
+import 'rewards.dart';
+import 'review_navigation.dart';
+import 'survey_entry.dart';
+
+// Compatibility for the existing frontend tests and integrations.
+typedef USpaceApp = KindSpotApp;
 
 class KindSpotApp extends StatefulWidget {
-  const KindSpotApp({super.key, required this.controller});
+  const KindSpotApp({super.key, required this.controller, this.surveyBuilder});
   final AppController controller;
+  final SurveyBuilder? surveyBuilder;
   @override
   State<KindSpotApp> createState() => _KindSpotAppState();
 }
@@ -30,6 +38,7 @@ class _KindSpotAppState extends State<KindSpotApp> {
     builder: (context, _) {
       final profile = widget.controller.profile;
       return MaterialApp(
+        key: ValueKey(widget.controller.sessionRevision),
         title: 'KindSpot',
         debugShowCheckedModeBanner: false,
         locale: const Locale('pl'),
@@ -71,16 +80,46 @@ class _KindSpotAppState extends State<KindSpotApp> {
                 ),
               )
             : widget.controller.isDemoSignedIn
-            ? HomeShell(controller: widget.controller)
+            ? HomeShell(
+                controller: widget.controller,
+                surveyBuilder: widget.surveyBuilder,
+              )
             : WelcomeScreen(controller: widget.controller),
       );
     },
   );
 }
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key, required this.controller});
   final AppController controller;
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  String? error;
+  final entryFocus = FocusNode(debugLabel: 'demo-entry');
+  @override
+  void dispose() {
+    entryFocus.dispose();
+    super.dispose();
+  }
+
+  AppController get controller => widget.controller;
+  Future<void> enter() async {
+    setState(() => error = null);
+    try {
+      await controller.openDemoSession();
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => error = "Nie udało się otworzyć konta demo. Spróbuj ponownie. Twoje ustawienia nie zostały zmienione.",
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     body: SafeArea(
@@ -139,16 +178,25 @@ class WelcomeScreen extends StatelessWidget {
           'Korzystanie z KindSpot wymaga konta. Logowanie i rejestracja czekają na uzgodnienie API. Teraz możesz sprawdzić osobne konto demonstracyjne.',
         ),
         const SizedBox(height: 24),
+        if (error != null) ...[
+          Semantics(
+            liveRegion: true,
+            child: Notice(error!, icon: Icons.error_outline),
+          ),
+          const SizedBox(height: 16),
+        ],
         FilledButton(
-          onPressed: controller.saving
-              ? null
-              : () => perform(
-                  context,
-                  () => controller.saveProfile(
-                    controller.profile.copyWith(onboarded: true),
-                  ),
-                ),
-          child: const Text('Otwórz konto demonstracyjne'),
+          key: const ValueKey('demo-enter'),
+          autofocus: true,
+          focusNode: entryFocus,
+          onPressed: controller.saving ? null : enter,
+          child: Text(
+            controller.saving ? 'Otwieranie…' : 'Otwórz konto demonstracyjne',
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'To lokalna sesja Test Hackaton. Nie podawaj hasła ani danych prawdziwego konta. Ustawienia demo pozostają na tym urządzeniu.',
         ),
         const SizedBox(height: 20),
         demoNotice(),
@@ -158,8 +206,9 @@ class WelcomeScreen extends StatelessWidget {
 }
 
 class HomeShell extends StatefulWidget {
-  const HomeShell({super.key, required this.controller});
+  const HomeShell({super.key, required this.controller, this.surveyBuilder});
   final AppController controller;
+  final SurveyBuilder? surveyBuilder;
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -220,9 +269,19 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      const SavedPlacesScreen(),
-      RewardsScreen(controller: widget.controller),
-      DiscoveryScreen(key: discoveryKey, controller: widget.controller),
+      KindSpotSavedPlacesScreen(
+        controller: widget.controller,
+        surveyBuilder: widget.surveyBuilder,
+        onOpenReviews: (context, place) =>
+            openDemoReviews(context, place, widget.controller),
+        onOpenSection: showMap,
+      ),
+      RewardsScreen(controller: widget.controller, onOpenSection: showMap),
+      DiscoveryScreen(
+        key: discoveryKey,
+        controller: widget.controller,
+        surveyBuilder: widget.surveyBuilder,
+      ),
       ProfileScreen(controller: widget.controller, onOpenSection: showMap),
     ];
     final bodyIndex = switch (index) {
@@ -238,7 +297,19 @@ class _HomeShellState extends State<HomeShell> {
       },
       child: Scaffold(
         body: SafeArea(
-          child: IndexedStack(index: bodyIndex, children: screens),
+          child: IndexedStack(
+            index: bodyIndex,
+            children: [
+              for (var i = 0; i < screens.length; i++)
+                ExcludeFocus(
+                  excluding: i != bodyIndex,
+                  child: ExcludeSemantics(
+                    excluding: i != bodyIndex,
+                    child: screens[i],
+                  ),
+                ),
+            ],
+          ),
         ),
         bottomNavigationBar: KindSpotNavigation(
           selected: index,

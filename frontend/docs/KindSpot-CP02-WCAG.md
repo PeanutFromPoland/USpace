@@ -8,9 +8,9 @@ Sprawdzamy wszystkie kryteria WCAG 2.2 poziomów A i AA: 55 pozycji. Numery i po
 
 Interpretację dla natywnej aplikacji Flutter opieramy na [W3C WCAG2ICT](https://www.w3.org/TR/wcag2ict-22/). Jest to wskazówka stosowania do oprogramowania poza WWW, nie certyfikat ani nowa norma zgodności. Kryteria zależne od technologii mają wyjaśnione zastosowanie. Nie przenosimy automatycznie wymogów HTML/CSS do Androida.
 
-Badamy aktualne ekrany i pełne istniejące ścieżki: start/odczyt i błąd profilu, ręczne wejście demo, mapa/lista, miasto, wyszukiwanie, filtry, potrzeby, szczegóły miejsca, profil/prywatność, ustawienia, informacyjne Zapisane/Proponowane/Nagrody, potwierdzenia i wyjście. Ustawienia dostępności muszą być dostępne również przed wejściem na konto.
+Badamy aktualne ekrany i pełne istniejące ścieżki: start/odczyt i błąd profilu, ręczne wejście demo, mapa/lista, miasto, wyszukiwanie, filtry, potrzeby, szczegóły miejsca, profil/prywatność, ustawienia, Zapisane/Proponowane, odczyt recenzji i symulację nagród, potwierdzenia i wyjście. Ustawienia dostępności muszą być dostępne również przed wejściem na konto.
 
-Nie implementujemy w tym etapie ankiety, recenzji, rzeczywistego logowania, kart ani ekonomii nagród. Kryteria dotyczące tych przyszłych funkcji są przypisane do późniejszych checkpointów; nie otrzymują fikcyjnego wyniku pozytywnego. Nie wymuszamy deklarowania niepełnosprawności, aby korzystać z udogodnień. Potrzeby pozostają prywatne domyślnie.
+Ankieta i publikacja recenzji pozostają odłożone. CP-08 dodał odczyt demonstracyjnych recenzji, CP-09 przykłady stanu karty, a CP-10 symulację nagrody. Nie implementujemy rzeczywistego logowania, kart ani ekonomii nagród. Kryteria dotyczące tych przyszłych funkcji są przypisane do późniejszych checkpointów; nie otrzymują fikcyjnego wyniku pozytywnego. Nie wymuszamy deklarowania niepełnosprawności, aby korzystać z udogodnień. Potrzeby pozostają prywatne domyślnie.
 
 WCAG obejmuje wiele potrzeb, lecz nie wszystkie potrzeby każdej osoby. Dlatego kompletna lista kryteriów musi być uzupełniona testami z użytkownikami o różnych i łączonych potrzebach. Nie używamy etykiety „wszystkie niepełnosprawności obsłużone” jako wyniku automatycznego testu. [Zakres WCAG](https://www.w3.org/TR/WCAG22/#abstract).
 
@@ -42,78 +42,78 @@ Każdy wiersz ma własny zakres i wynik. „Częściowo” oznacza istniejący m
 
 ### Postrzeganie
 
-| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie |
-|---|---|---|---|
-| 1.1.1 Alternatywy tekstowe | A | Częściowo | Pinezki/ikony przycisków mają tooltipy, statusy tekst. Sprawdzić nazwy kart miejsc, dekoracje oraz kompletność równoważnej listy czytnikiem. |
-| 1.2.1 Nagrania audio/wideo | A | Nie dotyczy teraz | Brak odtwarzanych nagrań. Przy dodaniu mediów przygotować odpowiednie alternatywy. |
-| 1.2.2 Napisy nagrań | A | Nie dotyczy teraz | Brak nagrań wymagających napisów. |
-| 1.2.3 Audiodeskrypcja/alternatywa | A | Nie dotyczy teraz | Brak takich nagrań. |
-| 1.2.4 Napisy transmisji | AA | Nie dotyczy teraz | Brak transmisji. |
-| 1.2.5 Audiodeskrypcja nagrań | AA | Nie dotyczy teraz | Brak takich nagrań. |
-| 1.3.1 Struktura informacji | A | Częściowo | SectionTitle ma rolę nagłówka; standardowe pola mają etykiety. Sprawdzić powiązania każdej cechy z jej polem i odczytywanie wybranych wartości. |
-| 1.3.2 Kolejność | A | Do testu | Zweryfikować czytnikiem i klawiaturą kolejność pól, listy, mapy oraz adaptacyjnego menu; pozaekranowe sekcje nie mogą przejmować fokusu. |
-| 1.3.3 Wskazówki sensoryczne | A | Częściowo | Tekst nazw czynności istnieje. Instrukcje nie mogą opierać się tylko na kolorze, położeniu lub kształcie; przegląd wszystkich komunikatów. |
-| 1.3.4 Orientacja | AA | Do testu | Nie znaleziono blokady orientacji. Przejść wszystkie ekrany w pionie i poziomie, także z dużym tekstem i klawiaturą. |
-| 1.3.5 Cel pól | AA | Późniejszy etap | Obecnie brak formularza tożsamości z takimi danymi osobowymi. W CP-03 dobrać autofill i typy pól zgodnie z mechanizmem logowania. |
-| 1.4.1 Informacja bez koloru | A | Częściowo | StatusTag ma tekst i różne ikony; potrzeby/filtry opisowe. Sprawdzić także zaznaczenie, fokus, błędy i wszystkie stany kontrolek. |
-| 1.4.2 Sterowanie dźwiękiem | A | Nie dotyczy teraz | Brak dźwięku odtwarzanego automatycznie przez aplikację. |
-| 1.4.3 Kontrast tekstu | AA | Do poprawy | Potwierdzony zbyt niski kontrast muted w ciemnych kartach. Objąć testami wszystkie faktycznie używane pary, także etykiety, daty, dialogi i błędy. |
-| 1.4.4 Powiększenie tekstu | AA | Częściowo | Są testy 200% części ekranów. Brakuje pełnego przejścia potrzeb, filtrów, szczegółów i dialogów, w tym długich wybranych opcji list. |
-| 1.4.5 Tekst jako tekst | AA | Częściowo | Treści interfejsu to Text, bez banerów zastępujących tekst. Podkład mapy nie może być jedynym źródłem nazw/danych miejsc. |
-| 1.4.10 Układ bez utraty treści | AA | Częściowo | Adaptacyjne menu i pionowe przewijanie. Sprawdzić wszystkie ekrany na wąskim obszarze i w poziomie; lista musi działać poza mapą. |
-| 1.4.11 Kontrast kontrolek | AA | Do testu | Poprzednie pomiary dotyczą tekstu. Zmierzyć rozpoznawalne granice i stany przycisków/pól, przełączników, pinezek oraz fokusu. |
-| 1.4.12 Odstępy tekstu | AA | Nie dotyczy teraz wprost | Natywne widgety Flutter nie są językiem znaczników z użytkowym nadpisywaniem odstępów. Według WCAG2ICT warunek technologiczny nie zachodzi; czytelność nadal testujemy. Dla przyszłego HTML/WebView ocenić ponownie. |
-| 1.4.13 Treść hover/fokus | AA | Do testu | Są Tooltipy. Sprawdzić ich zamykanie, trwałość i dostępność przy fokusie/wskaźniku; nie może w nich być jedynej ważnej informacji. |
+| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie | Etap odpowiedzialny; zawsze regresja CP-12 |
+|---|---|---|---|---|
+| 1.1.1 Alternatywy tekstowe | A | Częściowo | Pinezki/ikony przycisków mają tooltipy, statusy tekst. Sprawdzić nazwy kart miejsc, dekoracje oraz kompletność równoważnej listy czytnikiem. | CP-04/06 (mapa/karty), CP-07 (przyszłe zdjęcia) |
+| 1.2.1 Nagrania audio/wideo | A | Nie dotyczy teraz | Brak odtwarzanych nagrań. Przy dodaniu mediów przygotować odpowiednie alternatywy. | Etap dodający multimedia; CP-12 ponowna ocena; brak mediów obecnie |
+| 1.2.2 Napisy nagrań | A | Nie dotyczy teraz | Brak nagrań wymagających napisów. | Etap dodający multimedia; CP-12 ponowna ocena; brak mediów obecnie |
+| 1.2.3 Audiodeskrypcja/alternatywa | A | Nie dotyczy teraz | Brak takich nagrań. | Etap dodający multimedia; CP-12 ponowna ocena; brak mediów obecnie |
+| 1.2.4 Napisy transmisji | AA | Nie dotyczy teraz | Brak transmisji. | Etap dodający multimedia; CP-12 ponowna ocena; brak mediów obecnie |
+| 1.2.5 Audiodeskrypcja nagrań | AA | Nie dotyczy teraz | Brak takich nagrań. | Etap dodający multimedia; CP-12 ponowna ocena; brak mediów obecnie |
+| 1.3.1 Struktura informacji | A | Częściowo | SectionTitle ma rolę nagłówka; standardowe pola mają etykiety. Sprawdzić powiązania każdej cechy z jej polem i odczytywanie wybranych wartości. | CP-03/05/06/07/09 (pola i treści) |
+| 1.3.2 Kolejność | A | Do testu | Zweryfikować czytnikiem i klawiaturą kolejność pól, listy, mapy oraz adaptacyjnego menu; pozaekranowe sekcje nie mogą przejmować fokusu. | CP-02 (menu), CP-03–10 (kolejność ekranów) |
+| 1.3.3 Wskazówki sensoryczne | A | Częściowo | Tekst nazw czynności istnieje. Instrukcje nie mogą opierać się tylko na kolorze, położeniu lub kształcie; przegląd wszystkich komunikatów. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.3.4 Orientacja | AA | Do testu | Nie znaleziono blokady orientacji. Przejść wszystkie ekrany w pionie i poziomie, także z dużym tekstem i klawiaturą. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.3.5 Cel pól | AA | Późniejszy etap | Obecnie brak formularza tożsamości z takimi danymi osobowymi. W CP-03 dobrać autofill i typy pól zgodnie z mechanizmem logowania. | CP-03 (autofill przy uzgodnionym logowaniu) |
+| 1.4.1 Informacja bez koloru | A | Częściowo | StatusTag ma tekst i różne ikony; potrzeby/filtry opisowe. Sprawdzić także zaznaczenie, fokus, błędy i wszystkie stany kontrolek. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.4.2 Sterowanie dźwiękiem | A | Nie dotyczy teraz | Brak dźwięku odtwarzanego automatycznie przez aplikację. | Etap dodający multimedia; CP-12 ponowna ocena; brak mediów obecnie |
+| 1.4.3 Kontrast tekstu | AA | Częściowo | CP-04: opisy i daty PlaceCard używają onSurfaceVariant zamiast stałego muted. Kontrast faktycznych par kart sprawdzony automatycznie. Pozostałe szczegóły/ekrany i końcowa grafika wymagają dalszego sprawdzenia. | CP-02 (motyw), CP-06 (szczegóły), CP-12 (grafika) |
+| 1.4.4 Powiększenie tekstu | AA | Częściowo | CP-06–10: nowe szczegóły/zapisane, odczyt recenzji, profil i nagrody sprawdzone przy 320 px/200%; CP-12 dodatkowo 800×360/200%, szczegóły/recenzje/prywatność/nagroda. Rzeczywiste powiększenie na urządzeniu nadal do wykonania. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.4.5 Tekst jako tekst | AA | Częściowo | Treści interfejsu to Text, bez banerów zastępujących tekst. Podkład mapy nie może być jedynym źródłem nazw/danych miejsc. | CP-04/06 (lista i opisy), CP-12 (grafika) |
+| 1.4.10 Układ bez utraty treści | AA | Częściowo | Pionowe przewijanie i adaptacyjne menu; testy CP-12 poziom 800×360/200% dla istniejących ścieżek demo bez utraty przycisków. Pełna klawiatura ekranowa i urządzenie nadal do testu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.4.11 Kontrast kontrolek | AA | Do testu | Poprzednie pomiary dotyczą tekstu. Zmierzyć rozpoznawalne granice i stany przycisków/pól, przełączników, pinezek oraz fokusu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.4.12 Odstępy tekstu | AA | Nie dotyczy teraz wprost | Natywne widgety Flutter nie są językiem znaczników z użytkowym nadpisywaniem odstępów. Według WCAG2ICT warunek technologiczny nie zachodzi; czytelność nadal testujemy. Dla przyszłego HTML/WebView ocenić ponownie. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 1.4.13 Treść hover/fokus | AA | Do testu | Są Tooltipy. Sprawdzić ich zamykanie, trwałość i dostępność przy fokusie/wskaźniku; nie może w nich być jedynej ważnej informacji. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
 
 ### Obsługa
 
-| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie |
-|---|---|---|---|
-| 2.1.1 Klawiatura | A | Do testu | Sprawdzić Tab/Shift+Tab, Enter/Space, strzałki, Escape: menu, filtry, potrzeby, listę, szczegóły, ustawienia i dialogi. Nie wymagać manipulacji mapą. |
-| 2.1.2 Brak pułapki fokusu | A | Do testu | Wejście i wyjście z dropdownów/dialogów; powrót bez utraty możliwości dalszej obsługi. |
-| 2.1.4 Skróty znakowe | A | Nie dotyczy teraz | Brak własnych skrótów pojedynczym znakiem. Nie dodawać bez możliwości wyłączenia/przypisania lub ograniczenia do fokusu. |
-| 2.2.1 Czas na czynności | A | Częściowo | Formularze bez limitu czasu. Snackbar błędu znika; sprawdzić platformowe wydłużanie i zapewnić trwały błąd/możliwość odczytania oraz ponowienia. Sesje później w CP-03. |
-| 2.2.2 Ruch/aktualizacja | A | Częściowo | Brak karuzel i ruchomych dekoracji. Sprawdzić ładowanie, aktualizację wyników i faktyczne działanie ograniczania animacji; uzasadnić wyjątki dla potrzebnego postępu. |
-| 2.3.1 Błyski | A | Do testu | Brak widocznej w kodzie dekoracji migającej; przejrzeć rzeczywiste przejścia i stany ładowania. Ponowna ocena po dodaniu grafiki/mediów. |
-| 2.4.1 Pomijanie bloków | A | Nie dotyczy teraz wprost | WCAG2ICT wskazuje zakres zestawów dokumentów/oprogramowania; pojedyncza aplikacja nie jest zestawem stron WWW. Dostęp do głównej treści i pomijanie mapy pozostają wymaganiem produktu. |
-| 2.4.2 Nazwa ekranu | A | Częściowo | Są widoczne tytuły, ale zmiana sekcji IndexedStack wymaga sprawdzenia ogłoszenia nazwy/semantyki trasy. |
-| 2.4.3 Porządek fokusu | A | Do testu | Zweryfikować otwarcie/zamknięcie tras i dialogów, powrót do kontrolki, przewijanie oraz ukryte ekrany. |
-| 2.4.4 Cel odnośników | A | Do testu | Link OSM istnieje. Czytnik powinien rozpoznawać cel i możliwość otwarcia informacji o źródle; sprawdzić błąd otwarcia. |
-| 2.4.5 Różne drogi dostępu | AA | Nie dotyczy teraz wprost | Jeden program, bez zestawu dokumentów/programów w rozumieniu WCAG2ICT. Mapa i lista są dodatkowo wymagane przez produkt; nie traktować ich jako samodzielnego dowodu zgodności tego kryterium. |
-| 2.4.6 Nagłówki/etykiety | AA | Częściowo | Są nazwy sekcji i etykiety pól. Powtarzalne „Znaczenie cechy” musi mieć zrozumiały kontekst konkretnej cechy przy odczycie. |
-| 2.4.7 Widoczny fokus | AA | Do testu | Menu ma focusColor, Material swoje stany. Zweryfikować widoczność na każdej kontrolce i w każdym motywie. |
-| 2.4.11 Niezasłonięty fokus | AA | Do testu | Sprawdzić pasek menu, klawiaturę ekranową, snackbar i przewijanie tak, aby aktywny element nie był całkowicie zasłonięty. |
-| 2.5.1 Gesty | A | Częściowo | Zoom ma +/− i jest lista. Pełną ścieżkę wykonać pojedynczymi aktywacjami bez szczypania; nie pomijać funkcji dostępnych tylko na mapie. |
-| 2.5.2 Anulowanie aktywacji | A | Do testu | Kod używa onTap/onPressed. Sprawdzić wciśnięcie, przesunięcie poza element i zwolnienie, także przy potwierdzeniach i przełącznikach. |
-| 2.5.3 Widoczna nazwa | A | Częściowo | Menu ma zgodne nazwy semantyczne. Sprawdzić pozostałe etykiety, pinezki, karty i rozpoznanie nazw przez sterowanie głosowe. |
-| 2.5.4 Ruch urządzenia | A | Nie dotyczy teraz | Brak czynności sterowanych potrząsaniem/przechyleniem. |
-| 2.5.7 Bez przeciągania | AA | Częściowo | Lista i przyciski zoom zapewniają alternatywy części działań mapy. Sprawdzić równoważność całej ścieżki i obsługę przewijania technologiami asystującymi. |
-| 2.5.8 Cele dotykowe | AA | Częściowo | Testy rozmiarów obejmują menu. Pomierzyć każdą aktywną kontrolkę i odstępy, również pinezki, link i strzałkę cofania; test urządzenia przy dużym tekście. |
+| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie | Etap odpowiedzialny; zawsze regresja CP-12 |
+|---|---|---|---|---|
+| 2.1.1 Klawiatura | A | Do testu | Sprawdzić Tab/Shift+Tab, Enter/Space, strzałki, Escape: menu, filtry, potrzeby, listę, szczegóły, ustawienia i dialogi. Nie wymagać manipulacji mapą. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.1.2 Brak pułapki fokusu | A | Do testu | Wejście i wyjście z dropdownów/dialogów; powrót bez utraty możliwości dalszej obsługi. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.1.4 Skróty znakowe | A | Nie dotyczy teraz | Brak własnych skrótów pojedynczym znakiem. Nie dodawać bez możliwości wyłączenia/przypisania lub ograniczenia do fokusu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.2.1 Czas na czynności | A | Częściowo | Formularze bez limitu czasu. Snackbar błędu znika; sprawdzić platformowe wydłużanie i zapewnić trwały błąd/możliwość odczytania oraz ponowienia. Sesje później w CP-03. | CP-03 (sesja), CP-05/09 (trwałe błędy), CP-10/11 (operacje API) |
+| 2.2.2 Ruch/aktualizacja | A | Częściowo | Brak karuzel i ruchomych dekoracji. Sprawdzić ładowanie, aktualizację wyników i faktyczne działanie ograniczania animacji; uzasadnić wyjątki dla potrzebnego postępu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.3.1 Błyski | A | Do testu | Brak widocznej w kodzie dekoracji migającej; przejrzeć rzeczywiste przejścia i stany ładowania. Ponowna ocena po dodaniu grafiki/mediów. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.4.1 Pomijanie bloków | A | Nie dotyczy teraz wprost | WCAG2ICT wskazuje zakres zestawów dokumentów/oprogramowania; pojedyncza aplikacja nie jest zestawem stron WWW. Dostęp do głównej treści i pomijanie mapy pozostają wymaganiem produktu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.4.2 Nazwa ekranu | A | Częściowo | Są widoczne tytuły, ale zmiana sekcji IndexedStack wymaga sprawdzenia ogłoszenia nazwy/semantyki trasy. | CP-03–10 (nazwy tras), CP-02 (sekcje) |
+| 2.4.3 Porządek fokusu | A | Częściowo | Częściowo sprawdzone automatycznie: ExcludeFocus/ExcludeSemantics dla ukrytych sekcji, 24×Tab na Nagrodach omija ukrytą mapę; Escape i powrót tras w CP-12. Pełna kolejność/powrót fokusu na urządzeniu nadal wymagają testu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.4.4 Cel odnośników | A | Częściowo | CP-04: polska etykieta „Autorzy OpenStreetMap — informacje i licencja”; poza viewportem mapy, trwały błąd z adresem przy nieudanym otwarciu. Czytnik/otwarcie systemowe do sprawdzenia na urządzeniu. | CP-04 (odnośnik OSM), CP-10 (odbiór) |
+| 2.4.5 Różne drogi dostępu | AA | Nie dotyczy teraz wprost | Jeden program, bez zestawu dokumentów/programów w rozumieniu WCAG2ICT. Mapa i lista są dodatkowo wymagane przez produkt; nie traktować ich jako samodzielnego dowodu zgodności tego kryterium. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.4.6 Nagłówki/etykiety | AA | Częściowo | Są nazwy sekcji i etykiety pól. Powtarzalne „Znaczenie cechy” musi mieć zrozumiały kontekst konkretnej cechy przy odczycie. | CP-03/05/07 (nazwy pól), CP-06/09 (sekcje) |
+| 2.4.7 Widoczny fokus | AA | Do testu | Menu ma focusColor, Material swoje stany. Zweryfikować widoczność na każdej kontrolce i w każdym motywie. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.4.11 Niezasłonięty fokus | AA | Do testu | Sprawdzić pasek menu, klawiaturę ekranową, snackbar i przewijanie tak, aby aktywny element nie był całkowicie zasłonięty. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.5.1 Gesty | A | Częściowo | Zoom ma +/− i jest lista. Pełną ścieżkę wykonać pojedynczymi aktywacjami bez szczypania; nie pomijać funkcji dostępnych tylko na mapie. | CP-04 (mapa/lista/zoom), CP-05/07 (wybory bez gestów) |
+| 2.5.2 Anulowanie aktywacji | A | Do testu | Kod używa onTap/onPressed. Sprawdzić wciśnięcie, przesunięcie poza element i zwolnienie, także przy potwierdzeniach i przełącznikach. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.5.3 Widoczna nazwa | A | Częściowo | Menu ma zgodne nazwy semantyczne. Sprawdzić pozostałe etykiety, pinezki, karty i rozpoznanie nazw przez sterowanie głosowe. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.5.4 Ruch urządzenia | A | Nie dotyczy teraz | Brak czynności sterowanych potrząsaniem/przechyleniem. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 2.5.7 Bez przeciągania | AA | Częściowo | Lista i przyciski zoom zapewniają alternatywy części działań mapy. Sprawdzić równoważność całej ścieżki i obsługę przewijania technologiami asystującymi. | CP-04 (mapa/lista), CP-05/07 (formularze) |
+| 2.5.8 Cele dotykowe | AA | Częściowo | Pomierzone menu i głosy CP-08 ≥48; kontrolki recenzji/nagrody sprawdzone w wąskim UI. Pełny pomiar wszystkich kontrolek, pinezek, linków i cofania oraz urządzenie nadal do wykonania. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
 
 ### Zrozumiałość
 
-| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie |
-|---|---|---|---|
-| 3.1.1 Język | A | Częściowo | MaterialApp locale pl i polskie lokalizacje. Sprawdzić wymowę treści przez TalkBack/VoiceOver. |
-| 3.1.2 Fragmenty językowe | AA | Do testu | Przejrzeć obcojęzyczne fragmenty, szczególnie atrybucję mapy; oznaczyć język, gdy to wymagane i wspierane. Nazwy własne ocenić z uwzględnieniem wyjątku. |
-| 3.2.1 Sam fokus | A | Do testu | Sprawdzić, że przesunięcie fokusu nie uruchamia akcji/zmiany ekranu ani zapisu. |
-| 3.2.2 Zmiana danych | A | Częściowo | Motywy i miasto aktualizują wynik, potrzeby/filtry zapis przyciskiem. Sprawdzić brak nieoczekiwanych przejść i czytelny sposób zapisu. |
-| 3.2.3 Stała nawigacja | AA | Częściowo | Kolejność menu jest stała; adaptacyjny układ i trasy zweryfikować wszystkimi metodami obsługi. |
-| 3.2.4 Stałe nazwy czynności | AA | Częściowo | Wspólne przyciski/statusy istnieją. Przejrzeć rozbieżne nazwy dostępu do tych samych ustawień i stanów. |
-| 3.2.6 Stała pomoc | A | Nie dotyczy teraz | Brak mechanizmu kontaktowej pomocy wymienionego w kryterium. Jeśli zostanie dodany, musi być w konsekwentnym miejscu. Ustawienia dostępności nadal łatwo dostępne. |
-| 3.3.1 Błędy danych | A | Częściowo | Błąd odczytu jest trwały; błędy zapisu są w toastach. Rozróżnić błąd danych i błąd operacji, zapewnić trwałą informację i związek z czynnością/polem. |
-| 3.3.2 Instrukcje pól | A | Częściowo | Są etykiety i znaczenie reguł. Sprawdzić kontekst cechy, skali i utraty niezapisanej edycji. |
-| 3.3.3 Pomoc po błędzie | AA | Częściowo | Jest ponowienie i zachowanie wyborów. Przetestować błąd przy zapisie UI, nie tylko repozytorium; przyszłe błędy logowania w CP-03. |
-| 3.3.4 Zapobieganie pomyłkom | AA | Częściowo | Usunięcie lokalnych danych i upublicznienie potrzeb mają potwierdzenie. Sprawdzić ich odczyt i możliwość anulowania; zakupy/operacje backendu później. |
-| 3.3.7 Bez ponownego wpisywania | A | Częściowo | Potrzeby/filtry inicjalizują się z profilu. Zweryfikować zachowanie formularza po nieudanym zapisie. Zasady szkicu po cofnięciu wymagają decyzji; nie zakładamy ich. |
-| 3.3.8 Dostępne uwierzytelnienie | AA | Późniejszy etap | Auto-konto demo nie sprawdza uwierzytelnienia. W CP-03 ocenić rzeczywisty mechanizm, wklejanie, autofill i alternatywy wobec testów poznawczych. |
+| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie | Etap odpowiedzialny; zawsze regresja CP-12 |
+|---|---|---|---|---|
+| 3.1.1 Język | A | Częściowo | MaterialApp locale pl i polskie lokalizacje. Sprawdzić wymowę treści przez TalkBack/VoiceOver. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 3.1.2 Fragmenty językowe | AA | Częściowo | Atrybucja CP-04 po polsku, OpenStreetMap jako nazwa własna. Treści z przyszłego API/recenzji i czytnik nadal do weryfikacji. | CP-04 (atrybucja), CP-06/08 (treść miejsc/recenzji) |
+| 3.2.1 Sam fokus | A | Do testu | Sprawdzić, że przesunięcie fokusu nie uruchamia akcji/zmiany ekranu ani zapisu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 3.2.2 Zmiana danych | A | Częściowo | Motywy i miasto aktualizują wynik, potrzeby/filtry zapis przyciskiem. Sprawdzić brak nieoczekiwanych przejść i czytelny sposób zapisu. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 3.2.3 Stała nawigacja | AA | Częściowo | Kolejność menu jest stała; adaptacyjny układ i trasy zweryfikować wszystkimi metodami obsługi. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 3.2.4 Stałe nazwy czynności | AA | Częściowo | Wspólne przyciski/statusy istnieją. Przejrzeć rozbieżne nazwy dostępu do tych samych ustawień i stanów. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 3.2.6 Stała pomoc | A | Nie dotyczy teraz | Brak mechanizmu kontaktowej pomocy wymienionego w kryterium. Jeśli zostanie dodany, musi być w konsekwentnym miejscu. Ustawienia dostępności nadal łatwo dostępne. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 3.3.1 Błędy danych | A | Częściowo | CP-03–06/08–10: trwałe błędy, retry i zachowanie potwierdzonego stanu przy zapisie; profil/prywatność, lokalne zgłoszenia i schowek nagrody testowane. CP-11 typed errors przygotowane, API i ankieta odłożone. | CP-03/04/05/07/09/10/11 (błędy operacji/pól) |
+| 3.3.2 Instrukcje pól | A | Częściowo | Są etykiety i znaczenie reguł. Sprawdzić kontekst cechy, skali i utraty niezapisanej edycji. | CP-03/05/07/09/10 (instrukcje) |
+| 3.3.3 Pomoc po błędzie | AA | Częściowo | Jest ponowienie i zachowanie wyborów. Przetestować błąd przy zapisie UI, nie tylko repozytorium; przyszłe błędy logowania w CP-03. | CP-03/05/07/09/10/11 (ponowienie) |
+| 3.3.4 Zapobieganie pomyłkom | AA | Częściowo | Usunięcie lokalnych danych i upublicznienie potrzeb mają potwierdzenie. Sprawdzić ich odczyt i możliwość anulowania; zakupy/operacje backendu później. | CP-09 (prywatność/usunięcie), CP-10 (zakup), CP-11 (API) |
+| 3.3.7 Bez ponownego wpisywania | A | Częściowo | Potrzeby/filtry inicjalizują się z profilu. Zweryfikować zachowanie formularza po nieudanym zapisie. Zasady szkicu po cofnięciu wymagają decyzji; nie zakładamy ich. | CP-03/05 (profil/filtry), CP-07 (szkic), CP-09/10 (operacje) |
+| 3.3.8 Dostępne uwierzytelnienie | AA | Późniejszy etap | Auto-konto demo nie sprawdza uwierzytelnienia. W CP-03 ocenić rzeczywisty mechanizm, wklejanie, autofill i alternatywy wobec testów poznawczych. | CP-03 (mechanizm konta), CP-11 (rzeczywiste API) |
 
 ### Współpraca z technologiami asystującymi
 
-| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie |
-|---|---|---|---|
-| 4.1.2 Nazwa/rola/stan | A | Częściowo | Część semantyki i standardowych kontrolek istnieje. Sprawdzić stany włączone/wybrane/zajęte, dropdowny, karty i dialogi czytnikiem. |
-| 4.1.3 Komunikaty zmian | AA | Częściowo | Snackbar ma liveRegion. Wynik wyszukiwania, błąd mapy i zapis ustawień nie mają pełnych dowodów odczytu; uzupełnić ogłoszenia bez przejmowania fokusu i bez powtarzania na każde kafelkowanie. |
+| Kryterium | Poziom | Wynik obecny | Dowód / działanie i sprawdzenie | Etap odpowiedzialny; zawsze regresja CP-12 |
+|---|---|---|---|---|
+| 4.1.2 Nazwa/rola/stan | A | Częściowo | Kontekst cechy/wejścia i odróżnienie braku danych od zera; stany zapisu, celu głosów, prywatności i symulacji jawne. Testy semantyki modułów są częściowe; TalkBack/VoiceOver pozostają niewykonane. | CP-02 (wspólne kontrolki); każdy nowy ekran CP-03–10 |
+| 4.1.3 Komunikaty zmian | AA | Częściowo | CP-04: wyniki po 600 ms ciszy. CP-05–10: trwałe błędy i potwierdzenia lokalnych operacji/statusów z liveRegion. Faktyczny odczyt czytnika oraz kolejność komunikatów na urządzeniu nadal do testu. | CP-03 (wejście/wyjście), CP-04 (wyniki/mapa), CP-05/07/09/10/11 (zapis/status) |
 
 ## Kolejność domknięcia CP-02
 
@@ -146,3 +146,26 @@ PJM każdego ekranu, osobny ETR, fotografie i dyktowanie nie są automatycznie w
 ## Ankieta recenzji — 2026-10-03
 
 Ankietę wznowiono na polecenie użytkownika; jej ekrany wchodzą do zakresu kryteriów A/AA. Wykonano: testy widżetów Fluttera `androidTapTargetGuideline`, `iOSTapTargetGuideline`, `labeledTapTargetGuideline` i `textContrastGuideline` na ekranie pytania; przebieg przy szerokości 320 i tekście 200% w jasnym i ciemnym motywie; trwały komunikat braku odpowiedzi z `liveRegion`; cofanie krok po kroku z zachowaniem szkicu. Niewykonane: TalkBack, Switch Access, klawiatura i VoiceOver na urządzeniu oraz testy z użytkownikami. Pełne wymagania: kindspot-instrukcja-dostepnosc.md.
+
+## Rozdzielenie prac — decyzja użytkownika po zmianie struktury
+
+Użytkownik zlecił rozpoczęcie CP-03 i przypisanie braków macierzy do odpowiednich checkpointów. To upoważnienie do przejścia dalej bez deklaracji, że CP-02/WCAG zostały odebrane. Macierz nadal ma 55 pozycji, teraz z kolumną odpowiedzialnego etapu; wynik dotyczy konkretnego ekranu, a nie całego kryterium raz na zawsze. Każdy etap domyka swoje pola, statusy i ścieżki, CP-02 utrzymuje wspólne mechanizmy, CP-12 sprawdza całość i zmianę grafiki. Media niestosowalne mają właściciela warunkowego przy ich dodaniu, bez rozszerzania obecnego zakresu.
+
+CP-03 demo: dodano jawne wejście/wyjście, trwały błąd wejścia/wyjścia, blokadę ponownej operacji, aktywację wejścia klawiaturą, usuwanie tras prywatnych po wyjściu. Weryfikacja lokalnych testów nie zamyka ręcznych testów czytnika ani kryterium rzeczywistego uwierzytelniania 3.3.8. Metoda produkcyjna, autofill i obsługa sesji API pozostają do ustalenia/podłączenia.
+
+## Decyzje CP-04 i CP-05 — 2026-10-03
+
+Użytkownik zlecił równoległe wykonanie CP-04 i CP-05 z dodatkowym agentem. Nie oznacza to odbioru pełnego CP-02/WCAG ani produkcyjnego uwierzytelnienia CP-03.
+
+- Najlepsze miejsca: średnia ocen malejąco ma bezwzględny priorytet; przy tej samej średniej wyżej jest więcej recenzji. Osobna opcja „Najwięcej recenzji” sortuje liczbę malejąco. Nie wyliczamy średniej miejsca ze średnich cech.
+- Na potrzeby happy case okolica obejmuje całe wybrane miasto. Proponowane miejsca stosują zapisane filtry i wybraną kolejność, bez dodatkowego promienia ani potwierdzania wizyty.
+- Komentarze: użytkownik wskazał największy stosunek lajków do dislajków. Implementacja należy do CP-08; zero dislajków, remisy i powiązanie z głosami per obserwacja nadal wymagają doprecyzowania. Nie zmieniamy teraz jednostki głosowania ani nie tworzymy komentarzy.
+- Demo ma jawnie fikcyjne średnie i liczby recenzji; brak średniej/licznika pozostaje brakiem danych. Domyślna kolejność demo to najlepsza ocena, ostatni wybór jest zapisany lokalnie. Dla sortowania liczby techniczny remis rozstrzyga średnia, potem nazwa/ID; ostatnie klucze nie stanowią nowej reguły produktu.
+- Miasto można ustalić po wybraniu „Użyj lokalizacji telefonu”. Demo rozpoznaje systemową nazwę miejscowości dla Krakowa/Warszawy w Polsce; nie zgaduje najbliższego miasta. Odmowa, wyłączona usługa, brak rozpoznania i inne miasta pozostawiają ręczny wybór. Zapisujemy tylko identyfikator miasta, bez współrzędnych/śledzenia w tle. Geokodowanie systemowe może użyć sieci.
+- Potrzeby/filtry: zapis dopiero przyciskiem, czyszczenie zmienia szkic i wyłącza dołączenie braków danych; bez zapisu potwierdzone filtry pozostają. Trwały błąd zachowuje wybory. Presety oraz sugestie cech pozostają przykładami PoC, nie zatwierdzoną klasyfikacją potrzeb. Potrzeby prywatne domyślnie.
+
+Operator produkcyjnej mapy, dane API i zakres agregacji recenzji dla średniej nadal należą do kontraktu CP-11. Synchronizacja filtrów i scenariusz szkicu po cofnięciu pozostają otwarte. Wyniki automatyczne nie zastępują testów lokalizacji/TalkBack na urządzeniu; emulator uruchamia tylko użytkownik. Szczegóły odbioru: KindSpot-CP04-CP05.md.
+
+## CP-06–12 — końcowe sprawdzenie PoC
+
+Analiza bez uwag; 131 testów przeszło; APK debug zbudowane (189263704 bajtów, 2026-10-03 21:59:03). Emulator nie był uruchamiany. Raport: KindSpot-CP06-CP12.md. Ankieta odłożona i przygotowany SurveyBuilder, brak API dla PoC, głosy/ranking oczekują odpowiedzi. CP-02 i odbiór ręczny CP-12 niezamknięte.

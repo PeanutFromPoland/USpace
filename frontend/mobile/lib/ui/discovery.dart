@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -5,20 +7,113 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../app_controller.dart';
 import '../data/catalog.dart';
+import '../data/city_locator.dart';
 import '../domain/models.dart';
 import 'components.dart';
 import 'preferences.dart';
 import 'place_details.dart';
+import 'review_navigation.dart';
+import 'survey_entry.dart';
 
 class DiscoveryScreen extends StatefulWidget {
-  const DiscoveryScreen({super.key, required this.controller});
+  const DiscoveryScreen({
+    super.key,
+    required this.controller,
+    this.surveyBuilder,
+  });
   final AppController controller;
+  final SurveyBuilder? surveyBuilder;
   @override
   State<DiscoveryScreen> createState() => DiscoveryScreenState();
 }
 
 class DiscoveryScreenState extends State<DiscoveryScreen> {
   final scroll = ScrollController();
+  final searchField = TextEditingController();
+  final searchFocus = FocusNode();
+  final cityFocus = FocusNode();
+  final sortFocus = FocusNode();
+  String? pendingCity, cityError, cityStatus, locationMessage;
+  bool locating = false;
+  PlaceSort? pendingSort;
+  String? sortError;
+
+  Future<void> selectSort(PlaceSort value) async {
+    setState(() {
+      pendingSort = value;
+      sortError = null;
+    });
+    try {
+      await widget.controller.saveProfile(
+        widget.controller.profile.copyWith(placeSort: value),
+      );
+      if (mounted) setState(() => pendingSort = null);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => sortError = 'Nie udało się zapisać kolejności. Lista nadal używa poprzedniego ustawienia. Ponów zapis.',
+        );
+      }
+    }
+  }
+
+  int locationRequest = 0;
+
+  Future<void> selectCity(String city) async {
+    setState(() {
+      pendingCity = city;
+      cityError = null;
+      cityStatus = null;
+    });
+    try {
+      await widget.controller.saveProfile(
+        widget.controller.profile.copyWith(cityId: city),
+      );
+      if (!mounted) return;
+      setState(() {
+        pendingCity = null;
+        cityStatus = 'Wybrano miasto: ${cityLabel(city)}.';
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(
+        () => cityError =
+            'Nie udało się zapisać miasta. Wyniki nadal dotyczą ${cityLabel(widget.controller.profile.cityId)}. Ponów zapis lub wybierz inne miasto.',
+      );
+    }
+  }
+
+  Future<void> locateCity() async {
+    if (locating || widget.controller.saving) return;
+    final request = ++locationRequest;
+    setState(() {
+      locating = true;
+      locationMessage = null;
+      cityStatus = null;
+    });
+    try {
+      final city = await widget.controller.cityLocator.locateCity();
+      if (!mounted || request != locationRequest) return;
+      await selectCity(city);
+    } on CityLocationException catch (error) {
+      if (mounted && request == locationRequest) {
+        setState(() => locationMessage = error.message);
+      }
+    } catch (_) {
+      if (mounted && request == locationRequest) {
+        setState(
+          () => locationMessage = const CityLocationException(
+            CityLocationProblem.unavailable,
+          ).message,
+        );
+      }
+    } finally {
+      if (mounted && request == locationRequest) {
+        setState(() => locating = false);
+      }
+    }
+  }
+
   void showMapView() {
     setState(() => showMap = true);
     if (scroll.hasClients) scroll.jumpTo(0);
@@ -26,6 +121,11 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
 
   @override
   void dispose() {
+    locationRequest++;
+    searchField.dispose();
+    searchFocus.dispose();
+    cityFocus.dispose();
+    sortFocus.dispose();
     scroll.dispose();
     super.dispose();
   }
@@ -36,7 +136,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
   Widget build(BuildContext context) {
     final hits = widget.controller.search(query);
     final profile = widget.controller.profile;
-    final active = profile.rules
+    final active = widget.controller.activeRules
         .where((r) => r.importance != Importance.ignored)
         .length;
     return pageBody(
@@ -81,8 +181,9 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
         ),
         const SizedBox(height: 20),
         DropdownButtonFormField<String>(
-          key: ValueKey(profile.cityId),
-          initialValue: profile.cityId,
+          key: ValueKey('city-choice-${pendingCity ?? profile.cityId}'),
+          initialValue: pendingCity ?? profile.cityId,
+          focusNode: cityFocus,
           isExpanded: true,
           decoration: const InputDecoration(
             labelText: 'Miasto',
@@ -94,21 +195,113 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
           ],
           onChanged: widget.controller.saving
               ? null
-              : (v) => perform(
-                  context,
-                  () => widget.controller.saveProfile(
-                    profile.copyWith(cityId: v),
-                  ),
-                ),
+              : (v) {
+                  if (v == null) return;
+                  // A manual choice supersedes an outstanding GPS result.
+                  locationRequest++;
+                  setState(() {
+                    locating = false;
+                    locationMessage = null;
+                  });
+                  selectCity(v);
+                },
         ),
+        if (cityError != null) ...[
+          const SizedBox(height: 12),
+          Semantics(
+            liveRegion: true,
+            child: Notice(cityError!, icon: Icons.error_outline),
+          ),
+          OutlinedButton(
+            key: const ValueKey('city-retry'),
+            onPressed: widget.controller.saving
+                ? null
+                : () => selectCity(pendingCity!),
+            child: const Text('Ponów zapis miasta'),
+          ),
+        ],
+        if (cityStatus != null)
+          Semantics(liveRegion: true, child: Text(cityStatus!)),
+        const SizedBox(height: 12),
+        const Text(
+          'Możesz ustalić miasto z lokalizacji na żądanie. Usługa systemowa może użyć internetu. W demo zapisujemy tylko miasto, bez współrzędnych.',
+          style: TextStyle(fontSize: 13),
+        ),
+        OutlinedButton.icon(
+          key: const ValueKey('locate-city'),
+          onPressed: locating || widget.controller.saving ? null : locateCity,
+          icon: const Icon(Icons.my_location),
+          label: Text(
+            locating ? 'Ustalanie miasta…' : 'Użyj lokalizacji telefonu',
+          ),
+        ),
+        if (locating)
+          Semantics(
+            liveRegion: true,
+            child: const Text(
+              'Trwa ustalanie miasta. Możesz wybrać je ręcznie.',
+            ),
+          ),
+        if (locationMessage != null)
+          Semantics(liveRegion: true, child: Notice(locationMessage!)),
         const SizedBox(height: 12),
         TextField(
+          key: const ValueKey('place-search'),
+          controller: searchField,
+          focusNode: searchFocus,
+          textInputAction: TextInputAction.search,
           onChanged: (value) => setState(() => query = value),
-          decoration: const InputDecoration(
-            hintText: 'Szukaj miejsca lub rodzaju',
+          decoration: InputDecoration(
+            hintText: 'Nazwa, rodzaj lub adres',
             labelText: 'Szukaj miejsc',
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: query.isEmpty
+                ? null
+                : IconButton(
+                    tooltip: 'Wyczyść wyszukiwanie',
+                    onPressed: () {
+                      searchField.clear();
+                      setState(() => query = '');
+                      searchFocus.requestFocus();
+                    },
+                    icon: const Icon(Icons.clear),
+                  ),
           ),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<PlaceSort>(
+          key: ValueKey(
+            'place-sort-${(pendingSort ?? profile.placeSort).name}',
+          ),
+          initialValue: pendingSort ?? profile.placeSort,
+          focusNode: sortFocus,
+          isExpanded: true,
+          itemHeight: null,
+          decoration: const InputDecoration(labelText: 'Kolejność miejsc'),
+          items: [
+            for (final sort in PlaceSort.values)
+              DropdownMenuItem(value: sort, child: Text(placeSortLabel(sort))),
+          ],
+          onChanged: widget.controller.saving
+              ? null
+              : (value) {
+                  if (value != null) selectSort(value);
+                },
+        ),
+        if (sortError != null) ...[
+          Semantics(liveRegion: true, child: Notice(sortError!)),
+          OutlinedButton(
+            key: const ValueKey('sort-retry'),
+            onPressed: widget.controller.saving
+                ? null
+                : () => selectSort(pendingSort!),
+            child: const Text('Ponów zapis kolejności'),
+          ),
+        ],
+        const SizedBox(height: 12),
+        const Text(
+          'Najlepsza ocena: najpierw średnia, przy remisie liczba recenzji. Średnie i liczby recenzji w demo są fikcyjne.',
+          style: TextStyle(fontSize: 13),
         ),
         const SizedBox(height: 12),
         SegmentedButton<bool>(
@@ -133,7 +326,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
         const SizedBox(height: 12),
         if (showMap && hits.isNotEmpty)
           PlacesMap(
-            key: ValueKey(profile.cityId),
+            key: ValueKey('map-city-${profile.cityId}'),
             hits: hits,
             cityId: profile.cityId,
             onSelect: (hit) => _open(context, hit),
@@ -170,14 +363,9 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute<void>(
-              builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('Proponowane miejsca')),
-                body: pageBody([
-                  const SectionTitle('Proponowane miejsca w okolicy'),
-                  const Notice(
-                    'Ranking i promień okolicy czekają na ustalenie. Nie pobieramy lokalizacji telefonu i nie udajemy rekomendacji z API. Miejsca demonstracyjne możesz obejrzeć na mapie i liście.',
-                  ),
-                ]),
+              builder: (_) => ProposedPlacesScreen(
+                controller: widget.controller,
+                surveyBuilder: widget.surveyBuilder,
               ),
             ),
           ),
@@ -186,9 +374,11 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
         ),
         const SizedBox(height: 20),
         demoNotice(),
-        SectionTitle(
-          '${hits.length} ${hits.length == 1 ? 'miejsce' : 'miejsc'} dla Ciebie',
-          subtitle: 'Dopasowanie do filtrów · dane przykładowe',
+        ResultsSummary(
+          count: hits.length,
+          cityId: profile.cityId,
+          query: query,
+          order: placeSortLabel(profile.placeSort),
         ),
         const SizedBox(height: 16),
         if (hits.isEmpty)
@@ -237,8 +427,13 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
   void _open(BuildContext context, SearchHit hit) => Navigator.push(
     context,
     MaterialPageRoute<void>(
-      builder: (_) =>
-          PlaceDetailsScreen(controller: widget.controller, place: hit.place),
+      builder: (routeContext) => PlaceDetailsScreen(
+        controller: widget.controller,
+        place: hit.place,
+        surveyBuilder: widget.surveyBuilder,
+        onOpenReviews: () =>
+            openDemoReviews(routeContext, hit.place, widget.controller),
+      ),
     ),
   );
 }
@@ -327,6 +522,11 @@ class PlaceCard extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+              Text(
+                '${place.aggregateRating == null ? "Brak średniej ocen" : "Średnia: ${place.aggregateRating!.toStringAsFixed(1).replaceAll('.', ',')} / 5"} · ${place.reviewCount == null ? "Liczba recenzji nieznana" : "Recenzje: ${place.reviewCount}"}',
+                style: const TextStyle(fontSize: 13),
+              ),
               if (place.issue != null) ...[
                 const SizedBox(height: 12),
                 Text(
@@ -350,7 +550,10 @@ class PlaceCard extends StatelessWidget {
                           .take(3))
                     Text(
                       featureById(fact.featureId).label,
-                      style: const TextStyle(fontSize: 12, color: muted),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                 ],
               ),
@@ -360,7 +563,10 @@ class PlaceCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Obserwacja: ${dateLabel(place.observedOn)}',
-                      style: const TextStyle(fontSize: 11, color: muted),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   const Icon(Icons.arrow_forward, size: 20),
@@ -393,6 +599,26 @@ class PlacesMap extends StatefulWidget {
 class _PlacesMapState extends State<PlacesMap> {
   final map = MapController();
   bool failed = false;
+  bool failureScheduled = false;
+  int tileAttempt = 0;
+  String? attributionError;
+
+  Future<void> openAttribution() async {
+    try {
+      final opened = await launchUrl(
+        Uri.parse('https://www.openstreetmap.org/copyright'),
+      );
+      if (!opened) throw StateError('No link handler');
+      if (mounted) setState(() => attributionError = null);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => attributionError = 'Nie udało się otworzyć informacji o autorach. Adres: https://www.openstreetmap.org/copyright',
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     map.dispose();
@@ -400,131 +626,267 @@ class _PlacesMapState extends State<PlacesMap> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      if (failed) ...[
-        const Notice(
-          'Podkład mapy jest niedostępny. Lista miejsc nadal działa.',
-        ),
-        TextButton(
-          onPressed: widget.onList,
-          child: const Text('Pokaż listę miejsc'),
-        ),
-      ],
-      ClipRRect(
-        borderRadius: BorderRadius.circular(22),
-        child: SizedBox(
-          height: 360,
-          child: Stack(
-            children: [
-              FlutterMap(
-                mapController: map,
-                options: MapOptions(
-                  initialCenter: widget.cityId == 'warsaw'
-                      ? const LatLng(52.233, 21.01)
-                      : const LatLng(50.0615, 19.941),
-                  initialZoom: 14,
-                  maxZoom: 18,
-                  minZoom: 10,
-                  interactionOptions: const InteractionOptions(
-                    flags:
-                        InteractiveFlag.drag |
-                        InteractiveFlag.pinchZoom |
-                        InteractiveFlag.doubleTapZoom,
-                  ),
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate: const String.fromEnvironment(
-                      'MAP_TILE_URL',
-                      defaultValue:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  Widget build(BuildContext context) {
+    final renderingAttempt = tileAttempt;
+    return Column(
+      children: [
+        if (failed) ...[
+          Semantics(
+            liveRegion: true,
+            child: const Notice(
+              'Podkład mapy jest niedostępny. Lista miejsc nadal działa.',
+            ),
+          ),
+          OutlinedButton(
+            key: const ValueKey('map-retry'),
+            onPressed: () => setState(() {
+              failed = false;
+              failureScheduled = false;
+              tileAttempt++;
+            }),
+            child: const Text('Ponów wczytanie mapy'),
+          ),
+          TextButton(
+            onPressed: widget.onList,
+            child: const Text('Pokaż listę miejsc'),
+          ),
+        ],
+        ClipRRect(
+          borderRadius: BorderRadius.circular(22),
+          child: SizedBox(
+            height: 360,
+            child: Stack(
+              children: [
+                FlutterMap(
+                  mapController: map,
+                  options: MapOptions(
+                    initialCenter: widget.cityId == 'warsaw'
+                        ? const LatLng(52.233, 21.01)
+                        : const LatLng(50.0615, 19.941),
+                    initialZoom: 14,
+                    maxZoom: 18,
+                    minZoom: 10,
+                    interactionOptions: const InteractionOptions(
+                      flags:
+                          InteractiveFlag.drag |
+                          InteractiveFlag.pinchZoom |
+                          InteractiveFlag.doubleTapZoom,
                     ),
-                    userAgentPackageName: 'com.example.uspace',
-                    maxNativeZoom: 19,
-                    errorTileCallback: (tile, error, stack) {
-                      if (!failed) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (mounted) setState(() => failed = true);
-                        });
-                      }
-                    },
                   ),
-                  MarkerLayer(
-                    markers: [
-                      for (final hit in widget.hits)
-                        Marker(
-                          point: LatLng(hit.place.lat, hit.place.lon),
-                          width: 52,
-                          height: 52,
-                          child: IconButton(
-                            style: IconButton.styleFrom(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerLow,
-                            ),
-                            tooltip: 'Otwórz ${hit.place.name}',
-                            onPressed: () => widget.onSelect(hit),
-                            icon: Icon(
-                              Icons.location_on,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 32,
+                  children: [
+                    TileLayer(
+                      key: ValueKey(tileAttempt),
+                      urlTemplate: const String.fromEnvironment(
+                        'MAP_TILE_URL',
+                        defaultValue:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      ),
+                      userAgentPackageName: 'com.example.uspace',
+                      maxNativeZoom: 19,
+                      errorTileCallback: (tile, error, stack) {
+                        if (renderingAttempt != tileAttempt) return;
+                        if (!failed && !failureScheduled) {
+                          failureScheduled = true;
+                          final attempt = renderingAttempt;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted && attempt == tileAttempt) {
+                              setState(() => failed = true);
+                            }
+                          });
+                        }
+                      },
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        for (final hit in widget.hits)
+                          Marker(
+                            point: LatLng(hit.place.lat, hit.place.lon),
+                            width: 52,
+                            height: 52,
+                            child: IconButton(
+                              style: IconButton.styleFrom(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerLow,
+                              ),
+                              tooltip: 'Otwórz ${hit.place.name}',
+                              onPressed: () => widget.onSelect(hit),
+                              icon: Icon(
+                                Icons.location_on,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 28,
+                              ),
                             ),
                           ),
+                      ],
+                    ),
+                  ],
+                ),
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: Material(
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(14),
+                    child: Column(
+                      children: [
+                        IconButton(
+                          constraints: const BoxConstraints(
+                            minWidth: 48,
+                            minHeight: 48,
+                          ),
+                          tooltip: 'Przybliż mapę',
+                          onPressed: () => map.move(
+                            map.camera.center,
+                            (map.camera.zoom + 1).clamp(10, 18),
+                          ),
+                          icon: const Icon(Icons.add),
                         ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Material(
-                      color: Theme.of(context).colorScheme.surface,
-                      child: TextButton(
-                        onPressed: () => launchUrl(
-                          Uri.parse('https://www.openstreetmap.org/copyright'),
+                        IconButton(
+                          constraints: const BoxConstraints(
+                            minWidth: 48,
+                            minHeight: 48,
+                          ),
+                          tooltip: 'Oddal mapę',
+                          onPressed: () => map.move(
+                            map.camera.center,
+                            (map.camera.zoom - 1).clamp(10, 18),
+                          ),
+                          icon: const Icon(Icons.remove),
                         ),
-                        child: const Text(
-                          '© OpenStreetMap contributors',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: Material(
-                  color: Theme.of(context).colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(14),
-                  child: Column(
-                    children: [
-                      IconButton(
-                        tooltip: 'Przybliż mapę',
-                        onPressed: () => map.move(
-                          map.camera.center,
-                          (map.camera.zoom + 1).clamp(10, 18),
-                        ),
-                        icon: const Icon(Icons.add),
-                      ),
-                      IconButton(
-                        tooltip: 'Oddal mapę',
-                        onPressed: () => map.move(
-                          map.camera.center,
-                          (map.camera.zoom - 1).clamp(10, 18),
-                        ),
-                        icon: const Icon(Icons.remove),
-                      ),
-                    ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: openAttribution,
+          child: const Text(
+            '© Autorzy OpenStreetMap — informacje i licencja',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        if (attributionError != null)
+          Semantics(liveRegion: true, child: Notice(attributionError!)),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+}
+
+// Result counts are spoken after a short pause instead of on every keystroke.
+class ResultsSummary extends StatefulWidget {
+  const ResultsSummary({
+    super.key,
+    required this.count,
+    required this.cityId,
+    required this.query,
+    this.order = '',
+  });
+  final int count;
+  final String cityId, query, order;
+  @override
+  State<ResultsSummary> createState() => _ResultsSummaryState();
+}
+
+class _ResultsSummaryState extends State<ResultsSummary> {
+  Timer? timer;
+  late String announcement;
+  String get summary =>
+      'Wyniki: ${widget.count}. Miasto: ${cityLabel(widget.cityId)}. ${widget.order}. Dopasowanie do filtrów, dane przykładowe.';
+  @override
+  void initState() {
+    super.initState();
+    announcement = summary;
+  }
+
+  @override
+  void didUpdateWidget(covariant ResultsSummary oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.count != widget.count ||
+        oldWidget.cityId != widget.cityId ||
+        oldWidget.query != widget.query ||
+        oldWidget.order != widget.order) {
+      timer?.cancel();
+      timer = Timer(const Duration(milliseconds: 600), () {
+        if (mounted) setState(() => announcement = summary);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    liveRegion: true,
+    header: true,
+    label: announcement,
+    excludeSemantics: true,
+    child: SectionTitle(
+      '${widget.count} ${widget.count == 1 ? 'miejsce' : 'miejsc'} dla Ciebie',
+      subtitle: 'Dopasowanie do filtrów · dane przykładowe',
+    ),
+  );
+}
+
+class ProposedPlacesScreen extends StatelessWidget {
+  const ProposedPlacesScreen({
+    super.key,
+    required this.controller,
+    this.surveyBuilder,
+  });
+  final AppController controller;
+  final SurveyBuilder? surveyBuilder;
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: controller,
+    builder: (context, _) {
+      final hits = controller.search('');
+      return Scaffold(
+        appBar: adaptiveAppBar(context, 'Proponowane miejsca'),
+        body: pageBody([
+          SectionTitle(
+            'Miejsca w okolicy: ${cityLabel(controller.profile.cityId)}',
+          ),
+          const Notice(
+            'W tym demo okolica obejmuje całe wybrane miasto. Lista uwzględnia zapisane filtry; lokalizacja służy wyborowi miasta. Średnie i liczby recenzji są fikcyjne.',
+          ),
+          Text('Kolejność: ${placeSortLabel(controller.profile.placeSort)}'),
+          ResultsSummary(
+            count: hits.length,
+            cityId: controller.profile.cityId,
+            query: '',
+            order: placeSortLabel(controller.profile.placeSort),
+          ),
+          if (hits.isEmpty)
+            const Notice(
+              'Brak pasujących miejsc. Wróć na mapę i zmień miasto lub filtry.',
+            ),
+          for (final hit in hits)
+            PlaceCard(
+              hit: hit,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (routeContext) => PlaceDetailsScreen(
+                    controller: controller,
+                    place: hit.place,
+                    surveyBuilder: surveyBuilder,
+                    onOpenReviews: () =>
+                        openDemoReviews(routeContext, hit.place, controller),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-      const SizedBox(height: 16),
-    ],
+            ),
+        ]),
+      );
+    },
   );
 }

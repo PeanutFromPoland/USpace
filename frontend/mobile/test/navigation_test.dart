@@ -114,12 +114,22 @@ void main() {
     final controller = AppController(DemoRepository(MemoryStore()));
     await tester.pumpWidget(KindSpotApp(controller: controller));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Lista'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.ensureVisible(find.text('Lista'));
     await tester.tap(find.text('Lista'));
     await tester.pumpAndSettle();
     expect(find.byType(PlacesMap), findsNothing);
     await tester.tap(find.byKey(const ValueKey('navigation-2')));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byType(PlacesMap),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.byType(PlacesMap), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('navigation-4')));
     await tester.pumpAndSettle();
