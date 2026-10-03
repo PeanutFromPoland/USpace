@@ -8,8 +8,8 @@ Aplikacja Flutter znajduje się w `frontend/mobile`, dokumentacja w `frontend/do
 
 - [Opis produktu](frontend/docs/Teoria%20Aplikacji.md)
 - [Przypadki użycia](frontend/docs/use-cases.md)
-- [Propozycja kontraktu frontend–backend](frontend/docs/USpace-kontrakt-frontend-backend-v0.1.md)
-- [Plan i checkpointy](frontend/docs/USpace-checkpointy.md)
+- [Propozycja kontraktu frontend–backend](frontend/docs/KindSpot-kontrakt-frontend-backend-v0.1.md)
+- [Plan i checkpointy](frontend/docs/KindSpot-checkpointy.md)
 
 Mobilny PoC korzysta z danych i konta demonstracyjnego. Integracje z backendem, kartą miejską i nagrodami nie są podłączone. Instrukcje dla agentów: AGENTS.md.
 

@@ -1,1 +1,1 @@
-"""USpace API foundation."""
+"""KindSpot API foundation."""

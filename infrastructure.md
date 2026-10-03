@@ -1,4 +1,4 @@
-# Infrastruktura USpace
+# Infrastruktura KindSpot
 
 Ten dokument opisuje stan konfiguracji w repozytorium. Publiczne demo nie jest
 jeszcze uruchomione: nie ma skonfigurowanego VPS, domeny ani sekretów wdrożenia.

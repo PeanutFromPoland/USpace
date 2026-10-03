@@ -13,7 +13,7 @@ void main() {
   ) async {
     final store = MemoryStore();
     final controller = AppController(DemoRepository(store));
-    await tester.pumpWidget(USpaceApp(controller: controller));
+    await tester.pumpWidget(KindSpotApp(controller: controller));
     await tester.pumpAndSettle();
     expect(find.byType(HomeShell), findsOneWidget);
     expect(find.byType(WelcomeScreen), findsNothing);
@@ -31,7 +31,7 @@ void main() {
     );
     final restarted = AppController(DemoRepository(store));
     await tester.pumpWidget(
-      USpaceApp(key: const ValueKey('restart'), controller: restarted),
+      KindSpotApp(key: const ValueKey('restart'), controller: restarted),
     );
     await tester.pumpAndSettle();
     expect(find.byType(HomeShell), findsOneWidget);
@@ -50,7 +50,7 @@ void main() {
     final controller = AppController(DemoRepository(store));
     await controller.load();
     await controller.saveProfile(controller.profile.copyWith(onboarded: true));
-    await tester.pumpWidget(USpaceApp(controller: controller));
+    await tester.pumpWidget(KindSpotApp(controller: controller));
     await tester.pumpAndSettle();
     expect(find.text('Znajdź swoje miejsce.'), findsOneWidget);
     await tester.tap(find.text('Zapisane'));
@@ -74,7 +74,7 @@ void main() {
         DemoRepository(MemoryStore()),
         autoDemoLogin: false,
       );
-      await tester.pumpWidget(USpaceApp(controller: controller));
+      await tester.pumpWidget(KindSpotApp(controller: controller));
       await tester.pumpAndSettle();
       expect(find.text('Otwórz konto demonstracyjne'), findsOneWidget);
       expect(find.text('Zacznij bez personalizacji'), findsNothing);
@@ -102,7 +102,7 @@ void main() {
         await controller.saveProfile(
           controller.profile.copyWith(theme: palette, darkMode: dark),
         );
-        await tester.pumpWidget(USpaceApp(controller: controller));
+        await tester.pumpWidget(KindSpotApp(controller: controller));
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         await tester.tap(find.byTooltip('Ustawienia dostępności'));

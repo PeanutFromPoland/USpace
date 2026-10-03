@@ -7,6 +7,6 @@ import 'ui/app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    USpaceApp(controller: AppController(DemoRepository(SecureDemoStore()))),
+    KindSpotApp(controller: AppController(DemoRepository(SecureDemoStore()))),
   );
 }

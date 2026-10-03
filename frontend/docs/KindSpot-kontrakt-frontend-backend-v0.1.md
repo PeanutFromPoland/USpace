@@ -1,4 +1,4 @@
-# USpace — kontrakt frontend–backend v0.1
+# KindSpot — kontrakt frontend–backend v0.1
 
 Status: propozycja do uzgodnienia w zespole, nie opis istniejącego API.
 Zakres: dane i zachowania potrzebne frontendowi mobilnemu/responsywnemu PoC. Bez projektu bazy, algorytmów moderacji, reputacji ani integracji z operatorem karty.
@@ -12,7 +12,7 @@ Backend: autoryzacja i walidacja ostateczna, zapis danych, wyszukiwanie i dopaso
 
 Frontend nie wylicza wiarygodności, nie przyznaje punktów i nie uznaje lokalnej zmiany salda za potwierdzenie zakupu. Ukryta reputacja nie jest zwracana klientowi. Bot sprawdza jakość/ryzyko nadużycia; pozytywna analiza tekstu nie jest dowodem dostępności miejsca.
 
-OSM jest podkładem/źródłem danych geograficznych. Frontend otrzymuje miejsca i informacje USpace z naszego API, z trwałym identyfikatorem USpace. Nie pobiera prywatnych danych ani recenzji z OSM. Dostawca mapy i atrybucja pozostają osobnym uzgodnieniem.
+OSM jest podkładem/źródłem danych geograficznych. Frontend otrzymuje miejsca i informacje KindSpot z naszego API, z trwałym identyfikatorem KindSpot. Nie pobiera prywatnych danych ani recenzji z OSM. Dostawca mapy i atrybucja pozostają osobnym uzgodnieniem.
 
 ## 2. Wspólne zasady API
 
@@ -88,7 +88,7 @@ Frontend korzysta z identyfikatorów katalogu. Lista potrzeb obejmuje także pod
 
 ### Recenzja i jej statusy
 
-`Review`: `id`, `placeId`, `author {id, displayName, appearance, badges[]}`, `visitedOn`, `visitedAtLocalTime`, `timeZone`, `createdAt`, `mode` (`quick | detailed`), `answers[]`, `temporaryIssues[]`, `publicationStatus`, `verificationStatus`, `communitySummary`, `allowedActions[]`.
+`Review`: `id`, `placeId`, `author {id, displayName, appearance, badges[]}`, `visitedOn`, `visitedAtLocalTime`, `timeZone`, `createdAt`, `mode` (`quick | detailed`), `answers[]`, `temporaryIssues[]`, `recommendation`, `publicationStatus`, `verificationStatus`, `communitySummary`, `allowedActions[]`.
 
 `Answer`: `featureId`, `targetId`, `presence` (`present | absent | unknown`), `operationalState` (jak wyżej lub null), `rating` (integer 0–5 lub null; 0 tylko przy absent), `comment` (string lub null).
 
@@ -96,6 +96,8 @@ Frontend korzysta z identyfikatorów katalogu. Lista potrzeb obejmuje także pod
 - `unknown` i pominięcie pytania nie są oceną 3.
 - Każde pytanie prezentowanej ankiety wymaga odpowiedzi. „Niewiedza” ma presence=unknown i rating=null, publikowana jako „Nie mogłem sprawdzić”. Lista pytań i identyfikacja wersji ankiety do uzgodnienia; klient nie powinien wysyłać braku odpowiedzi jako oceny.
 - Zatwierdzone: absent oznacza „Brak funkcji” z rating=0 i operationalState=null. Unknown oznacza „Nie mogłem sprawdzić”, z rating=null i operationalState=null. Rating 1–5 dotyczy ocenianej istniejącej cechy. Niewiedza nie jest oceną 0.
+- Decyzja użytkownika 2026-10-03: ocena 0 (absent) nie wlicza się do średniej oceny cechy.
+- Decyzja użytkownika 2026-10-03: `recommendation` w `ReviewCreate` i `Review` to integer 1–5 lub null, odpowiedź na pytanie „Czy polecisz to miejsce osobom z podobnymi potrzebami?”. Nie jest odpowiedzią o cechę i nie wpływa na `FeatureSummary`.
 - Czy ankieta z samą niewiedzą może być publikowana, pozostaje do ustalenia; wcześniejszy warunek jednej merytorycznej odpowiedzi nie jest zatwierdzoną decyzją. Dokładne granice długości pól zwraca konfiguracja.
 - Działająca/zepsuta cecha i jakość są osobne; ankieta nie wymusza gwiazdek, gdy jakości nie można ocenić.
 - Data nie może być przyszła względem strefy wizyty; godzina jest opcjonalna, bez automatycznego wpisywania godziny wysłania.
@@ -207,7 +209,8 @@ Raporty: reasonCode `suspected_false | offensive | spam | other`. Zgłoszenie i 
       "comment": "Podjazd dostępny, ale trudno było wjechać samodzielnie."
     }
   ],
-  "temporaryIssues": []
+  "temporaryIssues": [],
+  "recommendation": 4
 }
 ```
 
@@ -263,7 +266,7 @@ Przykładowe dane powinny obejmować: miejsce dopasowane, niespełniające warun
 | UC-01/02         | Turysta jest domyślny; karta ma automatycznie dowodzić bycia mieszkańcem   | Zwracać status weryfikacji powiązany z miastem; etykieta Turysta do uzgodnienia. Sam ważny numer nie potwierdza posiadacza ani zamieszkania. Backend zapewnia potwierdzenie zgodne z przyjętym założeniem API tak |
 | UC-02            | Typy kart wymienione jakby dawały identyczne uprawnienia                   | Backend zwraca obsługiwane cardTypes i eligibility nagród; frontend nie zakłada rzeczywistych uprawnień tych kart tak                                                                                             |
 | UC-03            | Brak Pomocnika, psa przewodnika i jawnego upublicznienia potrzeb           | Uzupełnić katalog, niezależny helperOptIn i privacy; psa terapeutycznego uzgodnić osobno tak                                                                                                                      |
-| UC-04            | Tylko mapa, brak ręcznego obszaru i rozróżnienia błędu OSM od pustej listy | Lista równoważna mapie; dane USpace z API; miasto/obszar wybrane ręcznie; brak wyników nie jest awarią tak                                                                                                        |
+| UC-04            | Tylko mapa, brak ręcznego obszaru i rozróżnienia błędu OSM od pustej listy | Lista równoważna mapie; dane KindSpot z API; miasto/obszar wybrane ręcznie; brak wyników nie jest awarią tak                                                                                                        |
 | UC-05            | 3 = brak zdania                                                            | Wycofać; 3 jest oceną pośrednią, unknown/pominięcie to osobne odpowiedzi tak                                                                                                                                      |
 | UC-05            | QR nie było w ostatnim opisie                                              | Oznaczyć jako opcjonalne rozszerzenie; QR identyfikuje miejsce, nie potwierdza wizyty wyjebać                                                                                                                     |
 | UC-06            | Obowiązkowa godzina i możliwe obowiązkowe gwiazdki                         | Godzina opcjonalna; ocena tylko gdy możliwa; formularz wspólny z ankietą tak                                                                                                                                      |

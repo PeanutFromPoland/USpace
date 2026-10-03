@@ -23,7 +23,7 @@ void main() {
     for (final palette in ['orange', 'pink', 'blue']) {
       for (final high in [false, true]) {
         test('Text contrast $palette dark=$dark high=$high', () {
-          final scheme = uspaceTheme(
+          final scheme = kindSpotTheme(
             DemoProfile(theme: palette, darkMode: dark, highContrast: high),
           ).colorScheme;
           for (final pair in [
@@ -53,11 +53,11 @@ void main() {
         await controller.saveProfile(
           controller.profile.copyWith(theme: palette, darkMode: dark),
         );
-        await tester.pumpWidget(USpaceApp(controller: controller));
+        await tester.pumpWidget(KindSpotApp(controller: controller));
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         final semantics = tester.ensureSemantics();
-        for (final item in USpaceNavigation.items) {
+        for (final item in KindSpotNavigation.items) {
           final button = find.byKey(ValueKey('navigation-${item.$1}'));
           expect(tester.getSize(button).height, greaterThanOrEqualTo(48));
           expect(tester.getSize(button).width, greaterThanOrEqualTo(48));
@@ -112,7 +112,7 @@ void main() {
     tester,
   ) async {
     final controller = AppController(DemoRepository(MemoryStore()));
-    await tester.pumpWidget(USpaceApp(controller: controller));
+    await tester.pumpWidget(KindSpotApp(controller: controller));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Lista'));
     await tester.tap(find.text('Lista'));
@@ -142,7 +142,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: uspaceTheme(const DemoProfile(darkMode: true)),
+        theme: kindSpotTheme(const DemoProfile(darkMode: true)),
         home: Scaffold(
           body: Column(
             children: [

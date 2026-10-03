@@ -1,6 +1,6 @@
 # Przypadki użycia KindSpot
 
-Nowa nazwa zatwierdzona 2026-10-03: KindSpot (wcześniej USpace). Starsze nazwy w dokumentacji i kontrakcie odnoszą się do tego samego projektu; ankieta pozostaje odłożona.
+Nowa nazwa zatwierdzona 2026-10-03: KindSpot (wcześniej USpace). Starsze nazwy w dokumentacji i kontrakcie odnoszą się do tego samego projektu. Ankietę wznowiono 2026-10-03 (Teoria aplikacji, sekcja końcowa).
 
 
 Aktualizacja: 2026-10-03, zgodnie z dopiskami użytkownika do tabeli rozbieżności kontraktu v0.1.
@@ -72,22 +72,22 @@ Zakres: zachowania użytkownika i systemu potrzebne do zaprojektowania frontendu
 
 ## Aktorzy
 
-- Użytkownik — osoba korzystająca z USpace, z potrzebami dostępności lub bez nich.
+- Użytkownik — osoba korzystająca z KindSpot, z potrzebami dostępności lub bez nich.
 - Pomocnik — dobrowolne oznaczenie uczestnictwa niezależne od wskazanych potrzeb i statusu dla miasta.
 - Użytkownik ze zweryfikowanym statusem dla konkretnego miasta — zakres potwierdzenia i uprawnień zależy od obsługiwanej integracji.
 - Turysta — użytkownik konta bez połączonej i potwierdzonej karty dla danego miasta; oznaczenie dotyczy miasta. Recenzje mają nieco mniejszą wagę, jej wartość i zastosowanie pozostają do ustalenia.
-- System USpace — dostarcza dane, statusy i dostępne działania.
+- System KindSpot — dostarcza dane, statusy i dostępne działania.
 - Bot weryfikujący — analizuje recenzje po stronie systemu.
 - Moderator — rozpatruje treści wymagające moderacji.
 - Zewnętrzny operator karty — zgodnie z przyjętym założeniem dostępności API.
-- OpenStreetMap — źródło/podkład geograficzny; nie jest źródłem prywatnych profili, punktów ani recenzji USpace.
+- OpenStreetMap — źródło/podkład geograficzny; nie jest źródłem prywatnych profili, punktów ani recenzji KindSpot.
 
 Etykieta „Turysta” dotyczy konta bez karty dla miasta; jest etykietą produktu, nie dowodem faktycznego miejsca zamieszkania. Zakres potwierdzenia „Miejscowego” wynika z integracji. Status dla jednego miasta nie nadaje takiego samego statusu w innych miastach.
 
 ## UC-01 Rejestracja i personalizacja profilu
 
 - Aktorzy: użytkownik, system.
-- Warunki wstępne: użytkownik uruchomił aplikację USpace.
+- Warunki wstępne: użytkownik uruchomił aplikację KindSpot.
 - Cel: utworzyć konto i ustawić podstawowy wygląd profilu.
 
 ### Scenariusz główny
@@ -163,7 +163,7 @@ Etykieta „Turysta” dotyczy konta bez karty dla miasta; jest etykietą produk
 ### Scenariusz główny
 
 1. Miasto jest wybierane na podstawie lokalizacji telefonu; użytkownik może je ręcznie zmienić na liście miast. Otwiera mapę albo równoważną listę.
-2. System dostarcza miejsca i dane dostępności USpace. Mapa wykorzystuje podkład OSM.
+2. System dostarcza miejsca i dane dostępności KindSpot. Mapa wykorzystuje podkład OSM.
 3. Początkowo aktywny jest ostatnio używany filtr użytkownika; system przekazuje wyniki z informacją o dopasowaniu. Pierwsze użycie bez poprzedniego filtra pozostaje do ustalenia.
 4. Aplikacja pokazuje te same wyniki i filtry na mapie oraz liście. Przełączenie widoku nie wymaga ponownego wyboru filtrów.
 5. Użytkownik może sortować listę według liczby recenzji lub od najlepszej oceny i wybiera miejsce. Znaczenie oceny zbiorczej pozostaje do ustalenia.
@@ -174,7 +174,7 @@ Etykieta „Turysta” dotyczy konta bez karty dla miasta; jest etykietą produk
 
 - Brak personalizacji: wyniki bez dopasowania do prywatnych potrzeb.
 - Brak wyników: pusty wynik z możliwością zmiany obszaru/filtrów, nie komunikat awarii.
-- Błąd danych USpace: komunikat błędu i ponowienie.
+- Błąd danych KindSpot: komunikat błędu i ponowienie.
 - Błąd podkładu mapy: dostępna lista pozostaje użyteczna.
 - Brak lokalizacji telefonu lub zgody: pozostaje ręczny wybór miasta/obszaru.
 - Brak internetu: komunikat o wymaganiu online; bez obietnicy pracy offline.

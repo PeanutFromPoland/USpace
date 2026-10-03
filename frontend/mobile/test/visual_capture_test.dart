@@ -66,7 +66,7 @@ void main() {
     await tester.pumpWidget(
       RepaintBoundary(
         key: key,
-        child: USpaceApp(controller: controller),
+        child: KindSpotApp(controller: controller),
       ),
     );
     await tester.pumpAndSettle();

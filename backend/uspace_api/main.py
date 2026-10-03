@@ -33,7 +33,7 @@ async def lifespan(_: FastAPI):
                 pass
 
 
-app = FastAPI(title="USpace API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="KindSpot API", version="0.1.0", lifespan=lifespan)
 app.router.routes.extend(router.routes)
 app.add_exception_handler(ApiError, api_error_handler)
 app.add_exception_handler(RequestValidationError, validation_error_handler)

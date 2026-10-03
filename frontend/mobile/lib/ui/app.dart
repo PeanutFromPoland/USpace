@@ -10,14 +10,14 @@ import 'profile.dart';
 import 'navigation.dart';
 import 'theme.dart';
 
-class USpaceApp extends StatefulWidget {
-  const USpaceApp({super.key, required this.controller});
+class KindSpotApp extends StatefulWidget {
+  const KindSpotApp({super.key, required this.controller});
   final AppController controller;
   @override
-  State<USpaceApp> createState() => _USpaceAppState();
+  State<KindSpotApp> createState() => _KindSpotAppState();
 }
 
-class _USpaceAppState extends State<USpaceApp> {
+class _KindSpotAppState extends State<KindSpotApp> {
   @override
   void initState() {
     super.initState();
@@ -39,7 +39,7 @@ class _USpaceAppState extends State<USpaceApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        theme: uspaceTheme(profile),
+        theme: kindSpotTheme(profile),
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(
             disableAnimations:
@@ -240,7 +240,7 @@ class _HomeShellState extends State<HomeShell> {
         body: SafeArea(
           child: IndexedStack(index: bodyIndex, children: screens),
         ),
-        bottomNavigationBar: USpaceNavigation(
+        bottomNavigationBar: KindSpotNavigation(
           selected: index,
           onSelect: select,
         ),
