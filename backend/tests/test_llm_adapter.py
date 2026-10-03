@@ -25,9 +25,8 @@ def _assert_chatgpt_branch_is_selected() -> None:
 def test_small_provider_selection_mutation_is_caught() -> None:
     """A one-branch regression makes the normal assertion fail without editing source."""
     _assert_chatgpt_branch_is_selected()
-    with patch.object(config, "_flag", return_value=False):
-        with pytest.raises(AssertionError):
-            _assert_chatgpt_branch_is_selected()
+    with patch.object(config, "_flag", return_value=False), pytest.raises(AssertionError):
+        _assert_chatgpt_branch_is_selected()
 
 
 def test_chat_adapter_sends_selected_model_and_returns_text(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -5,7 +5,6 @@ from uuid import uuid4
 
 from fastapi.testclient import TestClient
 
-
 API = "/api/v1"
 
 
@@ -40,7 +39,7 @@ def test_uc08_bot_accepted_review_has_one_confirmed_points_entry(client: TestCli
     awards = [
         item
         for item in history.json()["items"]
-        if item["relatedReviewId"] == review_id and item["delta"] > 0
+        if item["relatedReviewId"] == review_id and item["reasonCode"] == "review_accepted"
     ]
     assert len(awards) == 1
 

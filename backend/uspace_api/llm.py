@@ -1,7 +1,4 @@
-"""OpenAI-compatible client shared by Ollama and the optional ChatGPT API.
-
-Product endpoints will use this adapter after the API contract is updated.
-"""
+"""OpenAI-compatible client shared by Ollama and the optional ChatGPT API."""
 
 import httpx
 

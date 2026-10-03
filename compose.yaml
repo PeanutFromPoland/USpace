@@ -21,22 +21,39 @@ services:
     volumes:
       - ollama_data:/root/.ollama
 
-  api:
+  migrate:
     build: ./backend
+    command: ["python", "-m", "uspace_api.bootstrap"]
     environment:
       POSTGRES_HOST: db
       POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build: ./backend
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB}
+      APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-}
       USE_CHATGPT_API: ${USE_CHATGPT_API:-false}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      USPACE_REQUIRE_VISIT_FOR_VOTE: ${USPACE_REQUIRE_VISIT_FOR_VOTE:-false}
+      USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT: ${USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT:-false}
+      USPACE_RUN_WORKERS: "true"
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready', timeout=3)"]
       interval: 15s

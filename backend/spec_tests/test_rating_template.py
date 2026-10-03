@@ -2,9 +2,7 @@
 
 import pytest
 from pydantic import ValidationError
-
 from rating_template import FeatureSummaryTemplate, ReviewAnswerTemplate
-
 
 RATING_EXAMPLE = {"blinds": 4, "asd": 2, "adhd": 4, "average_rating": 3.33}
 

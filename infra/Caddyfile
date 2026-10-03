@@ -5,8 +5,12 @@
         reverse_proxy api:8000
     }
 
-    handle /health/* {
+    handle /health/live {
         reverse_proxy api:8000
+    }
+
+    handle /health/ready {
+        respond "Not found" 404
     }
 
     handle {

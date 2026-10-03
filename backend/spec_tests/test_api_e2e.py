@@ -8,10 +8,11 @@ must contain the sample places and rewards required by contract section 8.
 import os
 from uuid import uuid4
 
+import pytest
 from fastapi.testclient import TestClient
-
 from rating_template import FeatureSummaryTemplate, ReviewAnswerTemplate
 
+from uspace_api import assistance
 
 API = "/api/v1"
 RATING = {"blinds": 4, "asd": 2, "adhd": 4, "average_rating": 3.33}
@@ -172,15 +173,12 @@ def test_uc02_card_check_is_city_scoped_and_starts_as_pending(
     card_types = configuration.json()["cardTypes"]
     assert card_types, "PoC needs a demonstrational card type."
     card_type = card_types[0]
-    card_number = os.environ.get("USPACE_E2E_VALID_CARD_NUMBER")
-    assert card_number, "Set USPACE_E2E_VALID_CARD_NUMBER to a synthetic valid demo card."
     response = client.post(
         f"{API}/me/card-verifications",
         headers=headers,
         json={
             "cityId": card_type["cityId"],
             "cardTypeId": card_type["id"],
-            "cardNumber": card_number,
         },
     )
     assert response.status_code == 202, response.text
@@ -317,17 +315,27 @@ def test_uc05_retry_same_key_does_not_duplicate_review(
 
 
 def test_uc07_assistance_is_optional_and_does_not_publish(
-    client: TestClient, credentials: dict[str, str]
+    client: TestClient, credentials: dict[str, str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _, headers = _new_authenticated_user(client, credentials)
     place_id, feature_id, _ = _first_place(client)
+
+    async def model_reply(messages: list[dict[str, str]]) -> str:
+        assert "answer_1" in messages[1]["content"]
+        return '{"suggestions":[{"answerClientId":"answer_1","field":"comment","question":"Gdzie znajduje się to udogodnienie?"}]}'
+
+    monkeypatch.setattr(assistance, "chat_completion", model_reply)
     response = client.post(
         f"{API}/review-assistance",
         headers=headers,
         json={"placeId": place_id, "draft": _review_body(feature_id)},
     )
     assert response.status_code == 200, response.text
-    assert isinstance(response.json()["suggestions"], list)
+    assert response.json()["suggestions"] == [{
+        "id": response.json()["suggestions"][0]["id"],
+        "answerClientId": "answer_1", "field": "comment",
+        "question": "Gdzie znajduje się to udogodnienie?", "required": False,
+    }]
     assert "reviewId" not in response.json()
 
 

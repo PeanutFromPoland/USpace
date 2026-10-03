@@ -19,16 +19,16 @@ webowa służy do publicznego pokazu, a projekt przewiduje także uruchomienie n
 Androidzie. Obecny ekran jest szkieletem informującym o stanie demo. Nie
 implementuje jeszcze ścieżek użytkownika z `use-cases.md`.
 
-Backend w `backend/` to aplikacja FastAPI. Udostępnia obecnie tylko
-`/health/live` i `/health/ready`. Drugi adres sprawdza połączenie z bazą oraz
-obecność rozszerzenia `vector`. Trasy produktu pod `/api/v1` nie zostały jeszcze
-zaimplementowane. Kontrakt v0.1 jest propozycją i wymaga aktualizacji do
-zmienionych przypadków użycia, między innymi dla głosowania na pojedyncze cechy
-i modelu sesji.
+Backend w `backend/` to asynchroniczna aplikacja FastAPI z trasami produktu
+`/api/v1`, sondą `/health/live` i wewnętrzną `/health/ready`. Druga sonda
+sprawdza bazę oraz rozszerzenie `vector`. Konto API ma ograniczone uprawnienia;
+oddzielna usługa `migrate` używa konta administracyjnego do utworzenia schematu
+i danych syntetycznych. Kontrakt v0.1 zawiera wcześniejsze propozycje, a
+zatwierdzone zmiany są dopisane w jego aktualizacji implementacyjnej.
 
 ## Środowisko lokalne
 
-`compose.yaml` uruchamia trzy usługi: `db`, `ollama` i `api`. Baza używa obrazu
+`compose.yaml` uruchamia `db`, `ollama`, `migrate` i `api`. Baza używa obrazu
 `pgvector/pgvector:pg17`. Plik `infra/initdb/01-vector.sql` tworzy rozszerzenie
 `vector` przy pierwszym utworzeniu wolumenu bazy. Dane PostgreSQL i modele
 Ollama są przechowywane w osobnych wolumenach Docker. API jest dostępne tylko
@@ -39,19 +39,24 @@ ignorowany przez Git. Wybrany model trzeba pobrać do Ollama osobno. Backend
 używa Ollama domyślnie. Po ustawieniu `USE_CHATGPT_API=true` i
 `OPENAI_API_KEY` wybiera API OpenAI; nazwę modelu można zmienić przez
 `OPENAI_MODEL`. Klucz pozostaje po stronie backendu i nie trafia do Fluttera.
-Adapter dostawcy jest przygotowany, lecz nie jest jeszcze podłączony do trasy
-produktu.
+Adapter dostawcy jest używany przez worker moderacji. Zewnętrzne przetwarzanie
+tekstu recenzji wymaga dodatkowej flagi
+`USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT=true`; domyślnie jest zablokowane.
+Worker korzysta z pgvector do sygnału podobieństwa obserwacji tego samego
+miejsca, cechy i wejścia w ciągu 48 godzin od wysłania.
 
 ## Konfiguracja demo na VPS
 
 `infra/compose.demo.yaml` opisuje bazę, Ollama, API, kontener serwujący
 zbudowaną wersję Flutter web i Caddy. Tylko Caddy publikuje porty 80 i 443.
 Przekazuje ścieżki
-`/api/*` oraz `/health/*` do FastAPI, a pozostałe żądania do Flutter web.
+`/api/*` i publiczne `/health/live` do FastAPI, a pozostałe żądania do Flutter web.
+Szczegółowa `/health/ready` jest dostępna tylko wewnątrz sieci usług.
 PostgreSQL, Ollama, API i kontener webowy komunikują się przez prywatną sieć
 Docker. Caddy ma trwałe wolumeny na dane certyfikatów i konfigurację.
 
-Na serwerze plik `/opt/uspace/.env` będzie przechowywał domenę, hasło bazy i
+Na serwerze plik `/opt/uspace/.env` będzie przechowywał domenę, osobne hasła
+administratora bazy i konta API oraz
 ustawienia dostawcy LLM. Nie jest częścią repozytorium. Obrazy API i web są
 oznaczane identyfikatorem commita. `infra/deploy.sh` zapisuje ich wersje w
 `release.env`, zachowuje poprzednią w `release.previous.env` i przy błędzie
@@ -65,7 +70,7 @@ po zmianie w `master`, także po scaleniu PR.
 
 | Etap | Wykonywane kontrole |
 | --- | --- |
-| Backend | Ruff, testy Pythona i test połączenia z PostgreSQL oraz pgvector |
+| Backend | Ruff, testy jednostkowe i e2e Pythona na osobnej bazie PostgreSQL z pgvector |
 | Flutter | Analiza kodu, test widżetu i kompilacja wersji webowej |
 | Compose | Sprawdzenie obu definicji usług |
 | Obrazy | Budowa obrazów API i web; po zmianie w `master` publikacja w GHCR z tagiem commita |
@@ -80,10 +85,12 @@ mieć dostęp do obrazów GHCR. Wymagane ustawienia opisuje
 ## Stan i ograniczenia
 
 - Nie ma jeszcze działającej instancji dostępnej w sieci.
-- Nie ma schematu danych produktu ani migracji; skonfigurowano jedynie silnik
-  PostgreSQL i rozszerzenie pgvector.
-- Nie ma funkcji aplikacji, integracji z kartą miejską ani modelu moderacji.
+- Schemat produktu i syntetyczne dane demonstracyjne są inicjalizowane przez
+  usługę `migrate`; nadal nie ma integracji z operatorem karty ani zewnętrznym
+  wydawcą benefitów.
+- Worker moderacji i realizacji nagród działa demonstracyjnie. Rzeczywiste
+  dane użytkowników wymagają osobnej decyzji o prywatności, kopiach zapasowych
+  i zasadach operacyjnych.
 - Kopie zapasowe, miejsce ich przechowywania, retencja i test odtwarzania
   wymagają wskazania serwera oraz magazynu kopii przed użyciem prawdziwych danych.
-- Aktualizacja kontraktu API do `use-cases.md` jest konieczna przed implementacją
-  ścieżek produktu.
+- Flutter nadal wymaga podłączenia ekranów do API.
