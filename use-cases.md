@@ -1,314 +1,446 @@
-# Przypadki użycia
+# Przypadki użycia USpace
+
+Aktualizacja: 2026-10-03, zgodnie z dopiskami użytkownika do tabeli rozbieżności kontraktu v0.1.
+Platforma: mobilna aplikacja Flutter (Dart), interfejs i komunikacja po polsku. Docelowe systemy i model sesji wymagają dalszego uzgodnienia.
+Zakres: zachowania użytkownika i systemu potrzebne do zaprojektowania frontendu; nie jest to projekt algorytmów ani potwierdzenie działających integracji. Dane i integracje demonstracyjne są jawnie oznaczone.
 
 ## Spis treści
 
-- [Przypadki użycia](#przypadki-użycia)
-  - [Spis treści](#spis-treści)
-  - [Aktorzy](#aktorzy)
-  - [UC-01 Rejestracja i personalizacja profilu](#uc-01-rejestracja-i-personalizacja-profilu)
-    - [Scenariusz główny](#scenariusz-główny)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny)
-  - [UC-02 Przyznawanie roli mieszkańca](#uc-02-przyznawanie-roli-mieszkańca)
-    - [Scenariusz główny](#scenariusz-główny-1)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-1)
-  - [UC-03 Konfiguracja profilu dostępności i filtrów](#uc-03-konfiguracja-profilu-dostępności-i-filtrów)
-    - [Scenariusz główny](#scenariusz-główny-2)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-2)
-  - [UC-04 Wyszukiwanie dostępnych miejsc na mapie](#uc-04-wyszukiwanie-dostępnych-miejsc-na-mapie)
-    - [Scenariusz główny](#scenariusz-główny-3)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-3)
-  - [UC-05 Dodawanie krótkiej recenzji ankietowej](#uc-05-dodawanie-krótkiej-recenzji-ankietowej)
-    - [Scenariusz główny](#scenariusz-główny-4)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-4)
-  - [UC-06 Dodawanie szczegółowej recenzji dostępności](#uc-06-dodawanie-szczegółowej-recenzji-dostępności)
-    - [Scenariusz główny](#scenariusz-główny-5)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-5)
-  - [UC-07 Automatyczne dopytywanie o szczegóły w recenzjach](#uc-07-automatyczne-dopytywanie-o-szczegóły-w-recenzjach)
-    - [Scenariusz główny](#scenariusz-główny-6)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-6)
-  - [UC-08 Automatyczna weryfikacja wiarygodności recenzji](#uc-08-automatyczna-weryfikacja-wiarygodności-recenzji)
-    - [Scenariusz główny](#scenariusz-główny-7)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-7)
-  - [UC-09 Weryfikowanie recenzji przez użytkowników](#uc-09-weryfikowanie-recenzji-przez-użytkowników)
-    - [Scenariusz główny](#scenariusz-główny-8)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-8)
-  - [UC-10 Przyznawanie punktów za recenzje i weryfikacje](#uc-10-przyznawanie-punktów-za-recenzje-i-weryfikacje)
-    - [Scenariusz główny](#scenariusz-główny-9)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-9)
-  - [UC-11 Wymiana punktów na nagrody](#uc-11-wymiana-punktów-na-nagrody)
-    - [Scenariusz główny](#scenariusz-główny-10)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-10)
-  - [UC-12 Korzystanie z dostępnego interfejsu aplikacji](#uc-12-korzystanie-z-dostępnego-interfejsu-aplikacji)
-    - [Scenariusz główny](#scenariusz-główny-11)
-    - [Scenariusz alternatywny](#scenariusz-alternatywny-11)
+- [Aktorzy](#aktorzy)
+- [UC-01 Rejestracja i personalizacja profilu](#uc-01-rejestracja-i-personalizacja-profilu)
+- [UC-02 Weryfikacja statusu dla miasta i połączenie karty](#uc-02-weryfikacja-statusu-dla-miasta-i-połączenie-karty)
+- [UC-03 Konfiguracja profilu dostępności i filtrów](#uc-03-konfiguracja-profilu-dostępności-i-filtrów)
+- [UC-04 Wyszukiwanie miejsc na mapie i liście](#uc-04-wyszukiwanie-miejsc-na-mapie-i-liście)
+- [UC-05 Dodawanie krótkiej recenzji ankietowej](#uc-05-dodawanie-krótkiej-recenzji-ankietowej)
+- [UC-06 Rozwinięcie recenzji o szczegóły](#uc-06-rozwinięcie-recenzji-o-szczegóły)
+- [UC-07 Opcjonalne pytania doprecyzowujące](#uc-07-opcjonalne-pytania-doprecyzowujące)
+- [UC-08 Automatyczna weryfikacja recenzji](#uc-08-automatyczna-weryfikacja-recenzji)
+- [UC-09 Weryfikowanie pojedynczych cech przez użytkowników](#uc-09-weryfikowanie-pojedynczych-cech-przez-użytkowników)
+- [UC-10 Punkty za recenzje i weryfikacje](#uc-10-punkty-za-recenzje-i-weryfikacje)
+- [UC-11 Wymiana punktów na nagrody](#uc-11-wymiana-punktów-na-nagrody)
+- [UC-12 Korzystanie z dostępnego interfejsu](#uc-12-korzystanie-z-dostępnego-interfejsu)
+- [UC-13 Zgłaszanie recenzji](#uc-13-zgłaszanie-recenzji)
+- [UC-14 Historia punktów](#uc-14-historia-punktów)
+- [UC-15 Moje nagrody i odbiór](#uc-15-moje-nagrody-i-odbiór)
+- [UC-16 Prywatność potrzeb i publiczny profil](#uc-16-prywatność-potrzeb-i-publiczny-profil)
+- [UC-17 Logowanie, wylogowanie i wygaśnięcie sesji](#uc-17-logowanie-wylogowanie-i-wygaśnięcie-sesji)
+- [Decyzje otwarte i konsekwencje dla kontraktu](#decyzje-otwarte-i-konsekwencje-dla-kontraktu)
 
 ## Aktorzy
 
-- System
-- Użytkownik
-- Turysta - domyślna rola użytkownika
-- Mieszkaniec - rola użytkownika po pozytywnej weryfikacji karty miejskiej
-- Bot weryfikujący - moduł systemu analizujący recenzje
-- Moderator
-- Zewnętrzne API karty miejskiej
-- OpenStreetMap
+- Użytkownik — osoba korzystająca z USpace, z potrzebami dostępności lub bez nich.
+- Pomocnik — dobrowolne oznaczenie uczestnictwa niezależne od wskazanych potrzeb i statusu dla miasta.
+- Użytkownik ze zweryfikowanym statusem dla konkretnego miasta — zakres potwierdzenia i uprawnień zależy od obsługiwanej integracji.
+- Użytkownik bez potwierdzonego statusu dla miasta — brak weryfikacji nie oznacza automatycznie turysty.
+- System USpace — dostarcza dane, statusy i dostępne działania.
+- Bot weryfikujący — analizuje recenzje po stronie systemu.
+- Moderator — rozpatruje treści wymagające moderacji.
+- Zewnętrzny operator karty — zgodnie z przyjętym założeniem dostępności API.
+- OpenStreetMap — źródło/podkład geograficzny; nie jest źródłem prywatnych profili, punktów ani recenzji USpace.
+
+Etykiety „Miejscowy” i „Turysta” oraz warunki ich wyświetlania pozostają do ustalenia. Status dla jednego miasta nie nadaje takiego samego statusu w innych miastach.
 
 ## UC-01 Rejestracja i personalizacja profilu
 
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik ma zainstalowaną aplikację mobilną USpace
-- Cel: umożliwić użytkownikowi utworzenie konta i podstawową personalizację profilu
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: użytkownik uruchomił aplikację USpace.
+- Cel: utworzyć konto i ustawić podstawowy wygląd profilu.
 
 ### Scenariusz główny
 
-1. Użytkownik uruchamia aplikację i wybiera utworzenie konta.
-2. System wyświetla formularz rejestracji.
-3. Użytkownik podaje wymagane dane logowania.
-4. System tworzy konto użytkownika i nadaje mu domyślną rolę turysty.
-5. Użytkownik wybiera ikonę profilu lub inne dostępne elementy wizualnej personalizacji.
-6. System zapisuje ustawienia profilu.
+1. Użytkownik wybiera utworzenie konta.
+2. System wyświetla formularz z wymaganymi danymi logowania.
+3. Użytkownik uzupełnia formularz i potwierdza rejestrację.
+4. System tworzy konto z domyślnym wyglądem i prywatnymi potrzebami. Nie nadaje automatycznie etykiety Turysta na podstawie braku karty.
+5. Użytkownik wybiera dostępne elementy personalizacji oraz może dobrowolnie zaznaczyć oznaczenie Pomocnika.
+6. System potwierdza zapis profilu.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownik poda niepoprawne lub zajęte dane, system informuje go o błędzie.
-2. Użytkownik poprawia dane i ponawia rejestrację.
-3. Jeżeli użytkownik pominie personalizację, system tworzy konto z domyślnym wyglądem profilu.
+- Niepoprawne lub zajęte dane: komunikat przy odpowiednich polach i możliwość poprawy.
+- Pominięcie personalizacji: pozostaje domyślny wygląd.
+- Błąd połączenia: formularz pozostaje do poprawy/ponowienia bez ogłoszenia niepotwierdzonego sukcesu.
+- Sposób logowania po rejestracji i wymagane dane tożsamości pozostają do ustalenia; patrz UC-17.
 
-## UC-02 Przyznawanie roli mieszkańca
+## UC-02 Weryfikacja statusu dla miasta i połączenie karty
 
-- Aktorzy: system, użytkownik, zewnętrzne API karty miejskiej
-- Warunki wstępne: użytkownik posiada konto
-- Cel: przyznać status mieszkańca, który jest istotny przy ocenie wiarygodności recenzji i dostępie do miejskich benefitów
+- Aktorzy: użytkownik, system, operator karty.
+- Warunki wstępne: użytkownik jest zalogowany.
+- Cel: połączyć kartę i przedstawić potwierdzony status oraz dostępne uprawnienia dla wybranego miasta.
 
 ### Scenariusz główny
 
-1. Użytkownik w panelu użytkownika klika przycisk "Zweryfikuj status mieszkańca".
-2. System wyświetla formularz wprowadzenia numeru karty miejskiej, np. Krakowskiej Karty Miejskiej lub Krakowskiej Karty Rodzinnej 3+.
-3. Użytkownik wprowadza numer karty.
-4. System wysyła do zewnętrznego API zapytanie, czy dana karta istnieje i jest ważna.
-5. Zewnętrzne API zwraca pozytywny wynik weryfikacji.
-6. System usuwa użytkownikowi rolę turysty i przyznaje rolę mieszkańca na czas obowiązywania karty.
-7. System informuje użytkownika o pozytywnej weryfikacji.
+1. Użytkownik otwiera połączenie Karty Miejskiej i wybiera miasto.
+2. System pokazuje obsługiwane typy kart dla tego miasta.
+3. Użytkownik wybiera typ i podaje wymagane dane.
+4. System pokazuje stan sprawdzania i przeprowadza potwierdzenie zgodne z założeniami integracji, obejmujące powiązanie z użytkownikiem i właściwy zakres statusu.
+5. System zwraca wynik, okres ważności, jeśli jest znany, i uprawnienia wynikające z danego typu karty.
+6. Aplikacja prezentuje potwierdzony status dla wybranego miasta i informację o połączeniu karty.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli system otrzyma negatywny wynik weryfikacji, informuje użytkownika o wyniku.
-2. Użytkownik nadal posiada rolę turysty.
-3. Użytkownik może poprawić numer karty i ponowić próbę weryfikacji.
+- Karta nieważna lub brak potwierdzenia posiadacza/statusu: komunikat i możliwość poprawienia danych; brak automatycznej zmiany na Turystę.
+- Operator niedostępny: błąd usługi różny od negatywnej weryfikacji, możliwość ponowienia.
+- Wygaśnięcie potwierdzenia: widoczny aktualny status i możliwość ponownej weryfikacji.
+- Różne typy kart: mogą dawać różne uprawnienia; frontend pokazuje otrzymany wynik, nie zgaduje ich.
+- Samo istnienie ważnego numeru karty nie jest dowodem tożsamości ani zamieszkania. Szczegóły procedury potwierdzenia wymagają dokumentacji operatora.
 
 ## UC-03 Konfiguracja profilu dostępności i filtrów
 
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik jest zalogowany na swoim koncie
-- Cel: zapisać potrzeby użytkownika, aby mógł szybko wyszukiwać miejsca dopasowane do swoich ograniczeń i preferencji
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: użytkownik jest zalogowany, aby zapisać ustawienia na profilu.
+- Cel: zapisać potrzeby i filtry ułatwiające wybór miejsc.
 
 ### Scenariusz główny
 
-1. Użytkownik otwiera ustawienia dostępności.
-2. System wyświetla listę potrzeb, np. poruszanie się na wózku, trudności z chodzeniem, brak możliwości korzystania ze schodów, słabowidzenie, niedosłyszenie, wrażliwość na hałas, tłum lub intensywne światło, potrzeba spokojnych miejsc, trudności z orientacją, trudności z czytaniem skomplikowanych informacji, ograniczona sprawność rąk, potrzeba częstych miejsc odpoczynku, podróż z osobą wymagającą pomocy albo podróż z dzieckiem lub wózkiem dziecięcym.
-3. Użytkownik wybiera potrzeby, które go dotyczą.
-4. System proponuje szybkie filtry ogólne pasujące do wybranych potrzeb.
-5. Użytkownik może ustawić szczegółowe filtry dla wybranych cech miejsca.
-6. Dla każdej cechy użytkownik wybiera jedną z opcji: warunek konieczny, preferencja albo bez znaczenia.
-7. Przy warunku koniecznym użytkownik określa minimalną ocenę cechy.
-8. System zapisuje filtry w profilu użytkownika jako prywatne preferencje.
+1. Użytkownik otwiera ustawienia potrzeb i filtrów.
+2. System pokazuje potrzeby: wózek, trudności z chodzeniem, brak możliwości korzystania ze schodów, odpoczynek, niewidzenie/słabowidzenie, głuchota/niedosłuch, hałas, tłum, światło, spokojne miejsca, orientacja, złożony tekst, sprawność rąk, podróż z osobą wymagającą pomocy, dzieckiem/wózkiem dziecięcym oraz psem przewodnikiem.
+3. Użytkownik wybiera dowolną liczbę potrzeb. Oznaczenie Pomocnika jest niezależne od tego wyboru.
+4. System proponuje pasujące presety.
+5. Użytkownik ustawia dla cech: warunek konieczny, preferencję albo bez znaczenia.
+6. Dla wymaganej cechy ocenianej gwiazdkami użytkownik określa minimalną ocenę; dla pozostałych nie wymusza się oceny.
+7. System zapisuje ustawienia jako prywatne i potwierdza zapis.
+8. Dobrowolne upublicznienie potrzeb odbywa się osobno w UC-16.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownik nie ustawi szczegółowych filtrów, system zapisuje wyłącznie filtry ogólne.
-2. Jeżeli użytkownik nie wybierze żadnych potrzeb, system pozwala korzystać z aplikacji bez personalizacji filtrów.
-3. Użytkownik może później wrócić do ustawień i zmienić zapisane filtry.
+- Brak potrzeb: korzystanie bez personalizacji.
+- Brak szczegółowych reguł: użytkownik może poprzestać na presetach.
+- Błąd zapisu: wybory zostają zachowane, aplikacja nie informuje o niepotwierdzonym zapisie.
+- Użytkownik wraca do ustawień i zmienia je.
+- Pies terapeutyczny pozostaje potrzebą z opisu źródłowego, ale osobna pozycja i jej zakres wymagają uzgodnienia; akceptacja dopisku nie rozstrzygnęła tego punktu.
 
-## UC-04 Wyszukiwanie dostępnych miejsc na mapie
+## UC-04 Wyszukiwanie miejsc na mapie i liście
 
-- Aktorzy: system, użytkownik, OpenStreetMap
-- Warunki wstępne: użytkownik korzysta z aplikacji mobilnej i ma dostęp do internetu
-- Cel: pokazać użytkownikowi miejsca spełniające jego potrzeby dostępnościowe
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: dostęp online; wymóg konta do samego przeglądania pozostaje do ustalenia.
+- Cel: znaleźć miejsce i zrozumieć jego dopasowanie oraz braki informacji.
 
 ### Scenariusz główny
 
-1. Użytkownik otwiera widok mapy.
-2. System pobiera lokalizacje miejsc z OpenStreetMap.
-3. System stosuje zapisane filtry użytkownika.
-4. System oznacza na mapie miejsca, które spełniają wymagania użytkownika.
-5. Użytkownik wybiera miejsce z mapy.
-6. System wyświetla kartę miejsca z ocenami dostępności, recenzjami, datą ostatnich weryfikacji oraz informacjami o możliwych utrudnieniach, np. remoncie lub awarii windy.
+1. Użytkownik wybiera miasto lub obszar ręcznie i otwiera mapę albo równoważną listę.
+2. System dostarcza miejsca i dane dostępności USpace. Mapa wykorzystuje podkład OSM.
+3. System uwzględnia aktywne filtry i przekazuje wyniki z informacją o dopasowaniu.
+4. Aplikacja pokazuje te same wyniki i filtry na mapie oraz liście. Przełączenie widoku nie wymaga ponownego wyboru filtrów.
+5. Użytkownik wybiera miejsce.
+6. System pokazuje wejścia/elementy obiektu, oceny, recenzje, daty obserwacji i weryfikacji oraz utrudnienia tymczasowe.
+7. Brak danych jest wyraźnie odróżniony od potwierdzonego spełnienia warunku i od braku udogodnienia.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownik nie ma zapisanych filtrów, system wyświetla miejsca bez personalizacji wyników.
-2. Jeżeli OpenStreetMap nie zwróci danych dla danego obszaru, system informuje użytkownika o braku wyników.
-3. Jeżeli użytkownik nie ma połączenia z internetem, system informuje, że aplikacja wymaga dostępu online.
+- Brak personalizacji: wyniki bez dopasowania do prywatnych potrzeb.
+- Brak wyników: pusty wynik z możliwością zmiany obszaru/filtrów, nie komunikat awarii.
+- Błąd danych USpace: komunikat błędu i ponowienie.
+- Błąd podkładu mapy: dostępna lista pozostaje użyteczna.
+- Brak lokalizacji telefonu lub zgody: pozostaje ręczny wybór miasta/obszaru.
+- Brak internetu: komunikat o wymaganiu online; bez obietnicy pracy offline.
 
 ## UC-05 Dodawanie krótkiej recenzji ankietowej
 
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik jest zalogowany i wybrał miejsce, które chce ocenić
-- Cel: umożliwić szybkie dodanie recenzji dostępności miejsca
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: użytkownik zalogowany, wybrane miejsce.
+- Cel: dodać przydatne obserwacje przez krótką ankietę.
 
 ### Scenariusz główny
 
-1. Użytkownik wybiera opcję dodania recenzji miejsca albo skanuje kod QR znajdujący się w danym miejscu.
-2. System otwiera krótką ankietę dotyczącą dostępności.
-3. Użytkownik ocenia wskazane elementy w skali od 1 do 5, gdzie 1 oznacza ocenę negatywną, 3 oznacza brak zdania, a 5 oznacza ocenę idealną.
-4. Użytkownik może oznaczyć, że dany element nie występuje, np. brak podjazdu dla wózków.
-5. Użytkownik może pominąć pytanie, jeżeli nie wie, czy dany element występował, albo nie jest w stanie go ocenić.
-6. System domyślnie zapisuje, że recenzja dotyczy dnia wizyty.
-7. Użytkownik potwierdza wysłanie recenzji.
-8. System zapisuje recenzję jako oczekującą na weryfikację.
+1. Użytkownik wybiera dodanie recenzji z karty miejsca.
+2. System otwiera wspólny formularz z wyborem ocenianych elementów.
+3. Użytkownik wskazuje istnienie: występuje, nie występuje albo nie wiem.
+4. Jeśli odpowiedź i rodzaj cechy na to pozwalają, użytkownik wskazuje stan: działa, nie działa albo ograniczona dostępność.
+5. Gdy można ocenić jakość, użytkownik wybiera ocenę 1–5 zgodnie z etykietami dla danej cechy. Ocena 3 jest oceną pośrednią, nie brakiem zdania.
+6. Użytkownik potwierdza lub zmienia datę wizyty. Godzina jest opcjonalna i wpisywana samodzielnie.
+7. Użytkownik potwierdza wysłanie.
+8. Aplikacja pokazuje potwierdzenie zapisu, status publikacji, status weryfikacji i status punktów. Zwykła recenzja jest widoczna i oczekuje na weryfikację; wyjątki opisuje UC-08.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownik chce wskazać inną datę wizyty, zmienia datę przed wysłaniem recenzji.
-2. Jeżeli użytkownik pominie wszystkie pytania, system prosi o ocenę przynajmniej jednego elementu albo anulowanie recenzji.
-3. Jeżeli użytkownik utraci połączenie z internetem, system informuje, że recenzja nie może zostać wysłana.
+- Nie wiem lub brak możliwości oceny: osobna odpowiedź albo pominięcie, bez wpisywania 3/5.
+- Element nie występuje: nie wymusza się oceny jakości ani stanu działania.
+- Wszystkie pytania pominięte lub bez obserwacji: prośba o merytoryczną odpowiedź na przynajmniej jeden element albo anulowanie.
+- Utrata połączenia: zachowany szkic i komunikat o wyniku wysłania; brak niepotwierdzonego sukcesu.
+- Użytkownik rozwija ten sam formularz według UC-06, bez utraty odpowiedzi.
 
-## UC-06 Dodawanie szczegółowej recenzji dostępności
+## UC-06 Rozwinięcie recenzji o szczegóły
 
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik jest zalogowany i wybrał miejsce, które chce ocenić
-- Cel: umożliwić opisanie konkretnych elementów dostępności oraz uzasadnienie ocen
-
-### Scenariusz główny
-
-1. Użytkownik wybiera opcję dodania szczegółowej recenzji.
-2. System wyświetla formularz z kategoriami dostępności miejsca.
-3. Użytkownik opisuje oceniane elementy i uzasadnia swoje oceny, np. "Podjazd 4/5, bo był dobry, ale trochę za stromy".
-4. Jeżeli cecha może występować w kilku miejscach budynku, system umożliwia dodanie wielu pozycji, np. "Drzwi główne 5/5", "Drzwi od ulicy Białej 3/5", "Drzwi od ulicy Czarnej - brak udogodnienia".
-5. Użytkownik wskazuje godzinę wizyty.
-6. Użytkownik oznacza tymczasowe utrudnienia, np. remont podjazdu lub awarię windy.
-7. System zapisuje recenzję jako oczekującą na weryfikację.
-
-### Scenariusz alternatywny
-
-1. Jeżeli użytkownik nie chce dodawać opisu tekstowego, może wrócić do krótkiej ankiety.
-2. Jeżeli użytkownik opisze element bez oceny, system prosi o uzupełnienie oceny albo oznaczenie braku możliwości oceny.
-3. Jeżeli użytkownik wskaże utrudnienie tymczasowe, system oznacza informację jako wymagającą późniejszej ponownej weryfikacji.
-
-## UC-07 Automatyczne dopytywanie o szczegóły w recenzjach
-
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik wypełnia recenzję
-- Cel: zwiększyć przydatność recenzji przez doprecyzowanie niejasnych lub zbyt ogólnych informacji
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: użytkownik wypełnia formularz z UC-05.
+- Cel: uszczegółowić obserwacje bez tworzenia drugiego niezależnego formularza.
 
 ### Scenariusz główny
 
-1. Użytkownik wpisuje treść recenzji lub uzupełnia ankietę.
-2. System analizuje, czy recenzja zawiera wystarczająco szczegółowe informacje.
-3. System wykrywa brakujące szczegóły, np. brak informacji o lokalizacji ocenianych drzwi, godzinie wizyty albo przyczynie niskiej oceny.
-4. System wyświetla użytkownikowi krótkie pytania doprecyzowujące.
-5. Użytkownik odpowiada na pytania.
-6. System uzupełnia recenzję o doprecyzowane informacje.
+1. Użytkownik rozwija szczegóły wybranych elementów.
+2. Dopisuje uzasadnienie, np. „Podjazd 4/5, ale trudno było wjechać samodzielnie”.
+3. Wskazuje konkretne wejście/część obiektu albo dodaje brakującą pozycję, np. drzwi od innej ulicy.
+4. Dla każdej pozycji stosuje odpowiedzi z UC-05; ocena jest wpisywana tylko wtedy, gdy można ją ocenić.
+5. Może podać godzinę wizyty; brak godziny nie blokuje wysłania.
+6. Opisuje utrudnienie tymczasowe, np. budowę podjazdu lub awarię windy.
+7. Potwierdza wysłanie i widzi aktualne statusy z UC-08/UC-10.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownik nie chce odpowiadać na pytania, może pominąć doprecyzowanie.
-2. System zapisuje recenzję, ale oznacza ją jako mniej szczegółową.
-3. Jeżeli system nie wykryje braków, nie zadaje dodatkowych pytań.
+- Rezygnacja z komentarza: można wysłać poprawną ankietę bez opisu tekstowego.
+- Brak możliwości oceny: brak wymuszenia gwiazdek.
+- Powrót do ankiety: wprowadzone odpowiedzi nie są tracone.
+- Tymczasowe utrudnienie: informacja o konieczności późniejszego sprawdzenia aktualności.
 
-## UC-08 Automatyczna weryfikacja wiarygodności recenzji
+## UC-07 Opcjonalne pytania doprecyzowujące
 
-- Aktorzy: system, bot weryfikujący, moderator
-- Warunki wstępne: użytkownik przesłał recenzję
-- Cel: ograniczyć liczbę niewiarygodnych recenzji i przyznawać punkty tylko za konstruktywne treści
-
-### Scenariusz główny
-
-1. System przekazuje nową recenzję do bota weryfikującego.
-2. Bot analizuje recenzję pod kątem wiarygodności, m.in. stylu pisania, długości, kompletności, powtarzalnych schematów i zgodności z innymi danymi o miejscu.
-3. Bot uznaje recenzję za wiarygodną.
-4. System oznacza recenzję jako zaakceptowaną.
-5. System przekazuje informację do modułu punktów.
-
-### Scenariusz alternatywny
-
-1. Jeżeli bot uzna recenzję za podejrzaną, system przekazuje ją do moderatora oraz do weryfikacji przez innych użytkowników.
-2. Jeżeli bot wykryje treść obraźliwą lub spam, system blokuje publikację recenzji do czasu decyzji moderatora.
-3. Jeżeli recenzja jest bardzo krótka, ale zawiera poprawne odpowiedzi ankietowe, system może oznaczyć ją jako wymagającą dodatkowej weryfikacji zamiast ją odrzucać.
-
-## UC-09 Weryfikowanie recenzji przez użytkowników
-
-- Aktorzy: system, użytkownik, moderator
-- Warunki wstępne: w systemie istnieje recenzja wymagająca dodatkowej weryfikacji
-- Cel: wykorzystać społeczność do potwierdzania jakości recenzji i aktualności informacji o dostępności
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: wypełnianie recenzji.
+- Cel: zaproponować bardziej użyteczny opis, bez blokowania poprawnej ankiety.
 
 ### Scenariusz główny
 
-1. System wybiera użytkowników, którzy byli w danym miejscu albo w miejscach w okolicy.
-2. System pomija autora recenzji, ponieważ użytkownik nie może weryfikować własnych recenzji.
-3. System proponuje wybranym użytkownikom weryfikację recenzji.
-4. Użytkownik sprawdza recenzję i ocenia, czy jest konstruktywna, zgodna z jego doświadczeniem i przydatna dla innych.
-5. System zapisuje wynik weryfikacji.
-6. System aktualizuje ukrytą reputację weryfikacji użytkownika.
-7. Po osiągnięciu wymaganego poziomu zgodności system akceptuje albo odrzuca recenzję.
+1. System proponuje krótkie pytania dotyczące brakujących szczegółów, np. lokalizacji drzwi lub powodu niskiej oceny.
+2. Użytkownik odpowiada lub edytuje odpowiednie pole szkicu.
+3. System prezentuje uzupełniony szkic do potwierdzenia.
+4. Doprecyzowanie nie jest zatwierdzeniem wiarygodności ani osobną publikacją recenzji.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownicy nie osiągną zgodności, system przekazuje recenzję moderatorowi.
-2. Jeżeli użytkownik błędnie weryfikuje recenzje, system obniża jego ukrytą reputację weryfikacji.
-3. Jeżeli użytkownik konstruktywnie weryfikuje recenzje, system zwiększa jego ukrytą reputację weryfikacji.
+- Pominięcie pytania nie blokuje wysłania poprawnej recenzji; brak godziny pozostaje dozwolony.
+- Brak sugestii: formularz działa bez dodatkowych pytań.
+- Błąd usługi sugestii: można kontynuować i wysłać ankietę.
+- Pominięcie sugestii samo w sobie nie oznacza odrzucenia, niewiarygodności ani ustalonej kary punktowej.
 
-## UC-10 Przyznawanie punktów za recenzje i weryfikacje
+## UC-08 Automatyczna weryfikacja recenzji
 
-- Aktorzy: system, użytkownik, bot weryfikujący, moderator
-- Warunki wstępne: użytkownik dodał recenzję albo zweryfikował recenzję innego użytkownika
-- Cel: zachęcić użytkowników do tworzenia konstruktywnych recenzji oraz sprawdzania jakości treści
+- Aktorzy: system, bot, użytkownik, moderator.
+- Warunki wstępne: recenzja została zapisana.
+- Cel: przedstawić wynik sprawdzenia i ograniczać nadużycia.
+- Zatwierdzona decyzja: pozytywny wynik bota wystarcza do akceptacji recenzji i uruchomienia przyznania punktów w UC-10; nie wymaga dodatkowego głosu człowieka.
 
 ### Scenariusz główny
 
-1. Użytkownik dodaje recenzję albo wykonuje weryfikację recenzji innego użytkownika.
-2. System oznacza działanie jako oczekujące na potwierdzenie.
-3. Bot, inni użytkownicy albo moderator potwierdzają, że działanie było konstruktywne i wiarygodne.
-4. System przyznaje użytkownikowi punkty.
-5. System aktualizuje publiczne statystyki profilu, np. liczbę recenzji i weryfikacji.
-6. System może przyznać użytkownikowi osiągnięcie potwierdzające autentyczność profilu, np. "znany weryfikator".
+1. Zwykła recenzja jest widoczna i ma status oczekiwania na weryfikację.
+2. System przeprowadza analizę jakości i sygnałów nadużycia, uwzględniając także strukturalne odpowiedzi ankietowe.
+3. Bot akceptuje recenzję.
+4. System aktualizuje status weryfikacji i przekazuje wynik do procesu punktów.
+5. Autor widzi niezależnie: status publikacji, status weryfikacji oraz status punktów. Akceptacja przez bota nie jest gwarancją dostępności miejsca.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli recenzja nie przejdzie weryfikacji, system nie przyznaje punktów.
-2. Jeżeli recenzja jest negatywna, ale konstruktywna, system może przyznać punkty.
-3. Jeżeli recenzja jest pozytywna, ale niekonstruktywna albo niewiarygodna, system nie przyznaje punktów.
+- Podejrzana recenzja: wymaga dodatkowego sprawdzenia; system pokazuje autorowi aktualny status. Skutki głosów społeczności pozostają do ustalenia.
+- Wykryty spam lub treść obraźliwa: publikacja jest wstrzymana do decyzji moderatora (`hidden_pending_moderation`), z jawną informacją dla autora.
+- Krótka, poprawna ankieta: brak rozbudowanego tekstu sam w sobie nie oznacza odrzucenia.
+- Analiza trwa lub jest chwilowo niedostępna: status oczekiwania, bez samodzielnej akceptacji ani przyznania punktów w kliencie.
+
+## UC-09 Weryfikowanie pojedynczych cech przez użytkowników
+
+- Aktorzy: użytkownik, system, moderator.
+- Warunki wstępne: system udostępnia możliwość głosowania na obserwacje cech w cudzej recenzji.
+- Cel: wyrazić zgodność lub niezgodność z konkretną obserwacją, a nie ogólną ocenę autora.
+- Zatwierdzona decyzja: lajk/dislajk dotyczy pojedynczej ocenianej cechy, z uwzględnieniem wskazanego wejścia/części obiektu.
+
+### Scenariusz główny
+
+1. System udostępnia recenzję i działania dostępne dla użytkownika.
+2. Użytkownik wybiera konkretną obserwację, np. podjazd przy wejściu od ulicy Białej.
+3. Wybiera „Lajk — potwierdzam” albo „Dislajk — nie potwierdzam”. Ikony mają etykiety dostępne dla czytnika ekranu.
+4. System zapisuje głos przy tej obserwacji i aktualizuje jej liczniki.
+5. Aplikacja pokazuje liczby potwierdzeń i niepotwierdzeń przy danej cesze. Sposób liczenia zbiorczego procentu recenzji pozostaje do ustalenia.
+6. Status punktów za wkład jest prezentowany niezależnie; sam głos nie przyznaje automatycznie punktów.
+
+### Scenariusze alternatywne
+
+- Własna recenzja: brak możliwości głosowania; ograniczenie jest sprawdzane przez system.
+- Brak wiedzy: użytkownik może pominąć cechę, bez wymuszonego lajka/dislajka. Osobny trzeci typ głosu nie został zatwierdzony.
+- Wiedza o jednej cesze: nie trzeba głosować na pozostałe.
+- Głos już istnieje: sposób zmiany/cofnięcia wymaga ustalenia, UI pokazuje stan przekazany przez system.
+- Sprzeczne głosy: dane pozostają rozróżnialne; progi i skutki dla akceptacji, ukrywania oraz usuwania są otwarte. Nie zakładamy automatycznego usunięcia.
+
+### Kwalifikowanie do weryfikacji — punkt wymagający wyjaśnienia i decyzji
+
+Frontend może pokazywać zadania i uprawnienia przekazane przez system. Nie ustala z samej lokalizacji, kto zna dane miejsce. Pobyt w okolicy nie potwierdza wejścia do budynku ani znajomości konkretnej cechy. Nawet zadeklarowana wcześniejsza wizyta może nie obejmować danego wejścia lub aktualnej awarii. Do ustalenia pozostaje źródło takiej informacji, wymagane zgody i to, czy głosowanie jest otwarte dla wszystkich zalogowanych osób czy tylko zakwalifikowanych. Do czasu decyzji nie opisujemy konkretnego mechanizmu kwalifikacji.
+
+## UC-10 Punkty za recenzje i weryfikacje
+
+- Aktorzy: użytkownik, system, bot, moderator.
+- Warunki wstępne: recenzja lub głos zostały zapisane.
+- Cel: pokazać nagrodzenie konstruktywnego wkładu.
+
+### Scenariusz główny
+
+1. System zapisuje działanie i prezentuje autorowi status punktów oczekujących.
+2. Właściwy proces potwierdza konstruktywność; akceptacja bota jest wystarczająca dla recenzji według UC-08.
+3. System przyznaje punkty i zwraca aktualne saldo oraz wynik dla działania.
+4. Frontend aktualizuje prezentację na podstawie tego wyniku.
+5. System może zaktualizować statystyki i przyznać osiągnięcie, np. „Znany weryfikator”.
+
+### Scenariusze alternatywne
+
+- Brak pozytywnej weryfikacji wkładu: brak przyznania punktów, z odpowiednim statusem.
+- Konstruktywna negatywna recenzja może być nagrodzona; pozytywny wydźwięk nie zapewnia nagrody.
+- Sam lajk/dislajk nie daje automatycznie punktów. Proces potwierdzania jakości głosów i wysokości nagród wymaga decyzji.
+- Ukryta reputacja nie jest saldem, nie jest wyświetlana ani wyliczana w kliencie.
+- Oczekujące punkty nie są przedstawiane jako saldo do wydania. Jeśli ich kwota nie jest znana, UI pokazuje status, nie wymyśla liczby.
 
 ## UC-11 Wymiana punktów na nagrody
 
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik posiada zweryfikowane punkty na koncie
-- Cel: umożliwić użytkownikowi odbiór benefitów za wkład w rozwój bazy dostępności
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: zalogowanie, dostęp do katalogu nagród.
+- Cel: wybrać nagrodę i zrozumieć wynik realizacji.
 
 ### Scenariusz główny
 
-1. Użytkownik otwiera katalog nagród.
-2. System wyświetla dostępne nagrody, np. elementy wizualne profilu, obramówki profilu, bilety komunikacji miejskiej, bilety do muzeów lub wejściówki do miejsc organizowanych przez miasto.
-3. Użytkownik wybiera nagrodę.
-4. System sprawdza, czy użytkownik ma wystarczającą liczbę punktów.
-5. System odejmuje punkty z konta użytkownika.
-6. System przypisuje nagrodę do konta użytkownika albo generuje sposób jej odbioru.
-7. System informuje użytkownika, że zakup punktowy został zrealizowany.
+1. Użytkownik otwiera katalog i wybiera nagrodę.
+2. System pokazuje opis, koszt, dostępność, wymagane uprawnienia i sposoby odbioru dla tej nagrody.
+3. Użytkownik wybiera sposób odbioru i potwierdza koszt.
+4. System ponownie sprawdza saldo, cenę, dostępność i uprawnienia.
+5. System rozpoczyna realizację, zwraca status (`processing`) oraz stan punktów (`reserved` albo `charged`, zależnie od realizacji).
+6. Frontend pokazuje przetwarzanie bez obietnicy gotowej nagrody.
+7. Po zakończeniu system zwraca wynik: gotową nagrodę/kod (`ready`) albo wydany benefit (`fulfilled`) oraz potwierdzone saldo.
+8. Użytkownik przechodzi do odbioru według UC-15.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne
 
-1. Jeżeli użytkownik nie ma wystarczającej liczby punktów, system blokuje zakup i informuje o brakującej liczbie punktów.
-2. Jeżeli nagroda nie jest już dostępna, system informuje użytkownika i nie pobiera punktów.
-3. System nie pozwala przekazywać punktów innym użytkownikom.
-4. System nie pozwala zwracać zakupionych nagród.
+- Brak punktów: komunikat o brakującej kwocie, bez zakupu.
+- Nagroda niedostępna lub brak uprawnień: informacja, bez pobrania punktów.
+- Zmiana ceny: nowy koszt i ponowne potwierdzenie przez użytkownika.
+- Nieudane wydanie (`failed`): system zwalnia rezerwację lub zwraca pobrane punkty (`released`); UI pokazuje wynik dopiero po jego potwierdzeniu. Nie jest to dobrowolny zwrot nagrody.
+- Zerwane połączenie/nieznany wynik: odczyt statusu istniejącego zakupu albo bezpieczne ponowienie, bez tworzenia kolejnego zakupu.
+- Punkty nie są przekazywalne; brak dobrowolnych zwrotów zakupionych nagród.
 
-## UC-12 Korzystanie z dostępnego interfejsu aplikacji
+## UC-12 Korzystanie z dostępnego interfejsu
 
-- Aktorzy: system, użytkownik
-- Warunki wstępne: użytkownik korzysta z aplikacji mobilnej USpace
-- Cel: zapewnić możliwość korzystania z aplikacji osobom z różnymi potrzebami dostępnościowymi
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: uruchomiona aplikacja.
+- Cel: zrealizować podstawowe ścieżki z różnymi sposobami obsługi; cel WCAG 2.2 AA sprawdzany w testach, nie tylko deklarowany.
 
 ### Scenariusz główny
 
-1. Użytkownik uruchamia aplikację.
-2. System wyświetla interfejs zgodny z WCAG 2.2 AA.
-3. System zapewnia czytelne etykiety elementów interfejsu, w tym etykiety dla czytników ekranu.
-4. System stosuje czytelne kontrasty, proste komunikaty i spokojną kolorystykę, np. pastelowy pomarańczowy albo jasnoniebieski.
-5. Użytkownik korzysta z głównych funkcji aplikacji bez konieczności wykonywania skomplikowanych gestów.
-6. System umożliwia korzystanie z filtrów ogólnych jednym kliknięciem.
+1. Użytkownik korzysta z czytelnych etykiet, kontrastów i prostych komunikatów; kolor nie jest jedynym nośnikiem informacji.
+2. Wybiera preset jednym kliknięciem i wyszukuje miejsce.
+3. Otwiera szczegóły, wypełnia recenzję i odczytuje wynik.
+4. Może korzystać bez złożonych gestów; kontrolki i gwiazdki są dostępne alternatywnymi sposobami obsługi.
+5. Może otworzyć ustawienia dostępności niezależnie od deklarowania potrzeb.
 
-### Scenariusz alternatywny
+### Scenariusze alternatywne i kryteria sprawdzenia
 
-1. Jeżeli użytkownik korzysta z czytnika ekranu, system przekazuje nazwy i stany elementów interfejsu.
-2. Jeżeli użytkownik ma trudności z czytaniem skomplikowanych informacji, system prezentuje krótkie komunikaty i jednoznaczne akcje.
-3. Jeżeli testy z użytkownikami wykażą problem dostępnościowy, wymaganie zostaje oznaczone do poprawy przed wdrożeniem.
+- Bez mapy: lista oferuje wybór miejsca, szczegóły i wejście do recenzji dla tych samych wyników/filtrów.
+- Czytnik ekranu: odczytuje etykiety, stany, oceny, lajki/dislajki oraz komunikaty błędów i sukcesu; kolejność przejścia jest logiczna.
+- Powiększony tekst: podstawowe akcje i treści pozostają dostępne, bez nakładania i obcinania.
+- Ograniczona sprawność rąk: nie wymaga się precyzyjnego przeciągania ani złożonych gestów do podstawowych czynności.
+- Trudności z czytaniem: krótkie komunikaty i jednoznaczne akcje, bez konieczności pisania długiej recenzji.
+- Zmiana palety: statusy pozostają zrozumiałe; podstawowy motyw sam zachowuje kontrast.
+- Błędy formularza: oznaczone przy polach, możliwe do odczytania i poprawienia bez utraty danych.
+- Problem wykryty w testach: poprawa i ponowne sprawdzenie danej ścieżki przed uznaniem jej za ukończoną.
+
+## UC-13 Zgłaszanie recenzji
+
+- Aktorzy: użytkownik, system, moderator.
+- Warunki wstępne: widoczna recenzja, uprawnienie do zgłaszania; wymaganie logowania do zgłoszenia pozostaje do ustalenia.
+- Cel: zgłosić fałszywą, obraźliwą lub spamową treść.
+
+### Scenariusz główny
+
+1. Użytkownik wybiera „Zgłoś” przy recenzji.
+2. Wskazuje powód i może dopisać komentarz.
+3. Potwierdza zgłoszenie.
+4. System potwierdza przyjęcie; UI nie obiecuje automatycznego usunięcia ani nie traktuje zgłoszenia jak dislajka cechy.
+
+### Scenariusze alternatywne
+
+- Anulowanie: brak wysłania.
+- Błąd wysłania: zachowana treść i możliwość ponowienia.
+- Recenzja już niedostępna: jasny komunikat.
+- Dalszy obieg zgłoszenia i progi moderacji pozostają do ustalenia; UI prezentuje faktyczny status.
+
+## UC-14 Historia punktów
+
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: zalogowanie.
+- Cel: zrozumieć saldo i pochodzenie zmian.
+
+### Scenariusz główny
+
+1. Użytkownik otwiera historię punktów.
+2. System pokazuje potwierdzone saldo i operacje z kwotą, datą oraz powodem, np. recenzja, weryfikacja, zakup lub zwrot po awarii.
+3. Oczekujące działania są odróżnione od operacji uwzględnionych w saldzie.
+4. Użytkownik może przejść do powiązanej recenzji lub nagrody, jeśli jest dostępna.
+
+### Scenariusze alternatywne
+
+- Pusta historia: czytelny stan pusty.
+- Błąd pobrania: ponowienie; frontend nie odtwarza salda na podstawie domysłów.
+- Powiązana treść niedostępna: historia operacji pozostaje zrozumiała bez niej.
+
+## UC-15 Moje nagrody i odbiór
+
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: zalogowanie; zakup lub posiadanie nagrody.
+- Cel: odczytać status i sposób skorzystania z nagrody.
+
+### Scenariusz główny
+
+1. Użytkownik otwiera „Moje nagrody”.
+2. Wybiera nagrodę i odczytuje jej stan.
+3. Gotowy kod ma instrukcję odbioru, możliwość skopiowania i termin ważności, jeśli obowiązuje.
+4. Benefit na karcie ma informację o zakończonym zapisaniu; element wizualny można wybrać do profilu, gdy jest dostępny.
+
+### Scenariusze alternatywne
+
+- Realizacja trwa: informacja o przetwarzaniu, bez prezentowania niegotowego kodu.
+- Błąd realizacji: wynik i status zwolnienia/zwrotu punktów według UC-11.
+- Brak nagród: stan pusty z przejściem do katalogu.
+- Wygaśnięcie/wykorzystanie: aktualny stan, jeśli system dostarcza takie informacje.
+- Błąd odczytu: ponowienie bez inicjowania kolejnego zakupu.
+
+## UC-16 Prywatność potrzeb i publiczny profil
+
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: zalogowanie.
+- Cel: świadomie zarządzać widocznością potrzeb oraz obejrzeć publiczny profil.
+
+### Scenariusz główny
+
+1. Użytkownik otwiera prywatność profilu.
+2. System pokazuje, że potrzeby są domyślnie prywatne.
+3. Użytkownik może świadomie włączyć ich upublicznienie i potwierdzić zmianę.
+4. Po potwierdzonym zapisie aplikacja pokazuje podgląd publicznego profilu.
+5. Użytkownik może ponownie ustawić potrzeby jako prywatne.
+6. Publiczne elementy mogą obejmować wybrany wygląd, opcjonalne osiągnięcia oraz statystyki recenzji/weryfikacji. Ukryta reputacja, saldo i dane karty nie są pokazywane.
+
+### Scenariusze alternatywne
+
+- Brak zgody/zmiany: potrzeby pozostają prywatne.
+- Błąd zapisu: UI nie ogłasza sukcesu i wskazuje ostatni potwierdzony stan.
+- Brak wskazanych potrzeb: profil nie wymusza ich podania.
+- Dokładny wybór publicznych osiągnięć i zakres ustawień ich widoczności wymagają doprecyzowania.
+
+## UC-17 Logowanie, wylogowanie i wygaśnięcie sesji
+
+- Aktorzy: użytkownik, system.
+- Warunki wstępne: uruchomiona aplikacja Flutter.
+- Cel: uzyskać dostęp do konta i kontynuować zadania po utracie sesji.
+
+### Scenariusz główny
+
+1. Użytkownik otwiera logowanie i podaje dane wymagane przez uzgodniony mechanizm.
+2. System potwierdza logowanie i przekazuje dostęp do prywatnego profilu.
+3. Użytkownik wraca do rozpoczętej ścieżki, jeśli nadal jest dostępna.
+4. Po wybraniu wylogowania aplikacja kończy sesję i przestaje pokazywać prywatne dane tego konta innemu użytkownikowi.
+
+### Scenariusze alternatywne
+
+- Niepoprawne dane: komunikat i możliwość poprawy.
+- Sesja wygasła: próba odnowienia, jeśli przewiduje ją uzgodniony model; inaczej powrót do logowania.
+- Wygaśnięcie podczas recenzji: szkic jest zachowany dla właściwego konta; po ponownym logowaniu można kontynuować, bez wysłania go jako inny użytkownik.
+- Utrata sesji podczas zakupu: po logowaniu odczyt istniejącej realizacji, bez ponownego zakupu na podstawie przypuszczenia.
+- Problem z połączeniem: odróżniony od niepoprawnych danych logowania.
+- Logowanie nie blokuje menedżera haseł ani wklejania danych, gdy używany jest mechanizm hasłowy.
+
+### Model sesji do ustalenia
+
+Zatwierdzona platforma to Flutter, nie trzeba ponownie wybierać między Flutterem a aplikacją webową. Mechanizm tożsamości (np. hasło lub logowanie operatora), wymagane dane, odnowienie, czas sesji, odzyskanie dostępu i przechowywanie poświadczeń nie zostały zatwierdzone. Scenariusz nie narzuca technologii ani konkretnych tokenów.
+
+## Decyzje otwarte i konsekwencje dla kontraktu
+
+1. Etykiety Miejscowy/Turysta i zakres potwierdzenia dla miasta; ważna karta nie dowodzi automatycznie zamieszkania.
+2. Pies terapeutyczny: osobna pozycja i jej znaczenie.
+3. Wpływ głosów społeczności na akceptację, ukrywanie i usuwanie; progi oraz ranking.
+4. Kwalifikacja weryfikatorów, źródła informacji o wizytach i wymagane zgody. Pobyt w okolicy nie dowodzi znajomości konkretnej cechy.
+5. Zmiana/cofnięcie głosu, agregacja procentów per cecha i całej recenzji, zasady potwierdzenia jakości głosów do punktów.
+6. Mechanizm logowania/sesji, zakres bez konta, wymóg konta przy zgłoszeniach; docelowe systemy Flutter.
+
+Zmiany wymagają późniejszego dostosowania kontraktu v0.1: identyfikacji pojedynczej obserwacji w głosie, liczników przy cechach, usunięcia operacji QR, statusu akceptacji bota i uzupełnienia uzgodnionego modelu sesji. Nie traktujemy starej propozycji głosowania na całą recenzję jako zatwierdzonej. W tym zadaniu aktualizujemy use case’y i pamięć decyzji, bez implementacji ani publikacji zmian w Git.
