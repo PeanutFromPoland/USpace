@@ -30,6 +30,16 @@ class PendingStore extends MemoryStore {
   }
 }
 
+Future<void> confirmName(WidgetTester tester) async {
+  await tester.pumpAndSettle();
+  await tester.enterText(
+    find.byKey(const ValueKey('filter-name')),
+    'Testowy filtr',
+  );
+  await tester.tap(find.byKey(const ValueKey('filter-name-confirm')));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   for (final needs in [true, false]) {
     testWidgets(
@@ -49,6 +59,7 @@ void main() {
         await reach(tester, key);
         await tester.tap(find.byKey(ValueKey(key)));
         await tester.pump();
+        if (!needs) await confirmName(tester);
         expect(
           tester.widget<FilledButton>(find.byKey(ValueKey(key))).onPressed,
           isNull,
@@ -92,6 +103,7 @@ void main() {
         store.fail = true;
         await tester.tap(find.byKey(ValueKey(key)));
         await tester.pumpAndSettle();
+        if (!needs) await confirmName(tester);
         final error = find.textContaining(
           'Twoje wybory pozostają w formularzu.',
         );
@@ -119,11 +131,15 @@ void main() {
         await tester.pump();
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
         await tester.pumpAndSettle();
+        if (!needs) await confirmName(tester);
         if (needs) {
           expect(controller.profile.needIds, isNotEmpty);
           expect(controller.profile.publicNeeds, isFalse);
         } else {
-          expect(controller.profile.rules.first.minRating, 4);
+          expect(
+            controller.profile.namedFilters.single.rules.first.minRating,
+            4,
+          );
         }
         final restart = AppController(DemoRepository(store));
         await restart.load();
@@ -134,7 +150,7 @@ void main() {
   }
 
   testWidgets(
-    'Clear edits the draft only; successful save clears all filter choices',
+    'Clear edits draft only; Use clears active choices without changing saved rules',
     (tester) async {
       final controller = AppController(DemoRepository(MemoryStore()));
       await controller.load();
@@ -151,15 +167,16 @@ void main() {
       await tester.pump();
       expect(controller.profile.rules.single.featureId, 'quiet');
       expect(controller.profile.includeUnknown, isTrue);
-      await reach(tester, 'filters-save');
+      await reach(tester, 'filters-use');
       expect(
         tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
         isFalse,
       );
-      await tester.tap(find.byKey(const ValueKey('filters-save')));
+      await tester.tap(find.byKey(const ValueKey('filters-use')));
       await tester.pumpAndSettle();
-      expect(controller.profile.rules, isEmpty);
-      expect(controller.profile.includeUnknown, isFalse);
+      expect(controller.activeRules, isEmpty);
+      expect(controller.activeIncludeUnknown, isFalse);
+      expect(controller.profile.rules.single.featureId, 'quiet');
     },
   );
 
@@ -235,6 +252,7 @@ void main() {
         await reach(tester, key);
         await tester.tap(find.byKey(ValueKey(key)));
         await tester.pumpAndSettle();
+        if (!needs) await confirmName(tester);
         expect(
           find.textContaining('Twoje wybory pozostają w formularzu.'),
           findsOneWidget,

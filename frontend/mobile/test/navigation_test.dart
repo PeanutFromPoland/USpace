@@ -20,7 +20,7 @@ double contrast(Color a, Color b) {
 
 void main() {
   for (final dark in [false, true]) {
-    for (final palette in ['orange', 'pink', 'blue']) {
+    for (final palette in ['green', 'orange', 'pink', 'blue']) {
       for (final high in [false, true]) {
         test('Text contrast $palette dark=$dark high=$high', () {
           final scheme = kindSpotTheme(

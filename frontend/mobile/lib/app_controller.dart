@@ -59,15 +59,15 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
-  DemoSnapshot snapshot = DemoSnapshot(profile: DemoProfile(savedPlaceIds: resetAccountOnLaunch ? const ['garden'] : const []));
-      shop.reset();
-      _temporaryRules = null;
-      _temporaryUnknown = null;
+  DemoSnapshot snapshot = const DemoSnapshot();
   bool loading = true, saving = false;
   String? loadError;
   DemoProfile get profile => snapshot.profile;
-  List<SearchHit> search(String query) =>
-      searchDemoPlaces(demoPlaces, profile.copyWith(rules: activeRules, includeUnknown: activeIncludeUnknown), query);
+  List<SearchHit> search(String query) => searchDemoPlaces(
+    demoPlaces,
+    profile.copyWith(rules: activeRules, includeUnknown: activeIncludeUnknown),
+    query,
+  );
 
   // Szkice recenzji tylko w pamięci, po jednym na miejsce: wyjście z ankiety
   // nie kasuje odpowiedzi. Zasady trwałego szkicu: DO-USTALENIA.md.
@@ -97,14 +97,20 @@ class AppController extends ChangeNotifier {
       final loaded = await repository.load();
       if (resetAccountOnLaunch && !_launchPrepared) {
         final previous = loaded.profile;
-        final fresh = DemoProfile(namedFilters: previous.namedFilters,
-          theme: previous.theme, darkMode: previous.darkMode,
-          highContrast: previous.highContrast, reduceMotion: previous.reduceMotion,
-          savedPlaceIds: const ['garden']);
+        final fresh = DemoProfile(
+          namedFilters: previous.namedFilters,
+          theme: previous.theme,
+          darkMode: previous.darkMode,
+          highContrast: previous.highContrast,
+          reduceMotion: previous.reduceMotion,
+          savedPlaceIds: const ['garden'],
+        );
         final candidate = DemoSnapshot(profile: fresh);
         await repository.save(candidate);
         snapshot = candidate;
         shop.reset();
+        _reviewDrafts.clear();
+        demoSubmittedReviews.clear();
         _temporaryRules = null;
         _temporaryUnknown = null;
         _launchPrepared = true;
@@ -200,18 +206,35 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveNamedFilter(String name, List<FilterRule> rules, bool includeUnknown) async {
+  Future<void> saveNamedFilter(
+    String name,
+    List<FilterRule> rules,
+    bool includeUnknown,
+  ) async {
     _requireSession();
     final trimmed = name.trim();
     if (trimmed.isEmpty || trimmed.length > 60) {
       throw ArgumentError('Nazwa musi mieć od 1 do 60 znaków.');
     }
-    if (profile.namedFilters.any((f) => f.name.toLowerCase() == trimmed.toLowerCase())) {
-      throw ArgumentError('Filtr o takiej nazwie już istnieje. Wybierz inną nazwę.');
+    if (profile.namedFilters.any(
+      (f) => f.name.toLowerCase() == trimmed.toLowerCase(),
+    )) {
+      throw ArgumentError(
+        'Filtr o takiej nazwie już istnieje. Wybierz inną nazwę.',
+      );
     }
-    final filter = NamedFilter(name: trimmed, rules: List.unmodifiable(rules), includeUnknown: includeUnknown);
-    await saveProfile(profile.copyWith(namedFilters: List.unmodifiable([...profile.namedFilters, filter])));
+    final filter = NamedFilter(
+      name: trimmed,
+      rules: List.unmodifiable(rules),
+      includeUnknown: includeUnknown,
+    );
+    await saveProfile(
+      profile.copyWith(
+        namedFilters: List.unmodifiable([...profile.namedFilters, filter]),
+      ),
+    );
   }
+
   Future<void> reset() async {
     if (saving) {
       throw StateError('Trwa zapis.');
@@ -220,8 +243,14 @@ class AppController extends ChangeNotifier {
     notifyListeners();
     try {
       await repository.clear();
-      snapshot = DemoSnapshot(profile: DemoProfile(savedPlaceIds: resetAccountOnLaunch ? const ['garden'] : const []));
+      snapshot = DemoSnapshot(
+        profile: DemoProfile(
+          savedPlaceIds: resetAccountOnLaunch ? const ['garden'] : const [],
+        ),
+      );
       shop.reset();
+      _reviewDrafts.clear();
+      demoSubmittedReviews.clear();
       _temporaryRules = null;
       _temporaryUnknown = null;
     } finally {

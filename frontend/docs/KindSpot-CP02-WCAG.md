@@ -169,3 +169,6 @@ Operator produkcyjnej mapy, dane API i zakres agregacji recenzji dla średniej n
 ## CP-06–12 — końcowe sprawdzenie PoC
 
 Analiza bez uwag; 131 testów przeszło; APK debug zbudowane (189263704 bajtów, 2026-10-03 21:59:03). Emulator nie był uruchamiany. Raport: KindSpot-CP06-CP12.md. Ankieta odłożona i przygotowany SurveyBuilder, brak API dla PoC, głosy/ranking oczekują odpowiedzi. CP-02 i odbiór ręczny CP-12 niezamknięte.
+
+
+Aktualizacja testowego sklepu 2026-10-03: 162 testy regresji przechodzą; pastelowy zielony dołączony do kontroli kontrastu jasnego/ciemnego/wysokiego kontrastu. Nowe przebiegi sklepu/poradnika/dialogu nazwy sprawdzone przy 200% i orientacji pionowej/poziomej; sklep spełnia automatyczne kontrole tekstu, etykiet i celów dotykowych Androida. Szczegóły w KindSpot-sklep-testowy.md. Statusy niewykonanych sprawdzeń urządzenia/czytników pozostają bez zmiany; to nie pełny odbiór WCAG.

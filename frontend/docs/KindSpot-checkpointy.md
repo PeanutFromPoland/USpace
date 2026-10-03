@@ -307,3 +307,16 @@ Na dev dostępne są teraz backend i niezależny moduł ankiety z dokumentami (r
 Zachowano nazwę KindSpotApp z dev oraz alias USpaceApp dla wcześniejszych testów. Fizyczny folder to D:\Github\USpace, pakiet Dart uspace i identyfikator com.example.uspace pozostają bez zmian. Nazwy dokumentów zmienione na KindSpot-checkpointy.md i KindSpot-kontrakt-frontend-backend-v0.1.md. Nazwa produktu: KindSpot.
 
 Aktualny commit jest WIP. Znane błędy parsowania kontrolera i nieukończone testy sklepu/filtrów pozostają do dokończenia po synchronizacji Git. Rebase nie jest dowodem działającej kompilacji i nie zmienia wcześniejszego APK.
+## Wznowienie sklepu, filtrów i profilu — 2026-10-03
+
+Ten zapis zastępuje wcześniejszy status WIP sklepu oraz dawny przebieg nagród bez pobierania punktów. Zgodnie z decyzją użytkownika lokalne PoC ma testowy portfel 1000 pkt; nie nadaje prawdziwych korzyści i nie zastępuje systemowego rozliczania produkcyjnego.
+
+- Nowy proces aplikacji resetuje konto, zakupy i saldo do 1000 pkt. Zachowuje nazwane filtry oraz ustawienia dostępności (kolor, tryb ciemny, wysoki kontrast, ograniczenie animacji). Cofanie, przełączanie zakładek, powrót z tła i ponowne wejście do konta w tym samym procesie nie odnawiają salda.
+- Ogród ciszy jest zapisany na start; usunięty w tej sesji wraca przy następnym uruchomieniu. Pozostałe zapisane miejsca i potrzeby resetują się.
+- Zakup wymaga potwierdzenia, odejmuje punkty i blokuje ponowny zakup tego elementu do nowego startu. Niewystarczające saldo blokuje zakup. Moje nagrody w Nagrodach zawierają Do odebrania oraz Historię zakupów; realizacja testowa pozostawia wpis w historii. Poradnik punktów i mini regulamin mają osobny ekran. Nie ustalamy niezatwierdzonych stawek zdobywania punktów.
+- Jak działają filtry znajduje się na górze filtrów. Zapisz filtr zapisuje nazwaną definicję bez jej automatycznego zastosowania. Użyj filtru stosuje wybór w bieżącej sesji bez zapisu na przyszłość. Nazwa 1–60 znaków; powtórzona nazwa wymaga zmiany. Błąd zapisu pozwala spróbować ponownie.
+- Profil ma adnotację przy koncie, wejścia Awatar, Obramowanie, Tło profilu (funkcje przygotowywane) oraz Ustawienia konta z zarządzaniem sesją i usuwaniem lokalnych danych. Celowe usunięcie danych usuwa także zachowane filtry i ustawienia.
+- Nowy domyślny akcent: pastelowy zielony, kolor bazowy #ADD8B4. Cztery akcenty w jasnym/ciemnym motywie; wcześniejszy zapisany wybór koloru zachowany zgodnie z decyzją o dostępności.
+- Niezależny moduł ankiety z dev zachowany. Test integracji przekazuje go przez opcjonalny SurveyBuilder; domyślne PoC nadal go nie włącza. API nie jest podłączone.
+
+Szczegóły i protokół sprawdzeń: KindSpot-sklep-testowy.md. Historyczne raporty i APK przed wznowieniem nie są wynikiem nowych zmian. Emulator uruchamia tylko użytkownik.

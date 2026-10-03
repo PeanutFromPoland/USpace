@@ -33,7 +33,7 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
         scrollable: true,
         title: Text('Kup za ${reward.exampleCost} pkt?'),
         content: Text(
-          '${reward.name}\nSaldo po zakupie: ${widget.controller.shop.balance - reward.exampleCost} pkt.\nZakup testowy. Nowe uruchomienie odnowi punkty i ofertę.',
+          '${reward.name}\nSaldo po zakupie: ${widget.controller.shop.balance - reward.exampleCost} pkt.\nZakup testowy. Nowy start odnowi punkty i ofertę.',
         ),
         actions: [
           TextButton(
@@ -58,7 +58,7 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
             'Kupiono: ${reward.name}. Nagroda czeka w zakładce Moje nagrody.',
       );
     } on StateError catch (error) {
-      setState(() => message = '${error.message}');
+      setState(() => message = error.message);
     }
   }
 
@@ -72,7 +72,7 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
         scrollable: true,
         title: const Text('Zrealizować nagrodę testową?'),
         content: Text(
-          '${purchase.reward.name}\nTo oznaczy nagrodę jako zrealizowaną w tej sesji. Nie wydaje prawdziwego biletu ani nie łączy karty.',
+          '${purchase.reward.name}\nNagroda trafi do historii tej sesji. Nie wydamy prawdziwego biletu ani benefitu.',
         ),
         actions: [
           TextButton(
@@ -90,8 +90,9 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
     dialogOpen = false;
     if (!mounted ||
         confirm != true ||
-        revision != widget.controller.sessionRevision)
+        revision != widget.controller.sessionRevision) {
       return;
+    }
     try {
       widget.controller.redeemDemoReward(purchase.id);
       setState(
@@ -99,7 +100,7 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
             'Nagroda testowa zrealizowana. Zakup pozostaje w historii.',
       );
     } on StateError catch (error) {
-      setState(() => message = '${error.message}');
+      setState(() => message = error.message);
     }
   }
 
@@ -274,10 +275,10 @@ class PointsGuideScreen extends StatelessWidget {
     body: pageBody([
       const SectionTitle('Jak zdobywać punkty?'),
       const Text(
-        'W docelowej aplikacji punkty będą nagrodą za zaakceptowane recenzje i potwierdzone wartościowe weryfikacje. Przyzna je system. Konkretne stawki nie zostały jeszcze ustalone.',
+        'Docelowo zdobędziesz punkty za zaakceptowane recenzje i potwierdzone wartościowe sprawdzenia. Przyzna je system. Stawki ustalimy później.',
       ),
       const Text(
-        'Teraz konto Test Hackaton dostaje 1000 punktów testowych przy każdym nowym uruchomieniu. Ankieta i naliczanie punktów za aktywność są w przygotowaniu.',
+        'Teraz konto Test Hackaton dostaje 1000 punktów testowych przy każdym nowym uruchomieniu. Nie naliczamy jeszcze punktów za aktywność.',
       ),
       const SectionTitle('Jak wydawać punkty?'),
       const Text(
@@ -288,7 +289,7 @@ class PointsGuideScreen extends StatelessWidget {
         'Punkty są nieprzekazywalne. Zakup wymaga wystarczającego salda i potwierdzenia kosztu. Dobrowolne zwroty nie są dostępne. W razie awarii produkcyjnej wynik realizacji i ewentualny zwrot musi potwierdzić system.',
       ),
       const Text(
-        'W tej wersji zakupy i realizacje są testowe: nie wydają prawdziwych biletów ani benefitów. Każdy element można kupić raz w sesji. Nowe uruchomienie aplikacji czyści zakupy i historię, odnawia ofertę oraz przywraca 1000 punktów. Przejście do innego ekranu lub powrót z tła nie odnawia salda.',
+        'Zakupy i odbiór są testowe. Nie wydajemy prawdziwych biletów ani benefitów. Każdy element możesz kupić raz w sesji. Nowy start czyści zakupy i historię oraz przywraca ofertę i 1000 punktów. Zmiana ekranu lub powrót z tła zachowuje saldo.',
       ),
     ]),
   );

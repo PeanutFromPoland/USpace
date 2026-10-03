@@ -6,7 +6,8 @@ ThemeData kindSpotTheme(DemoProfile profile) {
   final seed = switch (profile.theme) {
     'orange' => const Color(0xFFF5B98F),
     'pink' => const Color(0xFFF1B6CA),
-    _ => const Color(0xFFA7CBEF),
+    'blue' => const Color(0xFFA7CBEF),
+    _ => const Color(0xFFADD8B4),
   };
   final scheme = ColorScheme.fromSeed(
     seedColor: seed,
@@ -36,7 +37,7 @@ ThemeData kindSpotTheme(DemoProfile profile) {
         color: scheme.onSurface,
       ),
       bodyLarge: TextStyle(fontSize: 16, height: 1.5, color: scheme.onSurface),
-      bodyMedium: TextStyle(fontSize: 14, height: 1.5, color: scheme.onSurface),
+      bodyMedium: TextStyle(fontSize: 16, height: 1.5, color: scheme.onSurface),
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: scheme.surface,
@@ -74,3 +75,6 @@ ThemeData kindSpotTheme(DemoProfile profile) {
     materialTapTargetSize: MaterialTapTargetSize.padded,
   );
 }
+
+// Compatibility for existing module tests.
+ThemeData uspaceTheme(DemoProfile profile) => kindSpotTheme(profile);

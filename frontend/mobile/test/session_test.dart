@@ -72,6 +72,14 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('navigation-4')));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('account-settings')),
+        400,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('account-settings')));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
         find.byKey(const ValueKey('demo-exit')),
         400,
         scrollable: find.byType(Scrollable).last,
@@ -107,7 +115,11 @@ void main() {
     await tester.pumpWidget(USpaceApp(controller: controller));
     await tester.pumpAndSettle();
     final enter = find.byKey(const ValueKey('demo-enter'));
-    await tester.ensureVisible(enter);
+    await tester.scrollUntilVisible(
+      enter,
+      250,
+      scrollable: find.byType(Scrollable).last,
+    );
     await tester.pumpAndSettle();
     await tester.tap(enter);
     await tester.pumpAndSettle();
@@ -137,7 +149,11 @@ void main() {
     await tester.pumpWidget(USpaceApp(controller: controller));
     await tester.pumpAndSettle();
     final enter = find.byKey(const ValueKey('demo-enter'));
-    await tester.ensureVisible(enter);
+    await tester.scrollUntilVisible(
+      enter,
+      250,
+      scrollable: find.byType(Scrollable).last,
+    );
     await tester.pumpAndSettle();
     await tester.tap(enter);
     await tester.pump();

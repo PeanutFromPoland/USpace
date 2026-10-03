@@ -41,17 +41,19 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   Future<void> performReset() async {
     try {
       await widget.controller.reset();
-      if (mounted)
+      if (mounted) {
         setState(() {
           message = 'Lokalne dane usunięte.';
           failed = false;
         });
+      }
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           message = 'Nie udało się usunąć danych. Poprzedni stan pozostaje. Spróbuj ponownie.';
           failed = true;
         });
+      }
     }
   }
 

@@ -68,10 +68,12 @@ class DemoShop {
     final matches = demoShopCatalog.where((r) => r.id == rewardId);
     if (matches.isEmpty) throw StateError('Nie znaleziono nagrody.');
     final reward = matches.single;
-    if (owns(rewardId))
+    if (owns(rewardId)) {
       throw StateError('Ta nagroda została już kupiona w tej sesji.');
-    if (balance < reward.exampleCost)
+    }
+    if (balance < reward.exampleCost) {
       throw StateError('Za mało punktów na tę nagrodę.');
+    }
     final purchase = DemoPurchase(
       id: 'TEST-${_purchases.length + 1}',
       reward: reward,
@@ -84,8 +86,9 @@ class DemoShop {
   void redeem(String id) {
     final index = _purchases.indexWhere((p) => p.id == id);
     if (index < 0) throw StateError('Nie znaleziono zakupu.');
-    if (_purchases[index].redeemed)
+    if (_purchases[index].redeemed) {
       throw StateError('Nagroda została już zrealizowana.');
+    }
     _purchases[index] = _purchases[index].redeem(DateTime.now());
   }
 

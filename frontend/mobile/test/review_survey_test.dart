@@ -111,10 +111,15 @@ void main() {
     await tester.pumpWidget(
       _app(
         controller,
-        PlaceDetailsScreen(controller: controller, place: _library),
+        PlaceDetailsScreen(
+          controller: controller,
+          place: _library,
+          surveyBuilder: (context, place) =>
+              ReviewSurveyScreen(controller: controller, place: place),
+        ),
       ),
     );
-    await _tapText(tester, 'Dodaj recenzję');
+    await _tapText(tester, 'Otwórz ankietę');
     expect(find.byType(ReviewSurveyScreen), findsOneWidget);
     await tester.tap(find.text('Zaczynam'));
     await tester.pumpAndSettle();
@@ -128,7 +133,7 @@ void main() {
     }
     expect(find.byType(ReviewSurveyScreen), findsNothing);
     expect(controller.reviewDraft(_library.id)?.started, isTrue);
-    await _tapText(tester, 'Kontynuuj recenzję');
+    await _tapText(tester, 'Otwórz ankietę');
     expect(find.textContaining('Kontynuujesz rozpoczętą'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

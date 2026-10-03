@@ -76,8 +76,19 @@ void main() {
       );
       await tester.pumpWidget(KindSpotApp(controller: controller));
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('demo-enter')),
+        250,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.pumpAndSettle();
       expect(find.text('Otwórz konto demonstracyjne'), findsOneWidget);
       expect(find.text('Zacznij bez personalizacji'), findsNothing);
+      tester
+          .state<ScrollableState>(find.byType(Scrollable).last)
+          .position
+          .jumpTo(0);
+      await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Ustawienia dostępności'));
       await tester.pumpAndSettle();
       expect(find.text('Pastelowy pomarańczowy'), findsOneWidget);
@@ -86,7 +97,7 @@ void main() {
     },
   );
   for (final dark in [false, true]) {
-    for (final palette in ['orange', 'pink', 'blue']) {
+    for (final palette in ['green', 'orange', 'pink', 'blue']) {
       testWidgets('Theme $palette dark=$dark with 200% text', (tester) async {
         tester.view.physicalSize = const Size(412, 915);
         tester.view.devicePixelRatio = 1;
@@ -112,10 +123,12 @@ void main() {
       });
     }
   }
-  testWidgets('Filter preset can be edited and is persisted', (tester) async {
+  testWidgets('Filter preset can be edited and applied for the session', (
+    tester,
+  ) async {
     final controller = AppController(
       DemoRepository(MemoryStore()),
-      autoDemoLogin: false,
+      autoDemoLogin: true,
     );
     await controller.load();
     await tester.pumpWidget(
@@ -130,7 +143,7 @@ void main() {
     );
     expect(find.text('Wymagam'), findsOneWidget);
     expect(tester.takeException(), isNull);
-    final button = find.text('Zapisz i pokaż miejsca');
+    final button = find.text('Użyj filtru');
     await tester.scrollUntilVisible(
       button,
       500,
@@ -138,6 +151,6 @@ void main() {
     );
     await tester.tap(button);
     await tester.pumpAndSettle();
-    expect(controller.profile.rules.first.minRating, 4);
+    expect(controller.activeRules.first.minRating, 4);
   });
 }

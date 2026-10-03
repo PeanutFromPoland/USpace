@@ -75,9 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: const Icon(Icons.accessibility_new),
         title: const Text('Moje potrzeby'),
         subtitle: Text(
-          controller.profile.publicNeeds
-              ? 'Widoczne w podglądzie demo'
-              : 'Prywatne',
+          controller.profile.publicNeeds ? 'Widoczne w podglądzie' : 'Prywatne',
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
@@ -137,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       SwitchListTile(
         title: const Text('Pokaż potrzeby w publicznym profilu'),
-        subtitle: const Text('Tryb demo: tylko podgląd na tym urządzeniu.'),
+        subtitle: const Text('Widoczność potrzeb w podglądzie profilu.'),
         value: controller.profile.publicNeeds,
         onChanged: controller.saving
             ? null
@@ -222,9 +220,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         },
-      ),
-      const Notice(
-        'Nie podłączono operatora kart. Połączenie i potwierdzenie uprawnień wymagają API; nie pobieramy numeru karty w demonstracji.',
       ),
       const SizedBox(height: 16),
       ListTile(

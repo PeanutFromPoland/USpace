@@ -7,7 +7,7 @@ import 'package:uspace/ui/app.dart';
 import 'package:uspace/ui/discovery.dart';
 import 'package:uspace/ui/place_details.dart';
 import 'package:uspace/ui/reviews.dart';
-import 'package:uspace/ui/rewards.dart';
+import 'package:uspace/ui/shop_screen.dart';
 
 import 'domain_test.dart' show MemoryStore;
 
@@ -69,25 +69,25 @@ void main() {
       await tester.tap(find.text('Zamknij'));
       await tester.pumpAndSettle();
       await section(tester, 1);
-      await press(tester, find.byKey(const ValueKey('reward-museum')));
-      await press(tester, find.byKey(const ValueKey('reward-start')));
-      expect(find.text('Potwierdź symulację'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('reward-confirm')));
+      await press(tester, find.byKey(const ValueKey('shop-buy-museum')));
+      expect(find.text('Kup za 200 pkt?'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('shop-confirm')));
       await tester.pumpAndSettle();
-      await press(tester, find.byKey(const ValueKey('reward-advance')));
-      expect(find.text('TEST-NIEWAZNY'), findsOneWidget);
+      expect(controller.shop.balance, 800);
+      expect(controller.shop.purchases.single.redeemed, isFalse);
       expect(
         store.value,
         persisted,
-        reason: 'Reading reviews and a reward simulation must not mutate stored profile or points.',
+        reason:
+            'Test shop ledger must remain separate from persistent settings.',
       );
-      await controller.closeDemoSession();
+      await section(tester, 4);
+      await press(tester, find.byKey(const ValueKey('account-settings')));
+      await press(tester, find.byKey(const ValueKey('demo-exit')));
+      expect(find.byType(WelcomeScreen), findsOneWidget);
+      await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.byType(WelcomeScreen), findsOneWidget);
-      expect(find.byType(RewardPreviewScreen), findsNothing);
-      expect(find.byType(ReviewsScreen), findsNothing);
-      expect(find.byType(PlaceDetailsScreen), findsNothing);
-      expect(controller.profile.savedPlaceIds, ['garden']);
       final restarted = AppController(DemoRepository(store));
       await restarted.load();
       expect(restarted.profile.savedPlaceIds, ['garden']);
@@ -112,6 +112,7 @@ void main() {
       await tester.pumpWidget(USpaceApp(controller: controller));
       await tester.pumpAndSettle();
       await section(tester, 4);
+      await press(tester, find.byKey(const ValueKey('account-settings')));
       await press(tester, find.text('Usuń dane demonstracyjne'));
       expect(find.text('Usuń lokalne dane demo?'), findsOneWidget);
       await tester.tap(find.text('Anuluj'));
@@ -154,7 +155,7 @@ void main() {
           );
         }
       }
-      expect(find.byType(RewardPreviewScreen), findsNothing);
+      expect(find.byType(PointsGuideScreen), findsNothing);
       expect(store.value, before);
       expect(tester.takeException(), isNull);
     },
@@ -173,15 +174,17 @@ void main() {
       await tester.pumpWidget(USpaceApp(controller: controller));
       await tester.pumpAndSettle();
       await section(tester, 1);
-      await press(tester, find.byKey(const ValueKey('reward-museum')));
-      await press(tester, find.byKey(const ValueKey('reward-start')));
-      expect(find.text('Potwierdź symulację'), findsOneWidget);
+      await press(tester, find.byKey(const ValueKey('shop-buy-museum')));
+      expect(find.text('Kup za 200 pkt?'), findsOneWidget);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(find.byType(AlertDialog), findsNothing);
-      expect(find.byKey(const ValueKey('reward-start')), findsOneWidget);
+      expect(find.byKey(const ValueKey('shop-buy-museum')), findsOneWidget);
+      expect(controller.shop.balance, 1000);
+      await press(tester, find.byKey(const ValueKey('points-guide')));
+      expect(find.byType(PointsGuideScreen), findsOneWidget);
       await back(tester);
-      expect(find.byType(RewardPreviewScreen), findsNothing);
+      expect(find.byType(PointsGuideScreen), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );

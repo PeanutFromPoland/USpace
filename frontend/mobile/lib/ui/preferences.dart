@@ -5,6 +5,7 @@ import '../data/catalog.dart';
 import '../domain/models.dart';
 import 'components.dart';
 import 'filter_help.dart';
+import 'filter_name_dialog.dart';
 
 class NeedsScreen extends StatefulWidget {
   const NeedsScreen({
@@ -200,62 +201,21 @@ class _FiltersScreenState extends State<FiltersScreen> {
   });
   String? status;
   String? pendingName;
+  bool nameDialogOpen = false;
   Future<void> save() async {
     if (busy) return;
-    final text = TextEditingController(text: pendingName);
-    String? validation;
+    if (nameDialogOpen) return;
+    nameDialogOpen = true;
     final name = await showDialog<String>(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, update) {
-          void confirm() {
-            final value = text.text.trim();
-            if (value.isEmpty || value.length > 60) {
-              update(() => validation = 'Wpisz nazwę od 1 do 60 znaków.');
-              return;
-            }
-            if (widget.controller.profile.namedFilters.any(
-              (f) => f.name.toLowerCase() == value.toLowerCase(),
-            )) {
-              update(() => validation = 'Ta nazwa już istnieje. Wpisz inną.');
-              return;
-            }
-            Navigator.pop(context, value);
-          }
-
-          return AlertDialog(
-            scrollable: true,
-            title: const Text('Nazwa filtru'),
-            content: TextField(
-              key: const ValueKey('filter-name'),
-              controller: text,
-              autofocus: true,
-              maxLength: 60,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                labelText: 'Nazwa filtru',
-                errorText: validation,
-              ),
-              onSubmitted: (_) => confirm(),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Anuluj'),
-              ),
-              FilledButton(
-                key: const ValueKey('filter-name-confirm'),
-                onPressed: confirm,
-                child: const Text('Zapisz filtr'),
-              ),
-            ],
-          );
-        },
+      builder: (_) => FilterNameDialog(
+        initialName: pendingName,
+        existingNames: widget.controller.profile.namedFilters
+            .map((f) => f.name)
+            .toList(),
       ),
     );
-    // The route transition must release its TextField before controller disposal.
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    text.dispose();
+    nameDialogOpen = false;
     if (name == null || !mounted) return;
     pendingName = name;
     setState(() {
@@ -269,23 +229,26 @@ class _FiltersScreenState extends State<FiltersScreen> {
         rules.values.toList(),
         includeUnknown,
       );
-      if (mounted)
+      if (mounted) {
         setState(() {
           status =
               'Zapisano filtr „$name”. Wybierz Użyj filtru, aby pokazać wyniki.';
           pendingName = null;
         });
+      }
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(
           () => saveError = 'Nie udało się zapisać filtrów. Twoje wybory pozostają w formularzu. Spróbuj ponownie.',
         );
+      }
     } finally {
       if (mounted) setState(() => busy = false);
     }
   }
 
   void use() {
+    if (busy || nameDialogOpen) return;
     try {
       widget.controller.useFilter(rules.values.toList(), includeUnknown);
       Navigator.pop(context);
@@ -506,7 +469,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
         child: const Text('Użyj filtru'),
       ),
       if (status != null) Semantics(liveRegion: true, child: Notice(status!)),
-      const SizedBox(),
     ]),
   );
 }
@@ -540,6 +502,7 @@ class AccessibilityScreen extends StatelessWidget {
           child: Column(
             children: [
               for (final entry in {
+                'green': 'Pastelowy zielony',
                 'orange': 'Pastelowy pomarańczowy',
                 'pink': 'Pastelowy różowy',
                 'blue': 'Jasnoniebieski',

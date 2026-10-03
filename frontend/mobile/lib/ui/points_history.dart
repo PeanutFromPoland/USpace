@@ -9,7 +9,7 @@ class PointsHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final account = controller;
-    if (account != null)
+    if (account != null) {
       return AnimatedBuilder(
         animation: account,
         builder: (context, _) => Scaffold(
@@ -33,6 +33,7 @@ class PointsHistoryScreen extends StatelessWidget {
           ]),
         ),
       );
+    }
     return Scaffold(
       appBar: adaptiveAppBar(context, 'Saldo i historia punktów'),
       body: pageBody([

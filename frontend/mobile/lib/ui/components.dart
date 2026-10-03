@@ -59,7 +59,7 @@ class Notice extends StatelessWidget {
       children: [
         if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 10)],
         Expanded(
-          child: Text(text, style: const TextStyle(fontSize: 13, height: 1.5)),
+          child: Text(text, style: const TextStyle(fontSize: 16, height: 1.5)),
         ),
       ],
     ),

@@ -11,3 +11,6 @@ Stała decyzja użytkownika 2026-10-03: CP-02 dotyczy teraz dostępności funkcj
 Przed poleceniami Fluttera aktywuj frontend/scripts/Use-USpaceEnvironment.ps1. Projekt Flutter i pubspec.yaml znajdują się w frontend/mobile. Dokumentacja w frontend/docs. Przeniesienie katalogów nie zmienia reguł produktu ani stanu checkpointów.
 
 Użytkownik 2026-10-03 zlecił agentów dla pozostałych CP-06–12. CP-07 nadal odłożony do modułu Flutter innej osoby; bez tworzenia ankiety/dodawania recenzji. CP-06 zapis/usuń z lokalną listą latest-first zatwierdzony. API na PoC nie będzie: CP-11 rzeczywista integracja odroczona, pozostałe prezentacje/symulacje jawne. Nie nadaje to uprawnień do emulatora, publikacji Git ani naliczania prawdziwych punktów/nagród.
+
+
+Decyzja użytkownika po wznowieniu: testowy sklep lokalny ma 1000 pkt na każdy nowy proces aplikacji, reset zakupów i konta; zachowuje nazwane filtry oraz dostępność, dodaje Ogród ciszy. To jawne upoważnienie do lokalnego portfela PoC, nie do prawdziwych punktów/nagród. Nowy domyślny akcent pastelowy zielony #ADD8B4; zachowuj wcześniejszy zapisany kolor. Aktualne decyzje: frontend/docs/KindSpot-sklep-testowy.md.
