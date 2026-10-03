@@ -43,14 +43,9 @@ class SectionTitle extends StatelessWidget {
 }
 
 class Notice extends StatelessWidget {
-  const Notice(
-    this.text, {
-    super.key,
-    this.icon = Icons.info_outline,
-    this.color,
-  });
+  const Notice(this.text, {super.key, this.icon, this.color});
   final String text;
-  final IconData icon;
+  final IconData? icon;
   final Color? color;
   @override
   Widget build(BuildContext context) => Container(
@@ -62,8 +57,7 @@ class Notice extends StatelessWidget {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20),
-        const SizedBox(width: 10),
+        if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 10)],
         Expanded(
           child: Text(text, style: const TextStyle(fontSize: 13, height: 1.5)),
         ),

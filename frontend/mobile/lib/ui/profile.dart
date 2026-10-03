@@ -5,67 +5,12 @@ import '../data/catalog.dart';
 
 import 'components.dart';
 import 'preferences.dart';
+import 'card_connection.dart';
+import 'points_history.dart';
+import 'account_settings.dart';
+import 'customization.dart';
 
-class RewardsScreen extends StatelessWidget {
-  const RewardsScreen({super.key, required this.controller});
-  final AppController controller;
-  @override
-  Widget build(BuildContext context) => pageBody([
-    const SectionTitle('Nagrody', subtitle: 'Pomaganie ma znaczenie'),
-    demoNotice(),
-    const SizedBox(height: 20),
-    const Notice(
-      'Saldo niedostępne — API punktów nie jest podłączone. Recenzje i głosy demonstracyjne nie zmieniają salda.',
-    ),
-    const SectionTitle('Katalog — przykładowy wygląd'),
-    for (final entry in [
-      (
-        'Motyw profilu „Odkrywca”',
-        'Element wizualny na koncie',
-        Icons.palette_outlined,
-      ),
-      (
-        'Bilet do muzeum',
-        'Benefit miejski; dostępność i koszt z API',
-        Icons.confirmation_number_outlined,
-      ),
-    ])
-      Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(entry.$3, size: 36),
-                const SizedBox(height: 12),
-                Text(entry.$1, style: Theme.of(context).textTheme.titleLarge),
-                Text(entry.$2),
-                const SizedBox(height: 12),
-                const Text('Przykład · cena i uprawnienia nieustalone'),
-                const SizedBox(height: 8),
-                const FilledButton(
-                  onPressed: null,
-                  child: Text('Wymaga połączenia z API'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    const SectionTitle('Moje nagrody'),
-    const Text('Nie wydano żadnych nagród w trybie demonstracyjnym.'),
-    const SectionTitle('Historia punktów'),
-    const Text('Brak potwierdzonych operacji. Punkty i historia wymagają API.'),
-    const SectionTitle('Jak będzie działał odbiór?'),
-    const Notice(
-      'Przebieg teoretyczny: po potwierdzeniu kosztu system rozpocznie realizację. Dopiero wynik API pozwoli pokazać kod lub benefit na karcie. Przy awarii pokażemy potwierdzony status zwolnienia albo zwrotu punktów.',
-    ),
-  ]);
-}
-
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final VoidCallback? onOpenSection;
   const ProfileScreen({
     super.key,
@@ -74,193 +19,262 @@ class ProfileScreen extends StatelessWidget {
   });
   final AppController controller;
   @override
-  Widget build(BuildContext context) => pageBody([
-    const SectionTitle('Twój profil'),
-    const CircleAvatar(radius: 36, child: Icon(Icons.person_outline, size: 40)),
-    const SizedBox(height: 16),
-    Text(demoAccountName, style: Theme.of(context).textTheme.headlineMedium),
-    Text(
-      'Turysta · ${cityLabel(controller.profile.cityId)} · status demonstracyjny',
-    ),
-    const SizedBox(height: 16),
-    demoNotice(),
-    const SectionTitle('Potrzeby i wygląd'),
-    ListTile(
-      leading: const Icon(Icons.accessibility_new),
-      title: const Text('Moje potrzeby'),
-      subtitle: Text(
-        controller.profile.publicNeeds
-            ? 'Widoczne w podglądzie demo'
-            : 'Prywatne',
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  AppController get controller => widget.controller;
+  VoidCallback? get onOpenSection => widget.onOpenSection;
+  String? error;
+  String? successMessage;
+  Future<void> Function()? retry;
+  Future<void> _save(
+    Future<void> Function() action, {
+    String? success,
+    bool preview = false,
+  }) async {
+    setState(() {
+      error = null;
+      successMessage = null;
+      retry = null;
+    });
+    try {
+      await action();
+      if (!mounted) return;
+      setState(
+        () => successMessage = success ?? 'Zmiana zapisana w lokalnym demo.',
+      );
+      if (preview) _preview();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        error = 'Nie udało się zapisać zmiany. Nadal obowiązuje ostatni potwierdzony stan. Spróbuj ponownie.';
+        retry = () => _save(action, success: success, preview: preview);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: controller,
+    builder: (context, _) => pageBody([
+      const SectionTitle('Twój profil'),
+      const CircleAvatar(
+        radius: 36,
+        child: Icon(Icons.person_outline, size: 40),
       ),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () {
-        onOpenSection?.call();
-        Navigator.push(
-          context,
-          MaterialPageRoute<void>(
-            builder: (_) => NeedsScreen(controller: controller),
-          ),
-        );
-      },
-    ),
-    ListTile(
-      leading: const Icon(Icons.palette_outlined),
-      title: const Text('Wygląd i dostępność'),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () {
-        onOpenSection?.call();
-        Navigator.push(
-          context,
-          MaterialPageRoute<void>(
-            builder: (_) => AccessibilityScreen(controller: controller),
-          ),
-        );
-      },
-    ),
-    SwitchListTile(
-      title: const Text('Pomocnik'),
-      subtitle: const Text('Dobrowolnie, niezależnie od potrzeb i karty.'),
-      value: controller.profile.helper,
-      onChanged: controller.saving
-          ? null
-          : (value) => perform(
+      const SizedBox(height: 16),
+      Text(demoAccountName, style: Theme.of(context).textTheme.headlineMedium),
+      Text(
+        'Turysta · ${cityLabel(controller.profile.cityId)} · status demonstracyjny',
+      ),
+      const SizedBox(height: 16),
+
+      const SectionTitle('Potrzeby i wygląd'),
+      ListTile(
+        leading: const Icon(Icons.accessibility_new),
+        title: const Text('Moje potrzeby'),
+        subtitle: Text(
+          controller.profile.publicNeeds
+              ? 'Widoczne w podglądzie demo'
+              : 'Prywatne',
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () {
+          onOpenSection?.call();
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => NeedsScreen(controller: controller),
+            ),
+          );
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.palette_outlined),
+        title: const Text('Wygląd i dostępność'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () {
+          onOpenSection?.call();
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => AccessibilityScreen(controller: controller),
+            ),
+          );
+        },
+      ),
+      const SectionTitle('Personalizacja konta'),
+      for (final category in const ['Awatar', 'Obramowanie', 'Tło profilu'])
+        ListTile(
+          title: Text(category),
+          subtitle: const Text('W przygotowaniu'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            onOpenSection?.call();
+            Navigator.push(
               context,
-              () => controller.saveProfile(
-                controller.profile.copyWith(helper: value),
+              MaterialPageRoute<void>(
+                builder: (_) => CustomizationScreen(
+                  category: category,
+                  controller: controller,
+                ),
               ),
-            ),
-    ),
-    SwitchListTile(
-      title: const Text('Pokaż potrzeby w publicznym profilu'),
-      subtitle: const Text('Tryb demo: tylko podgląd na tym urządzeniu.'),
-      value: controller.profile.publicNeeds,
-      onChanged: controller.saving
-          ? null
-          : (value) async {
-              if (value) {
-                final agree = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Udostępnić potrzeby?'),
-                    content: const Text(
-                      'W docelowej aplikacji inni zobaczą wybrane potrzeby. Obecnie zmieniasz wyłącznie lokalny podgląd demonstracyjny.',
+            );
+          },
+        ),
+      SwitchListTile(
+        title: const Text('Pomocnik'),
+        subtitle: const Text('Dobrowolnie, niezależnie od potrzeb i karty.'),
+        value: controller.profile.helper,
+        onChanged: controller.saving
+            ? null
+            : (value) => _save(
+                () => controller.saveProfile(
+                  controller.profile.copyWith(helper: value),
+                ),
+              ),
+      ),
+      SwitchListTile(
+        title: const Text('Pokaż potrzeby w publicznym profilu'),
+        subtitle: const Text('Tryb demo: tylko podgląd na tym urządzeniu.'),
+        value: controller.profile.publicNeeds,
+        onChanged: controller.saving
+            ? null
+            : (value) async {
+                if (value) {
+                  final agree = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      scrollable: true,
+                      title: const Text('Udostępnić potrzeby?'),
+                      content: const Text(
+                        'W docelowej aplikacji inni zobaczą wybrane potrzeby. Obecnie zmieniasz wyłącznie lokalny podgląd demonstracyjny.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Anuluj'),
+                        ),
+                        FilledButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Potwierdzam'),
+                        ),
+                      ],
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Anuluj'),
-                      ),
-                      FilledButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Potwierdzam'),
-                      ),
-                    ],
-                  ),
-                );
-                if (agree != true) return;
-              }
-              if (context.mounted) {
-                await perform(
-                  context,
-                  () => controller.saveProfile(
-                    controller.profile.copyWith(publicNeeds: value),
-                  ),
-                );
-              }
-            },
-    ),
-    OutlinedButton(
-      onPressed: () => showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Publiczny profil — podgląd'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(demoAccountName),
-                if (controller.profile.helper) const Text('Pomocnik'),
-                if (controller.profile.publicNeeds)
-                  ...needs
-                      .where((n) => controller.profile.needIds.contains(n.id))
-                      .map((n) => Text(n.label))
-                else
-                  const Text('Potrzeby prywatne'),
-              ],
+                  );
+                  if (agree != true) return;
+                }
+                if (context.mounted) {
+                  await _save(
+                    () => controller.saveProfile(
+                      controller.profile.copyWith(publicNeeds: value),
+                    ),
+                    success: value
+                        ? 'Potrzeby są widoczne w lokalnym podglądzie demo.'
+                        : 'Potrzeby są ponownie prywatne.',
+                    preview: value,
+                  );
+                }
+              },
+      ),
+      OutlinedButton(
+        onPressed: _preview,
+        child: const Text('Podgląd publicznego profilu'),
+      ),
+      if (error != null) ...[
+        Semantics(
+          liveRegion: true,
+          child: Notice(error!, icon: Icons.error_outline),
+        ),
+        TextButton(
+          key: const ValueKey('profile-retry'),
+          onPressed: controller.saving ? null : retry,
+          child: const Text('Ponów zapis zmiany'),
+        ),
+      ],
+      if (successMessage != null)
+        Semantics(liveRegion: true, child: Notice(successMessage!)),
+      const SectionTitle('Karta miejska'),
+      ListTile(
+        title: const Text('Stan karty miejskiej'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () {
+          onOpenSection?.call();
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) =>
+                  CardConnectionScreen(cityId: controller.profile.cityId),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Zamknij'),
+          );
+        },
+      ),
+      ListTile(
+        title: const Text('Saldo i historia punktów'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () {
+          onOpenSection?.call();
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => PointsHistoryScreen(controller: controller),
             ),
+          );
+        },
+      ),
+      const Notice(
+        'Nie podłączono operatora kart. Połączenie i potwierdzenie uprawnień wymagają API; nie pobieramy numeru karty w demonstracji.',
+      ),
+      const SizedBox(height: 16),
+      ListTile(
+        key: const ValueKey('account-settings'),
+        leading: const Icon(Icons.manage_accounts_outlined),
+        title: const Text('Ustawienia konta'),
+        subtitle: const Text('Sesja i lokalne dane'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () {
+          onOpenSection?.call();
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => AccountSettingsScreen(controller: controller),
+            ),
+          );
+        },
+      ),
+    ]),
+  );
+  void _preview() => showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Publiczny profil — podgląd'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Lokalny przykład. Nie jest publikowany w sieci.'),
+            const Text(demoAccountName),
+            if (controller.profile.helper) const Text('Pomocnik'),
+            if (controller.profile.publicNeeds &&
+                controller.profile.needIds.isEmpty)
+              const Text('Nie wskazano potrzeb.'),
+            if (controller.profile.publicNeeds)
+              ...needs
+                  .where((n) => controller.profile.needIds.contains(n.id))
+                  .map((n) => Text(n.label))
+            else
+              const Text('Potrzeby prywatne'),
           ],
         ),
       ),
-      child: const Text('Podgląd publicznego profilu'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Zamknij'),
+        ),
+      ],
     ),
-    const SectionTitle('Karta miejska'),
-    const Notice(
-      'Nie podłączono operatora kart. Połączenie i potwierdzenie uprawnień wymagają API; nie pobieramy numeru karty w demonstracji.',
-    ),
-    const SizedBox(height: 16),
-    if (!controller.autoDemoLogin)
-      OutlinedButton(
-        onPressed: controller.saving
-            ? null
-            : () => perform(
-                context,
-                () => controller.saveProfile(
-                  controller.profile.copyWith(onboarded: false),
-                ),
-              ),
-        child: const Text('Zamknij konto demonstracyjne'),
-      ),
-    if (controller.autoDemoLogin)
-      const Notice(
-        'Testowy start: konto Test Hackaton jest otwierane automatycznie. Logowanie do backendu nie jest podłączone.',
-      ),
-    TextButton(
-      onPressed: controller.saving
-          ? null
-          : () async {
-              final agree = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Usuń lokalne dane demo?'),
-                  content: const Text(
-                    'Usunięte zostaną potrzeby i filtry z tego urządzenia.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text('Anuluj'),
-                    ),
-                    FilledButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text('Usuń dane demo'),
-                    ),
-                  ],
-                ),
-              );
-              if (agree == true && context.mounted) {
-                await perform(context, controller.reset);
-              }
-            },
-      child: const Text('Usuń dane demonstracyjne'),
-    ),
-  ]);
-}
-
-class SavedPlacesScreen extends StatelessWidget {
-  const SavedPlacesScreen({super.key});
-  @override
-  Widget build(BuildContext context) => pageBody([
-    const SectionTitle('Zapisane miejsca'),
-    const Notice(
-      'Sekcja zatwierdzona. Sposób dodawania i usuwania miejsc czeka na ustalenie w UC-18. W tej wersji nie zapisujemy miejsc automatycznie.',
-    ),
-  ]);
+  );
 }

@@ -166,7 +166,7 @@ Etykieta „Turysta” dotyczy konta bez karty dla miasta; jest etykietą produk
 2. System dostarcza miejsca i dane dostępności KindSpot. Mapa wykorzystuje podkład OSM.
 3. Początkowo aktywny jest ostatnio używany filtr użytkownika; system przekazuje wyniki z informacją o dopasowaniu. Pierwsze użycie bez poprzedniego filtra pozostaje do ustalenia.
 4. Aplikacja pokazuje te same wyniki i filtry na mapie oraz liście. Przełączenie widoku nie wymaga ponownego wyboru filtrów.
-5. Użytkownik może sortować listę według liczby recenzji lub od najlepszej oceny i wybiera miejsce. Znaczenie oceny zbiorczej pozostaje do ustalenia.
+5. Użytkownik wybiera sortowanie: najwięcej recenzji (malejąco) lub najlepsza średnia ocen (malejąco, następnie liczba recenzji malejąco przy remisie) i otwiera miejsce. Wyższa średnia wygrywa niezależnie od liczby recenzji. Agregat miejsca pochodzi z danych systemu; demo używa jawnie fikcyjnych wartości.
 6. System pokazuje wejścia/elementy obiektu, oceny, recenzje, daty obserwacji i weryfikacji oraz utrudnienia tymczasowe.
 7. Brak danych jest wyraźnie odróżniony od potwierdzonego spełnienia warunku i od braku udogodnienia. Kolejność informacji na karcie miejsca będzie ustalona osobno i stosowana konsekwentnie.
 
@@ -533,3 +533,42 @@ Końcowy projekt graficzny wykona później inna osoba. Teraz rozwijamy działan
 Czytnik, duży tekst/kontrast, klawiatura/przełączniki, obsługa bez złożonych gestów, przewidywalne cofanie, czytelne trwałe błędy i zachowanie wyborów muszą być sprawdzane w istniejących ścieżkach. Brak informacji przekazywanej wyłącznie dźwiękiem, kolorem lub wymagającej mówienia. Nie wymagamy deklaracji niepełnosprawności dla ustawień dostępności. Kontrast i rozmiary/fokus są wymaganiami funkcjonalnymi również przed grafiką.
 
 Nie deklarujemy „wszystkich potrzeb wszystkich osób obsłużonych” na podstawie samych testów automatycznych. Testy urządzenia/czytnika i z użytkownikami pozostają potrzebne. Brakujące funkcje mają późniejsze checkpointy, nie fikcyjny wynik zgodności. Ankieta i recenzje nadal odłożone. Emulator uruchamia wyłącznie użytkownik. Po zmianie grafiki ponownie sprawdzamy dostępność.
+## Przejście do CP-03 i rozdzielenie kryteriów dostępności
+
+Użytkownik zlecił rozpoczęcie CP-03 po zmianie struktury: projekt Flutter frontend/mobile, dokumenty frontend/docs, skrypty frontend/scripts. Brakujące kryteria macierzy mają właścicieli w odpowiednich checkpointach, a ich wymagania dopisano bezpośrednio w tych etapach. CP-02 nie jest automatycznie odebrany; przejście dalej jest jawnie zlecone. CP-12 ponownie sprawdza całe ścieżki oraz końcową grafikę.
+
+Implementacja CP-03 przy obecnym backendzie obejmuje wyłącznie jawne lokalne konto demo. Backend uspace_api/main.py udostępnia health, bez endpointów auth. Nie wprowadzono wymagań hasła/email, czasu sesji ani fikcyjnej rejestracji. Test Hackaton otwiera się domyślnie przy starcie; zamknięcie sesji prowadzi do wejścia demo i usuwa prywatne trasy z historii. Ponowne wejście zachowuje ustawienia lokalnego demo. Następne uruchomienie wraca do automatycznego testowego startu, chyba że wyłączono USPACE_AUTO_DEMO_LOGIN. Błąd zapisu wyjścia pozostawia konto otwarte z wyraźną informacją, bez fałszywego sukcesu. Mechanizm produkcyjny nadal wymaga ustalenia i API.
+
+## Decyzje CP-04 i CP-05 — 2026-10-03
+
+Użytkownik zlecił równoległe wykonanie CP-04 i CP-05 z dodatkowym agentem. Nie oznacza to odbioru pełnego CP-02/WCAG ani produkcyjnego uwierzytelnienia CP-03.
+
+- Najlepsze miejsca: średnia ocen malejąco ma bezwzględny priorytet; przy tej samej średniej wyżej jest więcej recenzji. Osobna opcja „Najwięcej recenzji” sortuje liczbę malejąco. Nie wyliczamy średniej miejsca ze średnich cech.
+- Na potrzeby happy case okolica obejmuje całe wybrane miasto. Proponowane miejsca stosują zapisane filtry i wybraną kolejność, bez dodatkowego promienia ani potwierdzania wizyty.
+- Komentarze: użytkownik wskazał największy stosunek lajków do dislajków. Implementacja należy do CP-08; zero dislajków, remisy i powiązanie z głosami per obserwacja nadal wymagają doprecyzowania. Nie zmieniamy teraz jednostki głosowania ani nie tworzymy komentarzy.
+- Demo ma jawnie fikcyjne średnie i liczby recenzji; brak średniej/licznika pozostaje brakiem danych. Domyślna kolejność demo to najlepsza ocena, ostatni wybór jest zapisany lokalnie. Dla sortowania liczby techniczny remis rozstrzyga średnia, potem nazwa/ID; ostatnie klucze nie stanowią nowej reguły produktu.
+- Miasto można ustalić po wybraniu „Użyj lokalizacji telefonu”. Demo rozpoznaje systemową nazwę miejscowości dla Krakowa/Warszawy w Polsce; nie zgaduje najbliższego miasta. Odmowa, wyłączona usługa, brak rozpoznania i inne miasta pozostawiają ręczny wybór. Zapisujemy tylko identyfikator miasta, bez współrzędnych/śledzenia w tle. Geokodowanie systemowe może użyć sieci.
+- Potrzeby/filtry: zapis dopiero przyciskiem, czyszczenie zmienia szkic i wyłącza dołączenie braków danych; bez zapisu potwierdzone filtry pozostają. Trwały błąd zachowuje wybory. Presety oraz sugestie cech pozostają przykładami PoC, nie zatwierdzoną klasyfikacją potrzeb. Potrzeby prywatne domyślnie.
+
+Operator produkcyjnej mapy, dane API i zakres agregacji recenzji dla średniej nadal należą do kontraktu CP-11. Synchronizacja filtrów i scenariusz szkicu po cofnięciu pozostają otwarte. Wyniki automatyczne nie zastępują testów lokalizacji/TalkBack na urządzeniu; emulator uruchamia tylko użytkownik. Szczegóły odbioru: KindSpot-CP04-CP05.md.
+## Pozostałe checkpointy — decyzje użytkownika 2026-10-03
+
+Użytkownik zlecił równoległą pracę nad pozostałymi etapami, po jednym agencie na checkpoint i z pytaniami przy niepewności. Etapy powstają w falach z uwagi na dostępne sloty i zależności; integracja wspólnych modeli i testy końcowe należą do agenta głównego. Nie wymaga się kolejnego odbioru każdego poprzednika przed przygotowaniem tych jawnie zleconych etapów; ukończenie techniczne nadal nie oznacza odbioru użytkownika.
+
+- CP-06 zatwierdzony przebieg: nazwa/adres i dopasowanie → utrudnienia i aktualność → wejścia → cechy → recenzje. Przycisk Zapisz miejsce/Usuń z zapisanych w szczegółach; lokalna lista demo od ostatnio zapisanego. Lista zapisanych pozostaje niezależna od wyszukiwanych miast/filtrów; wpis bez danych katalogowych jest jawnie niedostępny i można go usunąć. Dostępność wejścia nie jest domyślnie dostępnością całego miejsca.
+- CP-07 pozostaje odłożony: ankietę przygotowuje inna osoba we Flutterze. Nie tworzymy zastępczej ankiety ani formularza publikacji. Przygotowujemy sposób przekazania/włączenia modułu oraz wymagania dostępności i danych, bez narzucania niezatwierdzonych pytań.
+- CP-11: użytkownik potwierdził brak API i przewiduje jego brak dla PoC. Rzeczywista integracja jest jawnie odroczona na potrzeby PoC. Można przygotować adaptery i testy kontraktu; ich istnienie nie oznacza połączenia aplikacji z backendem. Backend pozostaje odpowiedzialnością innego członka zespołu.
+- CP-08/09/10 obejmują zatwierdzone prezentacje i jawne przebiegi demo. Nie tworzymy prawdziwych potwierdzeń karty, punktów, nagród ani skutków moderacji w kliencie. Potrzeby nadal prywatne domyślnie. Pytania o zmianę głosu i szczegóły rankingu zapisujemy oddzielnie.
+- CP-12: testy automatyczne i przygotowanie APK/przebiegu pokazu w rzeczywistym zakresie. Urządzenie/czytnik oraz iOS pozostają niewykonane do uzyskania rzeczywistych dowodów. Emulator uruchamia wyłącznie użytkownik.
+## Zmiana testowego konta i sklepu — praca w toku
+
+Decyzja użytkownika 2026-10-03: przy nowym uruchomieniu saldo testowe 1000 pkt, zakupy i pozostałe dane konta od nowa; nazwane filtry i ustawienia dostępności zachowane. Przykładowy Ogród ciszy wraca w Zapisanych przy każdym starcie. Sklep ma odejmować punkty testowe, Moje nagrody obejmują niezrealizowane nagrody oraz historię zakupów. Poradnik punktów i mini regulamin na osobnym ekranie. Filtry: pomoc na górze, Zapisz filtr z nazwą oraz Użyj filtru tylko w sesji. Profil: pojedyncza adnotacja konta testowego, wejścia do przyszłej personalizacji; zarządzanie sesją i danymi na osobnym ekranie.
+
+Użytkownik następnie przerwał implementację dla commita Frontend i rebase względem dev. To stan WIP: ostatnia analiza ma błędy parsowania app_controller.dart i uwagi lint; zmienione ścieżki wymagają dalszej implementacji oraz testów. Wynik 131 testów i istniejące APK dotyczą wcześniejszego stanu CP-06–12, nie aktualnych niedokończonych zmian. Ankieta i nowe moduły z dev nie są automatycznie podłączane przez rebase.
+## Stan po połączeniu Frontend z dev — 2026-10-03
+
+Na dev dostępne są teraz backend i niezależny moduł ankiety z dokumentami (review_survey.dart, review.dart, survey_catalog.dart). Zachowano ich kod, metody szkicu w kontrolerze oraz testy. Zachowano lokalne CP-04–12 i nieukończony sklep/filtry. Konflikt szczegółów rozstrzygnięto na rzecz nowego ekranu CP-06 z opcjonalnym SurveyBuilder; moduł ankiety można podłączyć przez ten punkt po wznowieniu pracy. Nie zintegrowano rzeczywistego API. Zapisy historyczne o braku kodu backendu/ankiety dotyczą wcześniejszego stanu, nie obecnego repozytorium.
+
+Zachowano nazwę KindSpotApp z dev oraz alias USpaceApp dla wcześniejszych testów. Fizyczny folder to D:\Github\USpace, pakiet Dart uspace i identyfikator com.example.uspace pozostają bez zmian. Nazwy dokumentów zmienione na KindSpot-checkpointy.md i KindSpot-kontrakt-frontend-backend-v0.1.md. Nazwa produktu: KindSpot.
+
+Aktualny commit jest WIP. Znane błędy parsowania kontrolera i nieukończone testy sklepu/filtrów pozostają do dokończenia po synchronizacji Git. Rebase nie jest dowodem działającej kompilacji i nie zmienia wcześniejszego APK.

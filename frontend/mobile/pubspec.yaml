@@ -40,6 +40,8 @@ dependencies:
   url_launcher: ^6.3.3
   flutter_localizations:
     sdk: flutter
+  geolocator: 14.1.1
+  geocoding: 5.0.0
 
 dev_dependencies:
   flutter_test:

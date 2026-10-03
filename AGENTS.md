@@ -9,3 +9,5 @@ Emulator uruchamia wyłącznie użytkownik. Nie uruchamiaj ani nie restartuj go 
 Stała decyzja użytkownika 2026-10-03: CP-02 dotyczy teraz dostępności funkcjonalnej według WCAG 2.2 A/AA i WCAG2ICT. Czytaj frontend/docs/KindSpot-CP02-WCAG.md przy pracy nad udogodnieniami. Końcową grafikę wykona później inna osoba; nie poświęcaj bieżącego etapu projektowaniu docelowej stylistyki. Wyniki częściowych testów nie są pełnym odbiorem WCAG; zachowuj statusy niewykonanych testów urządzenia.
 
 Przed poleceniami Fluttera aktywuj frontend/scripts/Use-USpaceEnvironment.ps1. Projekt Flutter i pubspec.yaml znajdują się w frontend/mobile. Dokumentacja w frontend/docs. Przeniesienie katalogów nie zmienia reguł produktu ani stanu checkpointów.
+
+Użytkownik 2026-10-03 zlecił agentów dla pozostałych CP-06–12. CP-07 nadal odłożony do modułu Flutter innej osoby; bez tworzenia ankiety/dodawania recenzji. CP-06 zapis/usuń z lokalną listą latest-first zatwierdzony. API na PoC nie będzie: CP-11 rzeczywista integracja odroczona, pozostałe prezentacje/symulacje jawne. Nie nadaje to uprawnień do emulatora, publikacji Git ani naliczania prawdziwych punktów/nagród.

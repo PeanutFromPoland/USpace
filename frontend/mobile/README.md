@@ -5,13 +5,13 @@ Interfejs po polsku. Źródła wymagań w `../docs`: `Teoria Aplikacji.md` i `us
 ## Działające elementy
 
 - Automatyczny start na mapie z lokalnym kontem „Test Hackaton”. Nazwa konta widoczna w profilu i jego podglądzie; dane nadal oznaczone jako demonstracyjne. Zapisane potrzeby/filtry/motyw pozostają zachowane. Reset danych również wraca do trybu testowego.
-- Mapa OSM i równoważna lista tych samych przykładowych miejsc; ręczny wybór Krakowa/Warszawy, wyszukiwanie, szczegóły i status braków danych.
+- Mapa OSM i równoważna lista tych samych przykładowych miejsc; ręczny wybór Krakowa/Warszawy oraz lokalizacja na żądanie z ręcznym fallbackiem, wyszukiwanie, szczegóły i status braków danych.
 - Nawigacja ze środkowym przyciskiem mapy; cofnięcie z sekcji wraca na mapę, z mapy pyta o wyjście.
 - Potrzeby prywatne, niezależny Pomocnik, filtry konieczne/preferowane/bez znaczenia, lokalny zapis ustawień w secure storage.
 - Akcent pomarańczowy/różowy/jasnoniebieski w jasnym i ciemnym motywie, wyższy kontrast i ograniczenie animacji; respektowane skalowanie tekstu telefonu.
-- Profil i lokalny podgląd prywatności. Zapisane miejsca, proponowane miejsca oraz nagrody mają jawne stany wymagające ustaleń/API.
+- Profil i lokalny podgląd prywatności. Proponowane miejsca obejmują całe wybrane miasto, ze wspólnymi filtrami/rankingiem demo. Zapisane miejsca i nagrody nadal mają jawne stany wymagające ustaleń/API.
 
-To PoC: fikcyjne miejsca i dane dostępności nie służą planowaniu rzeczywistych podróży. Rzeczywisty podkład OSM wymaga internetu; aplikacja nie obiecuje trybu offline. Tile URL można ustawić przez `--dart-define=MAP_TILE_URL=...`; produkcyjny dostawca pozostaje do wyboru. Atrybucja OSM jest widoczna na mapie. Backend KindSpot, logowanie, karty, ankieta, głosowanie, saldo i zakup nagród nie są podłączone.
+To PoC: fikcyjne miejsca i dane dostępności nie służą planowaniu rzeczywistych podróży. Rzeczywisty podkład OSM wymaga internetu; aplikacja nie obiecuje trybu offline. Tile URL można ustawić przez `--dart-define=MAP_TILE_URL=...`; produkcyjny dostawca pozostaje do wyboru. Atrybucja OSM jest widoczna pod mapą, dostępna również przy błędzie podkładu. Backend KindSpot, logowanie, karty, ankieta, głosowanie, saldo i zakup nagród nie są podłączone.
 
 ## Uruchomienie na przygotowanym Windows
 
@@ -98,3 +98,38 @@ Na karcie miejsca przycisk „Dodaj recenzję” otwiera ankietę (`lib/ui/revie
 Wersja demonstracyjna: recenzja nie jest wysyłana; ekran wyniku pokazuje statusy jako niedostępne i dane w formacie kontraktu. Szkic jest w pamięci aplikacji.
 
 Sprawdzenie 2026-10-03 (Flutter 3.47.6): `flutter analyze` bez uwag, `flutter test --concurrency=1` — 46 testów przeszło (11 nowych: model, przebieg ankiety, zachowanie szkicu, wytyczne dostępności Fluttera, 320 px i tekst 200%). Bez emulatora, TalkBack i testów z użytkownikami. APK nie przebudowano.
+
+## CP-03 — lokalne wejście i wyjście demo
+
+Aktualny projekt: D:\Github\USpace\frontend\mobile. Środowisko: . ..\scripts\Use-USpaceEnvironment.ps1. Domyślnie auto-start Test Hackaton pozostaje włączony. Profil → Zamknij konto demonstracyjne prowadzi do wejścia; prywatne trasy i ich historia są usuwane. Ustawienia demo pozostają w lokalnym magazynie. Ponowne wejście używa tego samego demo, nowy start aplikacji ponownie uruchamia auto-konto. Ręczny wariant od startu: USPACE_AUTO_DEMO_LOGIN=false.
+
+Błędy wejścia/wyjścia są trwałe i dostępne do odczytu; można ponowić. Błąd wyjścia pozostawia otwartą sesję i informuje o tym. Podczas zapisu wejście/wyjście jest zablokowane. Konto jest lokalną demonstracją; nie ma produkcyjnego logowania/rejestracji ani endpointów auth w backendzie. Nie należy podawać rzeczywistych poświadczeń.
+
+Weryfikacja: analiza bez uwag, 41 testów (6 nowych testów sesji). Nie uruchomiono emulatora, nie wykonano TalkBack/VoiceOver/Switch Access. Kompilacja końcowego APK debug zakończona sukcesem; aktualne APK znajduje się w build/app/outputs/flutter-apk/app-debug.apk; instalację wykonuje użytkownik według instrukcji powyżej. Pełna macierz i przydział braków: ../docs/KindSpot-CP02-WCAG.md oraz ../docs/KindSpot-checkpointy.md.
+
+## CP-04 i CP-05 — równoległe wdrożenie
+
+Ranking miejsc: najlepsza średnia malejąco, przy remisie najwięcej recenzji; osobny tryb liczby recenzji malejąco. Przełącznik „Kolejność miejsc” zapisuje ostatni wybór na urządzeniu. Demo pokazuje fikcyjne średnie/liczniki; brak średniej nie jest zerem ani dowodem dostępności. Proponowane miejsca obejmują całe miasto i zapisane filtry, bez dodatkowego promienia.
+
+Lokalizacja tylko po wybraniu przycisku; Android prosi o przybliżoną lokalizację podczas używania. Odmowa, wyłączona usługa, timeout, nierozpoznane/nieobsługiwane miasto pozostawiają ręczny wybór. Usługa geokodowania systemu może korzystać z internetu. Aplikacja zapisuje miasto, bez współrzędnych i bez śledzenia w tle. Wybór ręczny unieważnia spóźniony wynik GPS. Błąd zapisu zachowuje wybór do ponowienia; lista używa ostatniego potwierdzonego miasta/sortu.
+
+Potrzeby i filtry mają trwałe błędy z zachowaniem szkicu, retry i blokadę podwójnej operacji. „Wyczyść” zmienia szkic reguł i includeUnknown; zastosowanie dopiero przyciskiem zapisu. Presety są przykładami demo. Semantyka wartości/progu wskazuje konkretną cechę. Ankieta i dodawanie recenzji nadal odłożone.
+
+Przegląd: ../docs/KindSpot-CP04-CP05.md. Lokalizację systemową, TalkBack/Switch Access i link systemowy sprawdza użytkownik na urządzeniu; nie uruchamiano emulatora. iOS nadal niezweryfikowany na Windows.
+
+Dokumentacja adaptera: [geolocator](https://pub.dev/packages/geolocator), [geocoding](https://pub.dev/packages/geocoding). Pakiety wykorzystują lokalizację i geokodowanie systemów Android/iOS; są adapterem miasta, nie integracją rekomendacji z backendem.
+
+CP-04/05 — sprawdzenia końcowe: flutter analyze bez uwag, 80 testów standardowych, APK debug zbudowane poprawnie (Gradle 1536 MB, 2 workery). Odbiór: KindSpot-CP04-CP05.md. Brak uruchomienia emulatora i ręcznych testów lokalizacji/czytnika; dane i statystyki pozostają demo.
+
+
+## CP-06–12 — końcowe sprawdzenie PoC
+
+Analiza bez uwag; 131 testów przeszło; APK debug zbudowane (189263704 bajtów, 2026-10-03 21:59:03). Emulator nie był uruchamiany. Raport: ../docs/KindSpot-CP06-CP12.md. Ankieta odłożona i przygotowany SurveyBuilder, brak API dla PoC, głosy/ranking oczekują odpowiedzi. CP-02 i odbiór ręczny CP-12 niezamknięte.
+
+## Stan po połączeniu Frontend z dev — 2026-10-03
+
+Na dev dostępne są teraz backend i niezależny moduł ankiety z dokumentami (review_survey.dart, review.dart, survey_catalog.dart). Zachowano ich kod, metody szkicu w kontrolerze oraz testy. Zachowano lokalne CP-04–12 i nieukończony sklep/filtry. Konflikt szczegółów rozstrzygnięto na rzecz nowego ekranu CP-06 z opcjonalnym SurveyBuilder; moduł ankiety można podłączyć przez ten punkt po wznowieniu pracy. Nie zintegrowano rzeczywistego API. Zapisy historyczne o braku kodu backendu/ankiety dotyczą wcześniejszego stanu, nie obecnego repozytorium.
+
+Zachowano nazwę KindSpotApp z dev oraz alias USpaceApp dla wcześniejszych testów. Fizyczny folder to D:\Github\USpace, pakiet Dart uspace i identyfikator com.example.uspace pozostają bez zmian. Nazwy dokumentów zmienione na KindSpot-checkpointy.md i KindSpot-kontrakt-frontend-backend-v0.1.md. Nazwa produktu: KindSpot.
+
+Aktualny commit jest WIP. Znane błędy parsowania kontrolera i nieukończone testy sklepu/filtrów pozostają do dokończenia po synchronizacji Git. Rebase nie jest dowodem działającej kompilacji i nie zmienia wcześniejszego APK.

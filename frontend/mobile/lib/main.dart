@@ -7,6 +7,11 @@ import 'ui/app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    KindSpotApp(controller: AppController(DemoRepository(SecureDemoStore()))),
+    KindSpotApp(
+      controller: AppController(
+        DemoRepository(SecureDemoStore()),
+        resetAccountOnLaunch: true,
+      ),
+    ),
   );
 }

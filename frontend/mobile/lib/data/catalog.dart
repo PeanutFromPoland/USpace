@@ -225,9 +225,13 @@ List<FilterRule> suggestedRules(List<String> selected) {
   return ids.map((id) => FilterRule(id, Importance.preferred)).toList();
 }
 
+// Fictional aggregate statistics for ranking tests only, independent of feature ratings.
+// Null means no aggregate information, not a rating/count of zero.
 const demoPlaces = <Place>[
   Place(
     id: 'garden',
+    aggregateRating: 4.8,
+    reviewCount: 18,
     name: 'Ogród ciszy',
     category: 'Park i odpoczynek',
     cityId: 'krakow',
@@ -258,6 +262,8 @@ const demoPlaces = <Place>[
   ),
   Place(
     id: 'library',
+    aggregateRating: 4.8,
+    reviewCount: 35,
     name: 'Biblioteka otwarta',
     category: 'Kultura i nauka',
     cityId: 'krakow',
@@ -296,6 +302,8 @@ const demoPlaces = <Place>[
   ),
   Place(
     id: 'museum',
+    aggregateRating: 4.3,
+    reviewCount: 42,
     name: 'Przestrzeń sztuki',
     category: 'Muzeum i wystawy',
     cityId: 'krakow',
@@ -339,6 +347,8 @@ const demoPlaces = <Place>[
   ),
   Place(
     id: 'stairs',
+    aggregateRating: 3.6,
+    reviewCount: 9,
     name: 'Klub na piętrze',
     category: 'Spotkania i wydarzenia',
     cityId: 'krakow',
@@ -355,6 +365,8 @@ const demoPlaces = <Place>[
   ),
   Place(
     id: 'warsaw-park',
+    aggregateRating: 4.7,
+    reviewCount: 21,
     name: 'Zielony przystanek',
     category: 'Park i odpoczynek',
     cityId: 'warsaw',
@@ -373,6 +385,8 @@ const demoPlaces = <Place>[
   ),
   Place(
     id: 'warsaw-center',
+    aggregateRating: 4.7,
+    reviewCount: 12,
     name: 'Centrum sąsiedzkie',
     category: 'Spotkania i wydarzenia',
     cityId: 'warsaw',

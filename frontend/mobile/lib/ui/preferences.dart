@@ -4,6 +4,7 @@ import '../app_controller.dart';
 import '../data/catalog.dart';
 import '../domain/models.dart';
 import 'components.dart';
+import 'filter_help.dart';
 
 class NeedsScreen extends StatefulWidget {
   const NeedsScreen({
@@ -21,6 +22,14 @@ class _NeedsScreenState extends State<NeedsScreen> {
   late Set<String> selected;
   late bool helper;
   bool busy = false;
+  String? saveError;
+  final saveFocus = FocusNode();
+  @override
+  void dispose() {
+    saveFocus.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +38,11 @@ class _NeedsScreenState extends State<NeedsScreen> {
   }
 
   Future<void> save() async {
-    setState(() => busy = true);
+    if (busy) return;
+    setState(() {
+      busy = true;
+      saveError = null;
+    });
     try {
       final ids = selected.toList();
       // Needs suggest preferences only; explicit detailed rules always win.
@@ -50,7 +63,9 @@ class _NeedsScreenState extends State<NeedsScreen> {
       if (mounted) Navigator.pop(context);
     } catch (_) {
       if (mounted) {
-        toast(context, 'Nie udało się zapisać potrzeb. Spróbuj ponownie.');
+        setState(
+          () => saveError = 'Nie udało się zapisać potrzeb. Twoje wybory pozostają w formularzu. Spróbuj ponownie.',
+        );
       }
     } finally {
       if (mounted) setState(() => busy = false);
@@ -106,7 +121,10 @@ class _NeedsScreenState extends State<NeedsScreen> {
         ),
       ),
       const SizedBox(height: 24),
+      if (saveError != null) _SaveError(saveError!),
       FilledButton(
+        key: const ValueKey('needs-save'),
+        focusNode: saveFocus,
         onPressed: busy ? null : save,
         child: Text(
           busy
@@ -131,13 +149,21 @@ class _FiltersScreenState extends State<FiltersScreen> {
   late Map<String, FilterRule> rules;
   late bool includeUnknown;
   bool busy = false;
+  String? saveError;
+  final saveFocus = FocusNode();
+  @override
+  void dispose() {
+    saveFocus.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
     rules = {
-      for (final rule in widget.controller.profile.rules) rule.featureId: rule,
+      for (final rule in widget.controller.activeRules) rule.featureId: rule,
     };
-    includeUnknown = widget.controller.profile.includeUnknown;
+    includeUnknown = widget.controller.activeIncludeUnknown;
   }
 
   void preset(String preset) => setState(() {
@@ -172,44 +198,150 @@ class _FiltersScreenState extends State<FiltersScreen> {
       };
     }
   });
+  String? status;
+  String? pendingName;
   Future<void> save() async {
-    setState(() => busy = true);
+    if (busy) return;
+    final text = TextEditingController(text: pendingName);
+    String? validation;
+    final name = await showDialog<String>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, update) {
+          void confirm() {
+            final value = text.text.trim();
+            if (value.isEmpty || value.length > 60) {
+              update(() => validation = 'Wpisz nazwę od 1 do 60 znaków.');
+              return;
+            }
+            if (widget.controller.profile.namedFilters.any(
+              (f) => f.name.toLowerCase() == value.toLowerCase(),
+            )) {
+              update(() => validation = 'Ta nazwa już istnieje. Wpisz inną.');
+              return;
+            }
+            Navigator.pop(context, value);
+          }
+
+          return AlertDialog(
+            scrollable: true,
+            title: const Text('Nazwa filtru'),
+            content: TextField(
+              key: const ValueKey('filter-name'),
+              controller: text,
+              autofocus: true,
+              maxLength: 60,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                labelText: 'Nazwa filtru',
+                errorText: validation,
+              ),
+              onSubmitted: (_) => confirm(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Anuluj'),
+              ),
+              FilledButton(
+                key: const ValueKey('filter-name-confirm'),
+                onPressed: confirm,
+                child: const Text('Zapisz filtr'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    // The route transition must release its TextField before controller disposal.
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    text.dispose();
+    if (name == null || !mounted) return;
+    pendingName = name;
+    setState(() {
+      busy = true;
+      saveError = null;
+      status = null;
+    });
     try {
-      await widget.controller.saveProfile(
-        widget.controller.profile.copyWith(
-          rules: rules.values.toList(),
-          includeUnknown: includeUnknown,
-        ),
+      await widget.controller.saveNamedFilter(
+        name,
+        rules.values.toList(),
+        includeUnknown,
       );
-      if (mounted) Navigator.pop(context);
+      if (mounted)
+        setState(() {
+          status =
+              'Zapisano filtr „$name”. Wybierz Użyj filtru, aby pokazać wyniki.';
+          pendingName = null;
+        });
     } catch (_) {
-      if (mounted) {
-        toast(
-          context,
-          'Nie udało się zapisać filtrów. Twoje wybory pozostają w formularzu.',
+      if (mounted)
+        setState(
+          () => saveError = 'Nie udało się zapisać filtrów. Twoje wybory pozostają w formularzu. Spróbuj ponownie.',
         );
-      }
     } finally {
       if (mounted) setState(() => busy = false);
     }
   }
 
+  void use() {
+    try {
+      widget.controller.useFilter(rules.values.toList(), includeUnknown);
+      Navigator.pop(context);
+    } catch (_) {
+      setState(
+        () => saveError = 'Nie udało się użyć filtru. Twoje wybory pozostają w formularzu. Spróbuj ponownie.',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: adaptiveAppBar(
-      context,
-      'Filtry miejsc',
-      actions: [
-        TextButton(
-          onPressed: busy ? null : () => setState(() => rules.clear()),
-          child: const Text('Wyczyść'),
-        ),
-      ],
-    ),
+    appBar: adaptiveAppBar(context, 'Filtry miejsc'),
     body: pageBody([
+      OutlinedButton.icon(
+        key: const ValueKey('filter-help'),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(builder: (_) => const FilterHelpScreen()),
+        ),
+        icon: const Icon(Icons.menu_book_outlined),
+        label: const Text('Jak działają filtry'),
+      ),
+      if (widget.controller.profile.namedFilters.isNotEmpty) ...[
+        const SectionTitle('Zapisane filtry'),
+        for (final filter in widget.controller.profile.namedFilters)
+          ListTile(
+            title: Text(filter.name),
+            subtitle: const Text('Wczytaj do formularza'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: busy
+                ? null
+                : () => setState(() {
+                    rules = {
+                      for (final rule in filter.rules) rule.featureId: rule,
+                    };
+                    includeUnknown = filter.includeUnknown;
+                    status =
+                        'Wczytano filtr „${filter.name}”. Wybierz Użyj filtru.';
+                  }),
+          ),
+      ],
+      const SizedBox(height: 12),
+      OutlinedButton(
+        key: const ValueKey('filters-clear'),
+        onPressed: busy
+            ? null
+            : () => setState(() {
+                rules.clear();
+                includeUnknown = false;
+              }),
+        child: const Text('Wyczyść wybory w formularzu'),
+      ),
       const SectionTitle(
         'Szybki wybór',
-        subtitle: 'Preset zastępuje bieżące reguły. Możesz go zmienić poniżej.',
+        subtitle: 'Przykładowy preset zastępuje wybory w formularzu. Możesz je zmienić przed zapisaniem.',
       ),
       Wrap(
         spacing: 8,
@@ -234,7 +366,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
       ),
       const SectionTitle(
         'Dopasuj szczegóły',
-        subtitle: 'Warunki konieczne muszą być spełnione. Preferencje pomagają porządkować miejsca.',
+        subtitle: 'Wymagam: warunek konieczny. Preferencja: bez progu oceny. Bez znaczenia: pomijamy cechę. Dopasowanie jest demonstracyjne.',
       ),
       for (final feature in features)
         Padding(
@@ -250,68 +382,94 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 10),
-                  DropdownButtonFormField<Importance>(
-                    initialValue:
-                        rules[feature.id]?.importance ?? Importance.ignored,
-                    key: ValueKey(
-                      '${feature.id}-${rules[feature.id]?.importance.name}',
-                    ),
-                    decoration: const InputDecoration(
-                      labelText: 'Znaczenie cechy',
-                    ),
-                    isExpanded: true,
-                    items: const [
-                      DropdownMenuItem(
-                        value: Importance.ignored,
-                        child: Text('Bez znaczenia'),
+                  Semantics(
+                    label: 'Znaczenie cechy: ${feature.label}',
+                    child: DropdownButtonFormField<Importance>(
+                      initialValue:
+                          rules[feature.id]?.importance ?? Importance.ignored,
+                      key: ValueKey(
+                        '${feature.id}-${rules[feature.id]?.importance.name}',
                       ),
-                      DropdownMenuItem(
-                        value: Importance.preferred,
-                        child: Text('Preferencja'),
+                      decoration: const InputDecoration(
+                        labelText: 'Znaczenie cechy',
                       ),
-                      DropdownMenuItem(
-                        value: Importance.required,
-                        child: Text('Warunek konieczny'),
-                      ),
-                    ],
-                    onChanged: busy
-                        ? null
-                        : (importance) => setState(
-                            () => rules[feature.id] = FilterRule(
-                              feature.id,
-                              importance!,
-                              importance == Importance.required &&
-                                      feature.ratable
-                                  ? 3
-                                  : null,
-                            ),
+                      isExpanded: true,
+                      itemHeight: null,
+                      selectedItemBuilder: (context) => [
+                        for (final label in [
+                          'Bez znaczenia',
+                          'Preferencja',
+                          'Wymagam',
+                        ])
+                          Text(
+                            label,
+                            semanticsLabel:
+                                '$label. Znaczenie cechy: ${feature.label}',
                           ),
+                      ],
+                      items: const [
+                        DropdownMenuItem(
+                          value: Importance.ignored,
+                          child: Text('Bez znaczenia'),
+                        ),
+                        DropdownMenuItem(
+                          value: Importance.preferred,
+                          child: Text('Preferencja'),
+                        ),
+                        DropdownMenuItem(
+                          value: Importance.required,
+                          child: Text('Warunek konieczny', softWrap: true),
+                        ),
+                      ],
+                      onChanged: busy
+                          ? null
+                          : (importance) => setState(
+                              () => rules[feature.id] = FilterRule(
+                                feature.id,
+                                importance!,
+                                importance == Importance.required &&
+                                        feature.ratable
+                                    ? 3
+                                    : null,
+                              ),
+                            ),
+                    ),
                   ),
                   if (rules[feature.id]?.importance == Importance.required &&
                       feature.ratable) ...[
                     const SizedBox(height: 12),
-                    DropdownButtonFormField<int>(
-                      key: ValueKey(
-                        '${feature.id}-${rules[feature.id]?.minRating}',
-                      ),
-                      initialValue: rules[feature.id]?.minRating ?? 3,
-                      isExpanded: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Minimalna ocena',
-                      ),
-                      items: [
-                        for (var i = 1; i <= 5; i++)
-                          DropdownMenuItem(value: i, child: Text('$i / 5')),
-                      ],
-                      onChanged: busy
-                          ? null
-                          : (v) => setState(
-                              () => rules[feature.id] = FilterRule(
-                                feature.id,
-                                Importance.required,
-                                v,
+                    Semantics(
+                      label: 'Minimalna ocena: ${feature.label}',
+                      child: DropdownButtonFormField<int>(
+                        key: ValueKey(
+                          '${feature.id}-${rules[feature.id]?.minRating}',
+                        ),
+                        initialValue: rules[feature.id]?.minRating ?? 3,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Minimalna ocena',
+                        ),
+                        items: [
+                          for (var i = 1; i <= 5; i++)
+                            DropdownMenuItem(
+                              value: i,
+                              child: Text(
+                                '$i / 5',
+                                semanticsLabel:
+                                    '$i z 5. Minimalna ocena: ${feature.label}',
                               ),
                             ),
+                        ],
+                        onChanged: busy
+                            ? null
+                            : (v) => setState(
+                                () => rules[feature.id] = FilterRule(
+                                  feature.id,
+                                  Importance.required,
+                                  v,
+                                ),
+                              ),
+                      ),
                     ),
                     Text(
                       feature.ratingLabels[(rules[feature.id]?.minRating ?? 3) -
@@ -334,10 +492,21 @@ class _FiltersScreenState extends State<FiltersScreen> {
         ),
       ),
       const SizedBox(height: 24),
+      if (saveError != null) _SaveError(saveError!),
       FilledButton(
+        key: const ValueKey('filters-save'),
+        focusNode: saveFocus,
         onPressed: busy ? null : save,
-        child: Text(busy ? 'Zapisywanie…' : 'Zapisz i pokaż miejsca'),
+        child: Text(busy ? 'Zapisywanie…' : 'Zapisz filtr'),
       ),
+      const SizedBox(height: 12),
+      FilledButton(
+        key: const ValueKey('filters-use'),
+        onPressed: busy ? null : use,
+        child: const Text('Użyj filtru'),
+      ),
+      if (status != null) Semantics(liveRegion: true, child: Notice(status!)),
+      const SizedBox(),
     ]),
   );
 }
@@ -437,6 +606,19 @@ class AccessibilityScreen extends StatelessWidget {
           'Lista miejsc pozwala korzystać bez mapy. Przyciski mają opisy, statusy są zapisane tekstem, a oceny możesz wybrać z listy.',
         ),
       ]),
+    ),
+  );
+}
+
+class _SaveError extends StatelessWidget {
+  const _SaveError(this.message);
+  final String message;
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: Semantics(
+      liveRegion: true,
+      child: Notice(message, icon: Icons.error_outline),
     ),
   );
 }
