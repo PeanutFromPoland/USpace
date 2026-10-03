@@ -3,8 +3,8 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
 import psycopg
+from fastapi import FastAPI, HTTPException
 
 from uspace_api.config import llm_config
 
@@ -33,10 +33,9 @@ def ready() -> dict[str, str]:
             password=os.environ["POSTGRES_PASSWORD"],
             dbname=os.environ["POSTGRES_DB"],
             connect_timeout=3,
-        ) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT extversion FROM pg_extension WHERE extname = 'vector'")
-                row = cursor.fetchone()
+        ) as connection, connection.cursor() as cursor:
+            cursor.execute("SELECT extversion FROM pg_extension WHERE extname = 'vector'")
+            row = cursor.fetchone()
         if row is None:
             raise RuntimeError("pgvector extension is unavailable")
     except (KeyError, ValueError, psycopg.Error, RuntimeError) as exc:

@@ -1,7 +1,7 @@
 """Runtime configuration for the demo infrastructure."""
 
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
 
 
 def _flag(value: str) -> bool:
