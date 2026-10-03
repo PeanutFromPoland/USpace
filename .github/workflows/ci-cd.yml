@@ -1,0 +1,171 @@
+name: CI and demo CD
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: uspace
+          POSTGRES_DB: uspace_test
+          POSTGRES_PASSWORD: test-only-password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U uspace -d uspace_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_USER: uspace
+      POSTGRES_DB: uspace_test
+      POSTGRES_PASSWORD: test-only-password
+      OLLAMA_MODEL: test-model
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Install API and test tools
+        run: python -m pip install -e './backend[dev]'
+      - name: Lint API
+        run: python -m ruff check backend
+      - name: Test API and pgvector
+        run: python -m pytest backend/tests
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Flutter platform hosts
+        working-directory: frontend
+        run: flutter create --platforms=web,android --project-name=uspace_app .
+      - name: Install Flutter packages
+        working-directory: frontend
+        run: flutter pub get
+      - name: Analyze Flutter source
+        working-directory: frontend
+        run: flutter analyze
+      - name: Test Flutter widgets
+        working-directory: frontend
+        run: flutter test
+      - name: Build web demo
+        working-directory: frontend
+        run: flutter build web --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flutter-web
+          path: frontend/build/web/
+          if-no-files-found: error
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate local and demo Compose definitions
+        run: |
+          cp .env.example .env
+          docker compose --env-file .env -f compose.yaml config --quiet
+          API_IMAGE=example.invalid/uspace/api:test WEB_IMAGE=example.invalid/uspace/web:test DEMO_HOST=demo.example.org docker compose --env-file .env -f infra/compose.demo.yaml config --quiet
+
+  images:
+    needs: [backend, frontend, compose]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      api: ${{ steps.names.outputs.api }}
+      web: ${{ steps.names.outputs.web }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: flutter-web
+          path: frontend/build/web/
+      - name: Name immutable images
+        id: names
+        run: |
+          repo="${GITHUB_REPOSITORY,,}"
+          owner="${repo%/*}"
+          name="${repo##*/}"
+          echo "api=ghcr.io/$owner/$name-api:$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          echo "web=ghcr.io/$owner/$name-web:$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+      - name: Build API image
+        run: docker build --tag '${{ steps.names.outputs.api }}' backend
+      - name: Build web image
+        run: docker build --tag '${{ steps.names.outputs.web }}' frontend
+      - name: Log in to GitHub Container Registry
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GH_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+      - name: Publish images after merge
+        if: github.event_name == 'push'
+        run: |
+          docker push '${{ steps.names.outputs.api }}'
+          docker push '${{ steps.names.outputs.web }}'
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.DEMO_DEPLOY_ENABLED == 'true'
+    needs: images
+    runs-on: ubuntu-latest
+    environment: demo
+    concurrency:
+      group: uspace-demo
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure verified SSH host
+        env:
+          SSH_KEY: ${{ secrets.DEMO_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEMO_SSH_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/uspace-ssh"
+          printf '%s\n' "$SSH_KEY" > "$RUNNER_TEMP/uspace-ssh/key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$RUNNER_TEMP/uspace-ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/uspace-ssh/key" "$RUNNER_TEMP/uspace-ssh/known_hosts"
+      - name: Copy deployment definitions
+        env:
+          SSH_HOST: ${{ secrets.DEMO_SSH_HOST }}
+          SSH_USER: ${{ secrets.DEMO_SSH_USER }}
+        run: |
+          ssh -i "$RUNNER_TEMP/uspace-ssh/key" -o UserKnownHostsFile="$RUNNER_TEMP/uspace-ssh/known_hosts" "$SSH_USER@$SSH_HOST" 'mkdir -p /opt/uspace/initdb'
+          scp -i "$RUNNER_TEMP/uspace-ssh/key" -o UserKnownHostsFile="$RUNNER_TEMP/uspace-ssh/known_hosts" infra/compose.demo.yaml infra/Caddyfile infra/deploy.sh "$SSH_USER@$SSH_HOST:/opt/uspace/"
+          scp -i "$RUNNER_TEMP/uspace-ssh/key" -o UserKnownHostsFile="$RUNNER_TEMP/uspace-ssh/known_hosts" infra/initdb/01-vector.sql "$SSH_USER@$SSH_HOST:/opt/uspace/initdb/"
+      - name: Deploy immutable images
+        env:
+          SSH_HOST: ${{ secrets.DEMO_SSH_HOST }}
+          SSH_USER: ${{ secrets.DEMO_SSH_USER }}
+          API_IMAGE: ${{ needs.images.outputs.api }}
+          WEB_IMAGE: ${{ needs.images.outputs.web }}
+        run: |
+          ssh -i "$RUNNER_TEMP/uspace-ssh/key" -o UserKnownHostsFile="$RUNNER_TEMP/uspace-ssh/known_hosts" "$SSH_USER@$SSH_HOST" "bash /opt/uspace/deploy.sh '$API_IMAGE' '$WEB_IMAGE'"
+      - name: Check public demo
+        id: smoke
+        env:
+          DEMO_URL: ${{ vars.DEMO_URL }}
+        run: curl --fail --silent --show-error --retry 8 --retry-delay 5 "$DEMO_URL/health/ready"
+      - name: Restore previous release if public check failed
+        if: failure() && steps.smoke.outcome == 'failure'
+        env:
+          SSH_HOST: ${{ secrets.DEMO_SSH_HOST }}
+          SSH_USER: ${{ secrets.DEMO_SSH_USER }}
+        run: |
+          ssh -i "$RUNNER_TEMP/uspace-ssh/key" -o UserKnownHostsFile="$RUNNER_TEMP/uspace-ssh/known_hosts" "$SSH_USER@$SSH_HOST" 'bash /opt/uspace/deploy.sh --rollback'

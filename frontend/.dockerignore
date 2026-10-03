@@ -1,0 +1,9 @@
+.dart_tool/
+.flutter-plugins*
+test/
+android/
+ios/
+lib/
+web/
+pubspec.yaml
+pubspec.lock
