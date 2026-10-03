@@ -1,0 +1,1 @@
+"""USpace API foundation."""

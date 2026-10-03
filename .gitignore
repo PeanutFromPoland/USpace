@@ -1,0 +1,16 @@
+.env
+**/.env
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/*.pyc
+frontend/.dart_tool/
+frontend/.flutter-plugins*
+frontend/build/
+frontend/.packages
+infra/release*.env
+.deps/
+.pip-cache/
+backend/*.egg-info/
+backend/build/
+.worktrees/
