@@ -179,6 +179,7 @@ def test_uc02_card_check_is_city_scoped_and_starts_as_pending(
         json={
             "cityId": card_type["cityId"],
             "cardTypeId": card_type["id"],
+            "cardNumber": "DEMO-KRK-UNKNOWN-9999",
         },
     )
     assert response.status_code == 202, response.text

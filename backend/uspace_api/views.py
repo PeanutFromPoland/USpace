@@ -72,12 +72,19 @@ async def membership_views(conn: AsyncConnection, user_id: str) -> list[dict]:
     rows = await (
         await conn.execute(
             """SELECT DISTINCT ON (city_id) city_id,status,valid_until,card_masked
-            FROM card_verifications WHERE user_id=%s ORDER BY city_id,created_at DESC""",
+            FROM card_verifications WHERE user_id=%s
+            ORDER BY city_id,
+            CASE WHEN status='verified' AND (valid_until IS NULL OR valid_until>=current_date)
+                THEN 0 ELSE 1 END,
+            created_at DESC,id DESC""",
             (user_id,),
         )
     ).fetchall()
     return [
-        {"cityId": row["city_id"], "status": row["status"], "validUntil": iso(row["valid_until"]), "cardMasked": row["card_masked"]}
+        {"cityId": row["city_id"],
+         "status": "expired" if row["status"] == "verified" and row["valid_until"] is not None
+                   and row["valid_until"] < datetime.now(UTC).date() else row["status"],
+         "validUntil": iso(row["valid_until"]), "cardMasked": row["card_masked"]}
         for row in rows
     ]
 

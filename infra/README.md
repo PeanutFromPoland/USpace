@@ -7,12 +7,13 @@ Internet → Caddy (HTTPS) → Flutter web container
                          → FastAPI (/api/* and public /health/live)
 FastAPI → PostgreSQL 17 + pgvector
         → Ollama (private Docker network)
+        → resident-mock (private Docker network, synthetic city cards)
         → OpenAI API only when USE_CHATGPT_API=true and a key is supplied
 ```
 
 The Flutter source remains a mobile application. The web build gives reviewers a
 public URL for this infrastructure demo. Product API routes are implemented;
-the Flutter entry point now connects the product screens to /api/v1/ on the same origin. Database migration version 3 is required before testing the new client. The public demo must use
+the Flutter entry point now connects the product screens to /api/v1/ on the same origin. Database migration version 5 is required for card verification. The public demo must use
 synthetic accounts and reviews only.
 
 Only Caddy publishes ports (80 and 443). PostgreSQL, Ollama, API and web stay on
@@ -58,6 +59,9 @@ OPENAI_MODEL=gpt-4.1-mini
 OPENAI_API_KEY=
 USPACE_REQUIRE_VISIT_FOR_VOTE=false
 USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT=false
+KINDSPOT_ENABLE_DEMO_RESIDENTS=true
+KINDSPOT_DEMO_ACCOUNT_PASSWORD=replace-with-a-unique-demo-password
+KINDSPOT_RESIDENT_API_TOKEN=replace-with-a-random-32-character-service-token
 ```
 
 When `USE_CHATGPT_API=true`, supply `OPENAI_API_KEY` on the VPS. The configured
@@ -67,8 +71,26 @@ is never included in a Flutter build or container image. Turn the flag back to
 `false` to return to Ollama. The Ollama service remains private and can stay
 running in either mode. Sending review text to OpenAI additionally requires
 `USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT=true`; keep it disabled until the
-privacy decision is approved. Review assistance currently uses deterministic
-optional prompts and does not send drafts to a model.
+privacy decision is approved. Opcjonalne pytania do recenzji tworzy lokalny
+model Ollama; wysłanie szkicu do OpenAI wymaga tej samej dodatkowej flagi.
+
+Przed uruchomieniem zastąp oba nowe `replace-*` różnymi, losowymi wartościami.
+Hasło kont demo służy wyłącznie syntetycznym użytkownikom, a token wyłącznie
+komunikacji API z mockowym operatorem. `resident-mock` nie ma portu publicznego,
+poświadczeń bazy ani trasy w Caddy. Jest w osobnej sieci `resident_operator`,
+do której dołączone jest tylko API. Zmiana tokenu wymaga zaktualizowania `.env`
+i ponownego utworzenia obu kontenerów; nie zapisuj tokenu w logach ani kodzie.
+Mock potwierdza tylko własny, stały rejestr kont demonstracyjnych i nie
+poświadcza rzeczywistego miejsca zamieszkania.
+Mock przyjmuje wyłącznie fikcyjne numery kart, zwraca losowy identyfikator
+sprawdzenia i trzyma wynik w pamięci przez maksymalnie 24 godziny. API zapisuje
+identyfikator oraz maskę numeru, ale nie pełny numer. Po restarcie mocka
+oczekujące sprawdzenie trzeba zgłosić ponownie.
+Lokalny i demonstracyjny `docker compose up` uruchamiają mock automatycznie.
+API czeka na jego poprawny healthcheck. Sam skrypt
+`frontend/scripts/Start-KindSpotApi.ps1` uruchamia tylko FastAPI; przy tym
+sposobie pracy mock musi działać osobno i wymaga ustawienia
+`KINDSPOT_RESIDENT_API_URL` oraz `KINDSPOT_RESIDENT_API_TOKEN`.
 
 The `migrate` service uses the administrator credentials to create the schema,
 synthetic catalogue, and restricted API role. The `api` service receives only
@@ -100,6 +122,14 @@ Protect `master`: require the `backend`, `frontend`, `compose`, and `images` che
 and require PR review. Do not require the deploy job for PRs; it only runs after
 merge. A push outside the PR process would also trigger CD, so branch protection
 must block direct pushes if PR-only deployment is required.
+
+Do lokalnej kontroli struktury workflow użyj `act -l`, a do ograniczonej
+symulacji zadania bez kontenera usługi — `act -n -j compose`. Pełne `act -n`
+może zakończyć się panic przy zadaniu `backend`, ponieważ ma ono kontener usługi
+PostgreSQL; to znany błąd trybu dry run `act`, a nie wynik testów API. Konfigurację Compose
+sprawdź poleceniami z zadania `compose` w workflow. Pełny przebieg CI sprawdzaj
+na GitHub Actions lub uruchamiając `act` bez `-n` w świadomie przygotowanym
+środowisku Docker; lokalny przebieg nie wykonuje automatycznie wdrożenia VPS.
 
 ## Deployment behavior and recovery
 

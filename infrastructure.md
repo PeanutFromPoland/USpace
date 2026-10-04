@@ -11,13 +11,12 @@ Użytkownik → HTTPS / Caddy → Flutter web (demo)
                          → FastAPI (/api/*, /health/*)
 FastAPI → PostgreSQL 17 z pgvector
         → Ollama w prywatnej sieci Docker
+        → prywatny mock operatora kart miejskich (dane syntetyczne)
         → API OpenAI po włączeniu flagi i dodaniu klucza
 ```
 
-Kod interfejsu znajduje się w `frontend/`. Jest napisany we Flutterze; wersja
-webowa służy do publicznego pokazu, a projekt przewiduje także uruchomienie na
-Androidzie. Obecny ekran jest szkieletem informującym o stanie demo. Nie
-implementuje jeszcze ścieżek użytkownika z `use-cases.md`.
+Mobilna aplikacja Flutter znajduje się w `frontend/mobile/`. Osobny szkielet
+Flutter w `frontend/` służy obecnie do budowy publicznego demo webowego w CI/CD.
 
 Backend w `backend/` to asynchroniczna aplikacja FastAPI z trasami produktu
 `/api/v1`, sondą `/health/live` i wewnętrzną `/health/ready`. Druga sonda
@@ -28,7 +27,8 @@ zatwierdzone zmiany są dopisane w jego aktualizacji implementacyjnej.
 
 ## Środowisko lokalne
 
-`compose.yaml` uruchamia `db`, `ollama`, `migrate` i `api`. Baza używa obrazu
+`compose.yaml` uruchamia `db`, `ollama`, `migrate`, `resident-mock` i `api`.
+API czeka na zdrowy mock. Baza używa obrazu
 `pgvector/pgvector:pg17`. Plik `infra/initdb/01-vector.sql` tworzy rozszerzenie
 `vector` przy pierwszym utworzeniu wolumenu bazy. Dane PostgreSQL i modele
 Ollama są przechowywane w osobnych wolumenach Docker. API jest dostępne tylko
@@ -47,13 +47,16 @@ miejsca, cechy i wejścia w ciągu 48 godzin od wysłania.
 
 ## Konfiguracja demo na VPS
 
-`infra/compose.demo.yaml` opisuje bazę, Ollama, API, kontener serwujący
-zbudowaną wersję Flutter web i Caddy. Tylko Caddy publikuje porty 80 i 443.
+`infra/compose.demo.yaml` opisuje bazę, Ollama, prywatny `resident-mock`, API,
+kontener serwujący zbudowaną wersję Flutter web i Caddy. Tylko Caddy publikuje
+porty 80 i 443.
 Przekazuje ścieżki
 `/api/*` i publiczne `/health/live` do FastAPI, a pozostałe żądania do Flutter web.
 Szczegółowa `/health/ready` jest dostępna tylko wewnątrz sieci usług.
 PostgreSQL, Ollama, API i kontener webowy komunikują się przez prywatną sieć
-Docker. Caddy ma trwałe wolumeny na dane certyfikatów i konfigurację.
+Docker. Mock ma osobną wewnętrzną sieć, do której dołączone jest tylko API;
+nie ma publicznego portu. Caddy ma trwałe wolumeny na dane certyfikatów
+i konfigurację.
 
 Na serwerze plik `/opt/uspace/.env` będzie przechowywał domenę, osobne hasła
 administratora bazy i konta API oraz
@@ -67,6 +70,10 @@ wersji, do której można wrócić.
 
 Workflow `.github/workflows/ci-cd.yml` uruchamia się dla PR do `master` oraz
 po zmianie w `master`, także po scaleniu PR.
+Backendowe testy mocka używają transportu ASGI w procesie testowym; CI nie
+uruchamia dla niego osobnego kontenera. Zgłoszony panic `act -n` przy kontenerze
+PostgreSQL jest błędem narzędzia `act`, nie wynikiem workflow. Alternatywy
+lokalnej kontroli opisuje [infra/README.md](infra/README.md).
 
 | Etap | Wykonywane kontrole |
 | --- | --- |

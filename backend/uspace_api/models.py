@@ -235,6 +235,7 @@ class AssistanceRequest(ApiModel):
 class CardVerificationCreate(ApiModel):
     cityId: str
     cardTypeId: str
+    cardNumber: str = Field(min_length=12, max_length=64, pattern=r"^DEMO-[A-Z0-9-]+$")
 
 
 class VoteCreate(ApiModel):

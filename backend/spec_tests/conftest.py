@@ -5,12 +5,15 @@ import os
 from collections.abc import Iterator
 from uuid import uuid4
 
+import httpx
 import pytest
 from fastapi.testclient import TestClient
 from psycopg.types.json import Jsonb
 
+from uspace_api import mock_resident_api, resident_provider
 from uspace_api.auth import hash_password
 from uspace_api.db import connect, install_schema, seed_demo
+from uspace_api.demo_residents import seed_demo_accounts
 from uspace_api.main import app
 from uspace_api.views import new_id
 
@@ -26,6 +29,7 @@ async def _prepare_test_database() -> dict[str, str]:
             card_verifications,demo_card_entitlements,place_parts,places,rewards,users CASCADE"""
         )
     await seed_demo()
+    await seed_demo_accounts("Test-only-resident-pass-123!")
     identities = {
         "ACCEPTED_AUTHOR": ("accepted@example.invalid", "Test-pass-accepted-123!"),
         "HIDDEN_AUTHOR": ("hidden@example.invalid", "Test-pass-hidden-123!"),
@@ -83,16 +87,12 @@ async def _prepare_test_database() -> dict[str, str]:
             VALUES (%s,'place_krakow_library','2026-01-01','synthetic_fixture')""",
             (ids["QUALIFIED"],),
         )
-        await conn.execute(
-            """INSERT INTO demo_card_entitlements(user_id,city_id,card_type_id,valid_until)
-            VALUES (%s,'city_krakow','demo_city_card','2027-12-31')""",
-            (ids["ACCEPTED_AUTHOR"],),
-        )
     values = {}
     for key, (email, password) in identities.items():
         values[f"USPACE_E2E_{key}_EMAIL"] = email
         values[f"USPACE_E2E_{key}_PASSWORD"] = password
     values.update({
+        "USPACE_E2E_DEMO_ACCOUNT_PASSWORD": "Test-only-resident-pass-123!",
         "USPACE_E2E_ACCEPTED_REVIEW_ID": accepted_id,
         "USPACE_E2E_HIDDEN_REVIEW_ID": hidden_id,
         "USPACE_E2E_READY_REDEMPTION_ID": ready_id,
@@ -122,6 +122,12 @@ def synthetic_database() -> Iterator[None]:
 def client(monkeypatch: pytest.MonkeyPatch, synthetic_database: None) -> Iterator[TestClient]:
     monkeypatch.setenv("OLLAMA_MODEL", "test-only-model")
     monkeypatch.setenv("USE_CHATGPT_API", "false")
+    monkeypatch.setenv("KINDSPOT_RESIDENT_API_TOKEN", "test-only-resident-service-token-32-chars")
+    monkeypatch.setenv("KINDSPOT_RESIDENT_API_URL", "http://resident-mock/verifications")
+    monkeypatch.setattr(
+        resident_provider, "_client",
+        lambda: httpx.AsyncClient(transport=httpx.ASGITransport(app=mock_resident_api.app), timeout=5),
+    )
     with TestClient(app) as test_client:
         yield test_client
 

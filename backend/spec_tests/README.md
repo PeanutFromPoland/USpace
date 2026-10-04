@@ -22,3 +22,8 @@ demonstracyjne realizacje nagród oraz wpis potwierdzonej wizyty. Testy
 sprawdzają też ujemne saldo po dislajku, serwerową flagę wizyty, sporne
 obserwacje i jednokrotne naliczenie punktów. Nie korzystają z prawdziwych
 numerów kart ani danych użytkowników.
+
+Testy statusu mieszkańca tworzą cztery logowalne konta syntetyczne i wykonują
+żądania HTTP z fikcyjnym numerem karty do prywatnego mocka przez transport ASGI. Sprawdzają wynik
+potwierdzony, wygasły, odrzucony, awarię operatora oraz zachowanie wcześniej
+potwierdzonego statusu. Testowe hasło i token mocka istnieją tylko w fixture.

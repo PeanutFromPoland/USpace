@@ -45,6 +45,11 @@ from uspace_api.personalization import (
     owned_cosmetics,
     validate_appearance,
 )
+from uspace_api.resident_provider import (
+    ResidentProviderUnavailable,
+    get_resident_verification,
+    start_resident_verification,
+)
 from uspace_api.similarity import review_vector
 from uspace_api.views import (
     balance,
@@ -245,20 +250,38 @@ async def put_ui_settings(body: UiSettings, user: dict = Depends(current_user)) 
 async def create_card_verification(body: CardVerificationCreate, user: dict = Depends(current_user)) -> dict:
     if not any(card["id"] == body.cardTypeId and card["cityId"] == body.cityId for card in CARD_TYPES):
         raise ApiError(422, "CARD_INVALID", "Nieobsługiwany typ karty.")
+    try:
+        provider_id = await start_resident_verification(
+            user["id"], body.cityId, body.cardTypeId, body.cardNumber
+        )
+    except ResidentProviderUnavailable as exc:
+        raise ApiError(
+            503, "CARD_PROVIDER_UNAVAILABLE", "Usługa sprawdzania statusu jest chwilowo niedostępna.",
+            retryable=True, headers={"Retry-After": "5"},
+        ) from exc
     verification_id = new_id("card")
+    masked = "••••" + body.cardNumber[-4:]
     async with await connect() as conn:
-        entitlement = await (
+        await conn.execute("SELECT id FROM users WHERE id=%s FOR UPDATE", (user["id"],))
+        pending = await (
             await conn.execute(
-                """SELECT valid_until FROM demo_card_entitlements WHERE user_id=%s AND city_id=%s
-                AND card_type_id=%s AND (valid_until IS NULL OR valid_until>=current_date)""",
-                (user["id"], body.cityId, body.cardTypeId),
+                """SELECT id FROM card_verifications WHERE user_id=%s AND city_id=%s
+                AND status='pending' ORDER BY created_at DESC,id DESC LIMIT 1""",
+                (user["id"], body.cityId),
             )
         ).fetchone()
-        result = "verified" if entitlement else "rejected"
+        if pending is not None:
+            await conn.execute(
+                """UPDATE card_verifications SET provider_verification_id=%s,card_masked=%s,
+                card_type_id=%s WHERE id=%s AND user_id=%s AND status='pending'""",
+                (provider_id, masked, body.cardTypeId, pending["id"], user["id"]),
+            )
+            return {"id": pending["id"], "cityId": body.cityId, "status": "pending", "demonstrational": True}
         await conn.execute(
-            """INSERT INTO card_verifications(id,user_id,city_id,card_type_id,status,card_masked,valid_until,demo_result)
-            VALUES (%s,%s,%s,%s,'pending',%s,%s,%s)""",
-            (verification_id, user["id"], body.cityId, body.cardTypeId, None, entitlement["valid_until"] if entitlement else None, result),
+            """INSERT INTO card_verifications(id,user_id,city_id,card_type_id,status,demo_result,
+            provider_verification_id,card_masked)
+            VALUES (%s,%s,%s,%s,'pending','pending',%s,%s)""",
+            (verification_id, user["id"], body.cityId, body.cardTypeId, provider_id, masked),
         )
     return {"id": verification_id, "cityId": body.cityId, "status": "pending", "demonstrational": True}
 
@@ -274,15 +297,34 @@ async def get_card_verification(verification_id: str, user: dict = Depends(curre
         ).fetchone()
         if row is None:
             raise ApiError(404, "REVIEW_NOT_AVAILABLE", "Nie znaleziono sprawdzenia karty.")
-        if row["status"] == "pending":
+    if row["status"] == "pending":
+        try:
+            result = await get_resident_verification(
+                row["provider_verification_id"] or "", user["id"], row["city_id"], row["card_type_id"]
+            )
+        except ResidentProviderUnavailable as exc:
+            raise ApiError(
+                503, "CARD_PROVIDER_UNAVAILABLE", "Usługa sprawdzania statusu jest chwilowo niedostępna.",
+                retryable=True, headers={"Retry-After": "5"},
+            ) from exc
+        async with await connect() as conn:
             row = await (
                 await conn.execute(
-                    """UPDATE card_verifications SET status=demo_result,
-                    reason_code=CASE WHEN demo_result='rejected' THEN 'CARD_INVALID' ELSE NULL END
-                    WHERE id=%s RETURNING *""",
-                    (verification_id,),
+                    """UPDATE card_verifications SET status=%s,demo_result=%s,
+                    valid_until=%s,reason_code=%s
+                    WHERE id=%s AND user_id=%s AND status='pending'
+                    AND provider_verification_id=%s RETURNING *""",
+                    (result.status, result.status, result.validUntil, result.reasonCode,
+                     verification_id, user["id"], row["provider_verification_id"]),
                 )
             ).fetchone()
+            if row is None:
+                row = await (
+                    await conn.execute(
+                        "SELECT * FROM card_verifications WHERE id=%s AND user_id=%s",
+                        (verification_id, user["id"]),
+                    )
+                ).fetchone()
     return {"id": row["id"], "cityId": row["city_id"], "status": row["status"], "validUntil": row["valid_until"].isoformat() if row["valid_until"] else None, "reasonCode": row["reason_code"], "demonstrational": True}
 
 

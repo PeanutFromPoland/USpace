@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS idempotency_records (
 """
 
 INITIAL_SCHEMA_VERSION = 1
-CURRENT_SCHEMA_VERSION = 4
+CURRENT_SCHEMA_VERSION = 5
 
 
 async def install_schema() -> None:
@@ -221,6 +221,11 @@ async def install_schema() -> None:
                 earned_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(user_id,title_id)
             )""")
             await conn.execute("INSERT INTO schema_versions(version) VALUES (4)")
+
+        row = await (await conn.execute("SELECT 1 FROM schema_versions WHERE version=5")).fetchone()
+        if row is None:
+            await conn.execute("ALTER TABLE card_verifications ADD COLUMN IF NOT EXISTS provider_verification_id text")
+            await conn.execute("INSERT INTO schema_versions(version) VALUES (5)")
 
 
 async def seed_demo() -> None:
@@ -312,7 +317,7 @@ async def grant_app_role() -> None:
             sql.SQL("REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM {}").format(identifier)
         )
         grants = {
-            "SELECT": "places,rewards,visit_attestations,demo_card_entitlements,earned_titles",
+            "SELECT": "places,rewards,visit_attestations,earned_titles",
             "SELECT,INSERT": "place_parts,review_answers,temporary_issues,votes,reports,points_entries,moderation_events",
             "SELECT,INSERT,UPDATE": "users,sessions,reviews,redemptions,card_verifications,idempotency_records",
             "SELECT,INSERT,DELETE": "login_attempts,saved_places",
