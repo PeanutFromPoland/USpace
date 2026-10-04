@@ -21,6 +21,9 @@ class AppController extends ChangeNotifier {
       defaultValue: true,
     ),
   }) : cityLocator = cityLocator ?? DeviceCityLocator();
+  bool get isRemote => false;
+  Future<Map<String, dynamic>> submitReview(ReviewDraft draft) async =>
+      submitDemoReview(draft);
   final CityLocator cityLocator;
   final bool resetAccountOnLaunch;
   bool _launchPrepared = false;

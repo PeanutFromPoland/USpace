@@ -65,10 +65,22 @@ void main() {
           isNull,
         );
         expect(find.text('Zapisywanie…'), findsOneWidget);
-        expect(
-          tester.widget<SwitchListTile>(find.byType(SwitchListTile)).onChanged,
-          isNull,
-        );
+        if (needs) {
+          expect(
+            tester
+                .widgetList<CheckboxListTile>(find.byType(CheckboxListTile))
+                .every((tile) => tile.onChanged == null),
+            isTrue,
+          );
+          expect(find.byType(SwitchListTile), findsNothing);
+        } else {
+          expect(
+            tester
+                .widget<SwitchListTile>(find.byType(SwitchListTile))
+                .onChanged,
+            isNull,
+          );
+        }
         expect(store.writes, 1);
         store.completion.complete();
         await tester.pumpAndSettle();

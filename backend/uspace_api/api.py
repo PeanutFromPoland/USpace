@@ -54,6 +54,7 @@ from uspace_api.views import (
     redemption_view,
     review_view,
     reward_view,
+    sort_places,
 )
 
 router = APIRouter(prefix="/api/v1")
@@ -187,14 +188,13 @@ async def patch_profile(body: ProfilePatch, user: dict = Depends(current_user)) 
     updates = {
         "display_name": body.displayName.strip() if body.displayName is not None else user["display_name"],
         "appearance": appearance,
-        "helper_opt_in": body.helperOptIn if body.helperOptIn is not None else user["helper_opt_in"],
     }
     async with await connect() as conn:
         updated = await (
             await conn.execute(
-                """UPDATE users SET display_name=%s,appearance=%s,helper_opt_in=%s
+                """UPDATE users SET display_name=%s,appearance=%s
                 WHERE id=%s RETURNING *""",
-                (updates["display_name"], Jsonb(appearance), updates["helper_opt_in"], user["id"]),
+                (updates["display_name"], Jsonb(appearance), user["id"]),
             )
         ).fetchone()
         return await me_view(conn, updated)
@@ -231,7 +231,7 @@ async def put_preferences(body: Preferences, user: dict = Depends(current_user))
         raise ApiError(422, "VALIDATION_ERROR", "Nieznana potrzeba.")
     if any(preset not in {item["id"] for item in PRESETS} for preset in body.presetIds):
         raise ApiError(422, "VALIDATION_ERROR", "Nieznany zestaw filtrów.")
-    for rule in body.rules:
+    for rule in [*body.rules, *(rule for named in body.namedFilters for rule in named.rules)]:
         feature = FEATURE_BY_ID.get(rule.featureId)
         if not feature or (rule.minRating is not None and not feature["supportsRating"]):
             raise ApiError(422, "VALIDATION_ERROR", "Niepoprawna reguła filtrowania.")
@@ -339,6 +339,7 @@ async def search_places(body: PlaceSearch) -> dict:
     if body.sort == "recommended":
         rank = {"matches": 0, "not_evaluated": 0, "insufficient_data": 1}
         results.sort(key=lambda item: (rank[item["match"]["status"]], item["name"]))
+    sort_places(results, body.sort)
     return page(results[offset:offset + body.limit + 1], offset=offset, limit=body.limit, fingerprint=key)
 
 
@@ -408,9 +409,9 @@ async def create_review(
             raise ApiError(404, "PLACE_NOT_AVAILABLE", "Nie znaleziono miejsca.")
         review_id = new_id("rev")
         await conn.execute(
-            """INSERT INTO reviews(id,place_id,author_id,visited_on,visited_at_local_time,time_zone,mode)
-            VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-            (review_id, place_id, user["id"], body.visitedOn, body.visitedAtLocalTime, body.timeZone, body.mode),
+            """INSERT INTO reviews(id,place_id,author_id,visited_on,visited_at_local_time,time_zone,mode,recommendation)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+            (review_id, place_id, user["id"], body.visitedOn, body.visitedAtLocalTime, body.timeZone, body.mode, body.recommendation),
         )
         parts = {}
         for part in body.newParts:
@@ -786,3 +787,39 @@ async def get_redemption(redemption_id: str, user: dict = Depends(current_user))
         if row is None:
             raise ApiError(404, "REWARD_UNAVAILABLE", "Nie znaleziono realizacji nagrody.")
         return redemption_view(row, points_balance=await balance(conn, user["id"]))
+
+
+
+@router.get("/me/saved-places")
+async def list_saved_places(
+    cursor: str | None = None, limit: int = Query(20, ge=1, le=100),
+    user: dict = Depends(current_user),
+) -> dict:
+    key = fingerprint({"resource": "saved_places", "user": user["id"]})
+    offset = parse_cursor(cursor, key)
+    async with await connect() as conn:
+        rows = await (await conn.execute(
+            """SELECT p.* FROM saved_places s JOIN places p ON p.id=s.place_id
+            WHERE s.user_id=%s ORDER BY s.saved_at DESC,p.id OFFSET %s LIMIT %s""",
+            (user["id"], offset, limit + 1),
+        )).fetchall()
+        result = [await place_view(conn, row) for row in rows]
+    return page(result, offset=offset, limit=limit, fingerprint=key)
+
+
+@router.put("/me/saved-places/{place_id}", status_code=204)
+async def save_place(place_id: str, user: dict = Depends(current_user)) -> None:
+    async with await connect() as conn:
+        place = await (await conn.execute("SELECT 1 FROM places WHERE id=%s", (place_id,))).fetchone()
+        if place is None:
+            raise ApiError(404, "PLACE_NOT_AVAILABLE", "Nie znaleziono miejsca.")
+        await conn.execute(
+            "INSERT INTO saved_places(user_id,place_id) VALUES (%s,%s) ON CONFLICT DO NOTHING",
+            (user["id"], place_id),
+        )
+
+
+@router.delete("/me/saved-places/{place_id}", status_code=204)
+async def unsave_place(place_id: str, user: dict = Depends(current_user)) -> None:
+    async with await connect() as conn:
+        await conn.execute("DELETE FROM saved_places WHERE user_id=%s AND place_id=%s", (user["id"], place_id))

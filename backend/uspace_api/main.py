@@ -8,6 +8,7 @@ from uuid import uuid4
 import psycopg
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 
 from uspace_api.api import router
 from uspace_api.config import llm_config
@@ -33,8 +34,15 @@ async def lifespan(_: FastAPI):
                 pass
 
 
-app = FastAPI(title="KindSpot API", version="0.1.0", lifespan=lifespan)
-app.router.routes.extend(router.routes)
+app = FastAPI(title="KindSpot API", version="0.1.0", lifespan=lifespan, docs_url="/api/docs", redoc_url="/api/redoc", openapi_url="/api/openapi.json")
+# Explicit origins for browser development; production reverse proxy is same-origin.
+origins = [value.strip() for value in os.environ.get("KINDSPOT_CORS_ORIGINS", "").split(",") if value.strip()]
+if origins:
+    app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=False,
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+        allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
+        expose_headers=["X-Request-ID"])
+app.include_router(router)
 app.add_exception_handler(ApiError, api_error_handler)
 app.add_exception_handler(RequestValidationError, validation_error_handler)
 

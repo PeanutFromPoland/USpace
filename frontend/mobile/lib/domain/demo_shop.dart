@@ -24,7 +24,7 @@ const demoShopCatalog = [
   ),
   RewardExample(
     'frame',
-    'Obramowanie „Pomocnik”',
+    'Obramowanie „Wspólna przestrzeń”',
     'Obramowanie awatara do przyszłej personalizacji.',
     500,
     RewardDelivery.profile,

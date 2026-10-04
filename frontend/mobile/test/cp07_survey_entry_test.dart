@@ -20,7 +20,6 @@ void main() {
       store.value = const DemoSnapshot(
         profile: DemoProfile(
           onboarded: true,
-          helper: true,
           publicNeeds: false,
           savedPlaceIds: ['museum'],
         ),
@@ -66,6 +65,11 @@ void main() {
         scrollable: find.byType(Scrollable).first,
         maxScrolls: 80,
       );
+      await Scrollable.ensureVisible(
+        tester.element(find.byKey(const ValueKey('survey-entry'))),
+        alignment: 0.5,
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('survey-entry')));
       await tester.pumpAndSettle();
       expect(received, same(selectedPlace));
@@ -86,7 +90,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(DiscoveryScreen), findsOneWidget);
       expect(controller.isDemoSignedIn, isTrue);
-      expect(controller.profile.helper, isTrue);
       expect(controller.profile.publicNeeds, isFalse);
       expect(store.value, existingSession);
       expect(tester.takeException(), isNull);

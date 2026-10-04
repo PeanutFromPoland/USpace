@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 class KindSpotNavigation extends StatelessWidget {
   const KindSpotNavigation({
     super.key,
@@ -117,8 +119,9 @@ class KindSpotNavigation extends StatelessWidget {
                             ? Border.all(color: scheme.primary, width: 2)
                             : null,
                       ),
-                      child: Icon(
+                      child: KindSpotSymbol(
                         item.$3,
+                        filled: active,
                         color: primary || active
                             ? scheme.onPrimaryContainer
                             : scheme.onSurfaceVariant,

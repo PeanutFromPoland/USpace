@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../domain/models.dart';
 import 'components.dart';
 
@@ -54,7 +56,7 @@ class _SurveyEntryState extends State<SurveyEntry> {
         key: const ValueKey('survey-entry'),
         onPressed: widget.builder == null || _opening ? null : _open,
         style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
-        icon: const Icon(Icons.rate_review_outlined),
+        icon: const KindSpotSymbol(Icons.rate_review_outlined),
         label: const Text('Otwórz ankietę'),
       ),
     ],

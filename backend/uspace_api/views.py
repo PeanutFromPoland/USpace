@@ -86,7 +86,7 @@ async def me_view(conn: AsyncConnection, user: dict) -> dict:
     ).fetchone()
     return {
         "id": user["id"], "displayName": user["display_name"],
-        "appearance": user["appearance"], "helperOptIn": user["helper_opt_in"],
+        "appearance": user["appearance"],
         "memberships": await membership_views(conn, user["id"]),
         "stats": {"reviewCount": stats["review_count"], "verificationCount": stats["verification_count"]},
         "achievements": [], "pointsBalance": await balance(conn, user["id"]),
@@ -191,6 +191,31 @@ async def current_features(conn: AsyncConnection, place: dict) -> list[dict]:
     return list(summaries.values())
 
 
+def place_statistics(observations: list[dict]) -> dict:
+    """Equal weight for every subordinate score, excluding absence/unknown and metadata."""
+    values = []
+    for observation in observations:
+        rating = observation.get("rating")
+        if observation.get("presence") != "present" or not isinstance(rating, dict):
+            continue
+        values.extend(value for name, value in rating.items()
+            if name != "average_rating" and isinstance(value, (int, float))
+            and not isinstance(value, bool) and 1 <= value <= 5)
+    return {
+        "aggregateRating": sum(values) / len(values) if values else None,
+        "reviewCount": len({row["review_id"] for row in observations}),
+    }
+
+
+def sort_places(places: list[dict], sort: str) -> None:
+    def score(item: dict) -> float:
+        return item.get("aggregateRating") if item.get("aggregateRating") is not None else -1
+    if sort == "best_rated":
+        places.sort(key=lambda item: (-score(item), -item["reviewCount"], item["name"].casefold(), item["id"]))
+    elif sort == "review_count":
+        places.sort(key=lambda item: (-item["reviewCount"], -score(item), item["name"].casefold(), item["id"]))
+
+
 async def place_view(conn: AsyncConnection, place: dict, *, detail: bool = False) -> dict:
     issue_count = await (
         await conn.execute(
@@ -201,9 +226,16 @@ async def place_view(conn: AsyncConnection, place: dict, *, detail: bool = False
         )
     ).fetchone()
     features = await current_features(conn, place)
+    observations = await (await conn.execute(
+        """SELECT r.id AS review_id,a.presence,a.rating FROM reviews r
+        LEFT JOIN review_answers a ON a.review_id=r.id
+        WHERE r.place_id=%s AND r.publication_status='visible' AND r.verification_status='accepted'""",
+        (place["id"],),
+    )).fetchall()
     verified_dates = [item["lastVerifiedAt"] for item in features if item["lastVerifiedAt"]]
     body = {
         "id": place["id"], "name": place["name"], "categoryId": place["category_id"],
+        **place_statistics(observations),
         "cityId": place["city_id"], "address": place["address"],
         "location": {"lat": place["lat"], "lon": place["lon"]},
         "match": {"status": "not_evaluated", "reasons": [], "unknownFeatureIds": []},
@@ -294,7 +326,7 @@ async def review_view(conn: AsyncConnection, review: dict, viewer_id: str | None
         "visitedOn": iso(review["visited_on"]),
         "visitedAtLocalTime": review["visited_at_local_time"].strftime("%H:%M") if review["visited_at_local_time"] else None,
         "timeZone": review["time_zone"], "createdAt": iso(review["created_at"]),
-        "mode": review["mode"], "answers": answer_views,
+        "mode": review["mode"], "recommendation": review.get("recommendation"), "answers": answer_views,
         "temporaryIssues": [issue_view(issue) for issue in issues] if viewer_id == author["id"] or review["verification_status"] == "accepted" else [],
         "publicationStatus": review["publication_status"],
         "verificationStatus": review["verification_status"], "allowedActions": allowed,

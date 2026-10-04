@@ -9,6 +9,10 @@ import 'package:uspace/app_controller.dart';
 import 'package:uspace/data/demo_repository.dart';
 import 'package:uspace/ui/app.dart';
 
+import 'package:uspace/ui/introduction.dart';
+import 'package:uspace/ui/theme.dart';
+import 'package:uspace/domain/models.dart';
+
 import 'domain_test.dart' show MemoryStore;
 
 void main() {
@@ -101,6 +105,40 @@ void main() {
     await tester.tap(find.text('Wygląd i dostępność'));
     await tester.pumpAndSettle();
     await capture('settings-pink-dark-200');
+    await tester.binding.handlePopRoute();
+    await controller.saveProfile(
+      controller.profile.copyWith(theme: 'green', darkMode: false),
+    );
+    tester.platformDispatcher.textScaleFactorTestValue = 1;
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('navigation-1')));
+    await tester.pumpAndSettle();
+    await capture('graphics-shop-green-light');
+    await tester.tap(find.byKey(const ValueKey('navigation-2')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lista').first);
+    await tester.pumpAndSettle();
+    await capture('graphics-places-green-light');
+    await tester.pumpWidget(
+      RepaintBoundary(
+        key: key,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: kindSpotTheme(const DemoProfile()),
+          home: IntroductionSlides(onFinish: () async {}),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zatrzymaj przewijanie'));
+    await tester.pumpAndSettle();
+    await capture('introduction-1');
+    await tester.tap(find.text('Dalej'));
+    await tester.pumpAndSettle();
+    await capture('introduction-2');
+    await tester.tap(find.text('Dalej'));
+    await tester.pumpAndSettle();
+    await capture('introduction-3');
     expect(tester.takeException(), isNull);
   });
 }

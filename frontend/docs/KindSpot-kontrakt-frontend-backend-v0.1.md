@@ -298,3 +298,23 @@ Ta sekcja aktualizuje niezatwierdzone propozycje sekcji 8/10, które stanowią h
 - Formularz wspólny, godzina opcjonalna, sugestie opcjonalne. Zatwierdzona odpowiedź każdego punktu: gwiazdki 1–5, absent/rating=0 albo unknown/rating=null. Nie ustalono ankiety z samą niewiedzą ani agregacji 0 do zbiorczych ocen miejsc.
 - Zakup/odbiór obecnie teoretyczny PoC; nie oznacza faktycznej integracji i wydania nagrody. Zachowujemy planowany model błędu/zwolnienia punktów.
 - Platforma Flutter zatwierdzona; pełny model sesji nadal otwarty.
+
+
+## Integracja Flutter i FastAPI — decyzje 2026-10-04
+
+Ten zapis zastępuje wcześniejsze odłożenie ankiety/API oraz reset konta przy starcie. Użytkownik zlecił połączenie istniejącej ankiety i backendu. Główne wejście aplikacji korzysta z API, wymaga adresu serwera i logowania; dane konta, zapisane miejsca, punkty i zakupy są trwałe po stronie serwera. Test Hackaton otrzymuje 1000 punktów oraz Ogród ciszy tylko przy przygotowaniu konta lub ręcznym resecie operatora. Restart aplikacji nie dodaje punktów. Reset zachowuje nazwane filtry i dostępność; recenzje/głosy społeczności nie są usuwane w resecie portfela.
+
+Decyzja użytkownika: średnia całego miejsca wynika ze wszystkich pomniejszych ocen recenzji. Implementacja liczy wszystkie oceny wymiarów 1–5 zaakceptowanych widocznych recenzji, wyłączając absent/unknown i techniczne average_rating; osobne recommendation nie zastępuje średniej. Priorytet średniej i liczby recenzji przy remisie zachowany.
+
+Włączono transport HTTP, sesję, profil/filtry, miejsca/listę/mapę/zapisane, istniejącą ankietę, recenzje/głosy/zgłoszenia, punkty/sklep/moje nagrody i stany weryfikacji. Katalog 12 istniejących pytań jest dostarczany przez API. Backend wymaga jawnej migracji 3. Punkty/publikacja/uprawnienia nie są nadawane przez klienta. Operator karty pozostaje jawnie demonstracyjny. Nie zmieniono reguł rankingu komentarzy przy zerowych dislajkach.
+
+Sprawdzenia: 175 testów Flutter, analiza bez uwag; 32 testy backendu bez bazy i Ruff poprawne. Próba HTTP konfiguracji/OpenAPI/health oraz ochrony /me przeszła bez PostgreSQL. Pełny przebieg z bazą i urządzeniem pozostaje do wykonania: brak konfiguracji PostgreSQL i wskazanego adresu serwera. Nie uruchamiano emulatora. Zmiany lokalne Frontend, bez commita/push. Pełny zakres, polecenia i checklista: frontend/docs/KindSpot-integracja-FastAPI.md.
+
+
+## Wspólna społeczność i czytelność ankiety — 2026-10-04
+
+Decyzja użytkownika zastępuje wcześniejszy zamysł Pomocnika: każdy może wyszukiwać miejsca, recenzować i weryfikować niezależnie od potrzeb. Usunięto przełączniki, oznaczenie oraz pole roli z modeli klienta i kontraktu konta API. Historyczna kolumna helper_opt_in w bazie pozostaje nieużywana dla zgodności danych; nie ma znaczenia dla uprawnień. Brak potrzeb nie nadaje osobnej roli. Nazwa obramowania zmieniona na „Wspólna przestrzeń”.
+
+Usunięto powtarzane banery wersji demonstracyjnej z ikoną kolby. Adnotacja konta testowego w profilu pozostaje. Informacje o rzeczywistych ograniczeniach operacji (nieważny kod/testowy operator karty/lokalny zapis) pozostają przy tych operacjach; nie oznacza to wdrożenia produkcyjnego.
+
+Pytania ankiety używają zatwierdzonych SVG cech (12 pytań; aliasy elevator/lift oraz quiet_environment/quiet). Ikona uzupełnia tekst, nie zastępuje etykiety. Kolory wynikają z motywu, ikony dekoracyjne nie powtarzają treści czytnikowi; nagłówek zawija się przy powiększonym tekście. Dane i punktacja ankiety bez zmian.

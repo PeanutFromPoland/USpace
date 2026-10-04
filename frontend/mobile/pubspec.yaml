@@ -34,6 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  flutter_svg: ^2.3.0
   flutter_map: 8.3.2
   latlong2: 0.10.1
   flutter_secure_storage: 11.2.0
@@ -42,6 +43,7 @@ dependencies:
     sdk: flutter
   geolocator: 14.1.1
   geocoding: 5.0.0
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +66,35 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/graphics/avatars/
+    - assets/graphics/badges/
+    - assets/graphics/brand/
+    - assets/graphics/frames/
+    - assets/graphics/garden/
+    - assets/graphics/illustrations/
+    - assets/graphics/onboarding/
+    - assets/graphics/presentation/
+    - assets/graphics/thumbnails/
+    - assets/graphics/icons/account/
+    - assets/graphics/icons/actions/
+    - assets/graphics/icons/categories_p3/
+    - assets/graphics/icons/features/
+    - assets/graphics/icons/features_extended_p3/
+    - assets/graphics/icons/filters/
+    - assets/graphics/icons/garden/
+    - assets/graphics/icons/map/
+    - assets/graphics/icons/media_controls_p3/
+    - assets/graphics/icons/navigation/
+    - assets/graphics/icons/needs/
+    - assets/graphics/icons/reviews/
+    - assets/graphics/icons/rewards/
+    - assets/graphics/icons/status/
+    - assets/graphics/variants/mono/
+    - assets/graphics/variants/calm/
+    - assets/graphics/manifest.json
+    - assets/graphics/palette-roles.json
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

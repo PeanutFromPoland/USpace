@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../app_controller.dart';
 import '../data/catalog.dart';
 import '../domain/matching.dart';
@@ -78,7 +80,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
           const SizedBox(height: 12),
           Text(place.description),
           const SizedBox(height: 12),
-          demoNotice(),
+
           const SizedBox(height: 12),
           Semantics(
             label: saved
@@ -91,7 +93,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
             child: FilledButton.icon(
               key: const ValueKey('place-save'),
               onPressed: widget.controller.saving ? null : save,
-              icon: Icon(
+              icon: KindSpotSymbol(
                 saved
                     ? Icons.bookmark_remove_outlined
                     : Icons.bookmark_add_outlined,
@@ -230,10 +232,24 @@ class _FeatureCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                feature.label,
-                style: Theme.of(context).textTheme.titleMedium,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  KindSpotGraphic(
+                    'feature_${feature.id}',
+                    width: 28,
+                    height: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      feature.label,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 10),
               for (final text in entries) Text(text),
             ],
           ),

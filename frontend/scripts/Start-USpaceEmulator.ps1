@@ -1,4 +1,4 @@
-# Uruchamianie emulatora KindSpot z niezmiennymi limitami zasobów.
+﻿# Uruchamianie emulatora KindSpot z niezmiennymi limitami zasobów.
 [CmdletBinding()]
 param(
     [switch]$Restart,

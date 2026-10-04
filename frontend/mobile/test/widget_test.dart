@@ -23,11 +23,7 @@ void main() {
     expect(controller.isDemoSignedIn, isTrue);
     expect(controller.profile.publicNeeds, isFalse);
     await controller.saveProfile(
-      controller.profile.copyWith(
-        theme: 'pink',
-        helper: true,
-        onboarded: false,
-      ),
+      controller.profile.copyWith(theme: 'pink', onboarded: false),
     );
     final restarted = AppController(DemoRepository(store));
     await tester.pumpWidget(
@@ -36,7 +32,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(HomeShell), findsOneWidget);
     expect(restarted.profile.theme, 'pink');
-    expect(restarted.profile.helper, isTrue);
     expect(restarted.profile.publicNeeds, isFalse);
     await restarted.reset();
     await tester.pumpAndSettle();

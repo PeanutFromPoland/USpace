@@ -11,6 +11,7 @@ class SurveyQuestion {
     this.hint,
     this.environmental = false,
     this.multiTarget = false,
+    this.definition,
   });
   final String featureId;
   final String text;
@@ -23,7 +24,8 @@ class SurveyQuestion {
   /// Cecha może występować w kilku miejscach budynku (wejścia, części).
   final bool multiTarget;
 
-  FeatureDefinition get feature => featureById(featureId);
+  final FeatureDefinition? definition;
+  FeatureDefinition get feature => definition ?? featureById(featureId);
 }
 
 const surveyQuestions = <SurveyQuestion>[
@@ -69,7 +71,7 @@ const surveyQuestions = <SurveyQuestion>[
 SurveyQuestion questionFor(String featureId) =>
     surveyQuestions.firstWhere((q) => q.featureId == featureId);
 
-/// Pytania dopasowane do potrzeb. Bez wskazanych potrzeb, np. u Pomocnika,
+/// Pytania dopasowane do potrzeb. Bez wskazanych potrzeb
 /// ankieta pokazuje wszystkie pytania. [all] pokazuje wszystkie zawsze.
 List<SurveyQuestion> questionsForNeeds(
   List<String> needIds, {

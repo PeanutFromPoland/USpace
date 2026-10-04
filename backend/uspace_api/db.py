@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS idempotency_records (
 """
 
 INITIAL_SCHEMA_VERSION = 1
-CURRENT_SCHEMA_VERSION = 2
+CURRENT_SCHEMA_VERSION = 3
 
 
 async def install_schema() -> None:
@@ -193,13 +193,24 @@ async def install_schema() -> None:
                 "INSERT INTO schema_versions(version) VALUES (%s)", (INITIAL_SCHEMA_VERSION,)
             )
         row = await (
-            await conn.execute("SELECT 1 FROM schema_versions WHERE version=%s", (CURRENT_SCHEMA_VERSION,))
+            await conn.execute("SELECT 1 FROM schema_versions WHERE version=%s", (2,))
         ).fetchone()
         if row is None:
             await conn.execute("ALTER TABLE place_parts ADD COLUMN IF NOT EXISTS origin_review_id text")
             await conn.execute(
-                "INSERT INTO schema_versions(version) VALUES (%s)", (CURRENT_SCHEMA_VERSION,)
+                "INSERT INTO schema_versions(version) VALUES (%s)", (2,)
             )
+        row = await (
+            await conn.execute("SELECT 1 FROM schema_versions WHERE version=%s", (3,))
+        ).fetchone()
+        if row is None:
+            await conn.execute("ALTER TABLE reviews ADD COLUMN IF NOT EXISTS recommendation integer CHECK (recommendation BETWEEN 1 AND 5)")
+            await conn.execute("""CREATE TABLE IF NOT EXISTS saved_places (
+                user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                place_id text NOT NULL REFERENCES places(id) ON DELETE CASCADE,
+                saved_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(user_id, place_id)
+            )""")
+            await conn.execute("INSERT INTO schema_versions(version) VALUES (3)")
 
 
 async def seed_demo() -> None:

@@ -133,3 +133,7 @@ Na dev dostępne są teraz backend i niezależny moduł ankiety z dokumentami (r
 Zachowano nazwę KindSpotApp z dev oraz alias USpaceApp dla wcześniejszych testów. Fizyczny folder to D:\Github\USpace, pakiet Dart uspace i identyfikator com.example.uspace pozostają bez zmian. Nazwy dokumentów zmienione na KindSpot-checkpointy.md i KindSpot-kontrakt-frontend-backend-v0.1.md. Nazwa produktu: KindSpot.
 
 Aktualny commit jest WIP. Znane błędy parsowania kontrolera i nieukończone testy sklepu/filtrów pozostają do dokończenia po synchronizacji Git. Rebase nie jest dowodem działającej kompilacji i nie zmienia wcześniejszego APK.
+
+## Aktualne wejście API (2026-10-04)
+
+main.dart uruchamia ConnectKindSpot. Native: ustaw KINDSPOT_API_URL z końcówką /api/v1/ albo wpisz adres na ekranie. Web: domyślnie /api/v1/ na tym samym origin. HTTPS; lokalny HTTP tylko debug z KINDSPOT_LOCAL_HTTP=true. Konto i saldo pochodzą z serwera i nie resetują się przy starcie. Backend wymaga migracji 3. Polecenia PowerShell, przygotowanie Test Hackaton i checklista: ../docs/KindSpot-integracja-FastAPI.md. Przed flutter aktywuj ../scripts/Use-USpaceEnvironment.ps1. Emulator uruchamia wyłącznie użytkownik.

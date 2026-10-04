@@ -109,28 +109,16 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
-  testWidgets(
-    'Failed helper write does not change private needs and can retry independently',
-    (tester) async {
-      final store = MemoryStore();
-      final controller = AppController(DemoRepository(store));
-      await controller.load();
-      await tester.pumpWidget(host(ProfileScreen(controller: controller)));
-      final helper = find.widgetWithText(SwitchListTile, 'Pomocnik');
-      await show(tester, helper);
-      store.fail = true;
-      await tester.tap(helper);
-      await tester.pumpAndSettle();
-      expect(controller.profile.helper, isFalse);
-      expect(controller.profile.publicNeeds, isFalse);
-      await show(tester, find.byKey(const ValueKey('profile-retry')));
-      store.fail = false;
-      await tester.tap(find.byKey(const ValueKey('profile-retry')));
-      await tester.pumpAndSettle();
-      expect(controller.profile.helper, isTrue);
-      expect(controller.profile.publicNeeds, isFalse);
-    },
-  );
+  testWidgets('Profile has no role separating users by their needs', (
+    tester,
+  ) async {
+    final controller = AppController(DemoRepository(MemoryStore()));
+    await controller.load();
+    await tester.pumpWidget(host(ProfileScreen(controller: controller)));
+    expect(find.text('Pomocnik'), findsNothing);
+    expect(find.text('Chcę być Pomocnikiem'), findsNothing);
+    expect(controller.profile.toJson().containsKey('helper'), isFalse);
+  });
   testWidgets(
     'CP09 unavailable card and points fit narrow dark screen at 200 percent without claiming success',
     (tester) async {

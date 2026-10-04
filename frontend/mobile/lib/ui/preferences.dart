@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../app_controller.dart';
 import '../data/catalog.dart';
 import '../domain/models.dart';
@@ -21,7 +23,6 @@ class NeedsScreen extends StatefulWidget {
 
 class _NeedsScreenState extends State<NeedsScreen> {
   late Set<String> selected;
-  late bool helper;
   bool busy = false;
   String? saveError;
   final saveFocus = FocusNode();
@@ -35,7 +36,6 @@ class _NeedsScreenState extends State<NeedsScreen> {
   void initState() {
     super.initState();
     selected = widget.controller.profile.needIds.toSet();
-    helper = widget.controller.profile.helper;
   }
 
   Future<void> save() async {
@@ -56,7 +56,6 @@ class _NeedsScreenState extends State<NeedsScreen> {
       await widget.controller.saveProfile(
         widget.controller.profile.copyWith(
           needIds: ids,
-          helper: helper,
           rules: rules,
           onboarded: true,
         ),
@@ -112,15 +111,6 @@ class _NeedsScreenState extends State<NeedsScreen> {
           ),
         ),
       ],
-      const SectionTitle('Pomagaj po swojemu'),
-      Card(
-        child: SwitchListTile(
-          title: const Text('Chcę być Pomocnikiem'),
-          subtitle: const Text('Niezależnie od wybranych potrzeb.'),
-          value: helper,
-          onChanged: busy ? null : (v) => setState(() => helper = v),
-        ),
-      ),
       const SizedBox(height: 24),
       if (saveError != null) _SaveError(saveError!),
       FilledButton(
@@ -269,7 +259,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           context,
           MaterialPageRoute<void>(builder: (_) => const FilterHelpScreen()),
         ),
-        icon: const Icon(Icons.menu_book_outlined),
+        icon: const KindSpotSymbol(Icons.menu_book_outlined),
         label: const Text('Jak działają filtry'),
       ),
       if (widget.controller.profile.namedFilters.isNotEmpty) ...[
@@ -278,7 +268,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ListTile(
             title: Text(filter.name),
             subtitle: const Text('Wczytaj do formularza'),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: const KindSpotSymbol(Icons.chevron_right),
             onTap: busy
                 ? null
                 : () => setState(() {
@@ -312,17 +302,17 @@ class _FiltersScreenState extends State<FiltersScreen> {
         children: [
           OutlinedButton.icon(
             onPressed: busy ? null : () => preset('wheelchair'),
-            icon: const Icon(Icons.accessible),
+            icon: const KindSpotSymbol(Icons.accessible),
             label: const Text('Na wózku'),
           ),
           OutlinedButton.icon(
             onPressed: busy ? null : () => preset('calm'),
-            icon: const Icon(Icons.spa_outlined),
+            icon: const KindSpotSymbol(Icons.spa_outlined),
             label: const Text('Spokojnie'),
           ),
           OutlinedButton.icon(
             onPressed: busy ? null : () => preset('family'),
-            icon: const Icon(Icons.family_restroom),
+            icon: const KindSpotSymbol(Icons.family_restroom),
             label: const Text('Z dzieckiem'),
           ),
         ],

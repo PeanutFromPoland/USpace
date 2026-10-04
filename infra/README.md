@@ -12,7 +12,7 @@ FastAPI → PostgreSQL 17 + pgvector
 
 The Flutter source remains a mobile application. The web build gives reviewers a
 public URL for this infrastructure demo. Product API routes are implemented;
-the Flutter product screens are not connected yet. The public demo must use
+the Flutter entry point now connects the product screens to /api/v1/ on the same origin. Database migration version 3 is required before testing the new client. The public demo must use
 synthetic accounts and reviews only.
 
 Only Caddy publishes ports (80 and 443). PostgreSQL, Ollama, API and web stay on

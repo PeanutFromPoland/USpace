@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../domain/models.dart';
 
 const ink = Color(0xFF192F2A);
@@ -48,22 +50,53 @@ class Notice extends StatelessWidget {
   final IconData? icon;
   final Color? color;
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: color ?? Theme.of(context).colorScheme.surfaceContainer,
-      borderRadius: BorderRadius.circular(18),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: 10)],
-        Expanded(
-          child: Text(text, style: const TextStyle(fontSize: 16, height: 1.5)),
-        ),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final error = icon == Icons.error_outline;
+    final warning = icon == Icons.warning_amber;
+    final success = icon == Icons.check_circle_outline;
+    final background =
+        color ??
+        (error
+            ? scheme.errorContainer
+            : warning
+            ? scheme.tertiaryContainer
+            : success
+            ? scheme.primaryContainer
+            : scheme.surfaceContainerHigh);
+    final foreground = color != null
+        ? scheme.onSurface
+        : error
+        ? scheme.onErrorContainer
+        : warning
+        ? scheme.onTertiaryContainer
+        : success
+        ? scheme.onPrimaryContainer
+        : scheme.onSurface;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: background,
+        border: Border.all(color: error ? scheme.error : scheme.outline),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (icon != null) ...[
+            KindSpotSymbol(icon, size: 24, color: foreground),
+            const SizedBox(width: 12),
+          ],
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(color: foreground, fontSize: 16, height: 1.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class StatusTag extends StatelessWidget {
@@ -106,7 +139,7 @@ class StatusTag extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: foreground, size: 18),
+            KindSpotSymbol(icon, color: foreground, size: 18),
             const SizedBox(width: 6),
             Flexible(
               child: Text(
@@ -160,11 +193,6 @@ Widget pageBody(
   controller: controller,
   padding: const EdgeInsets.fromLTRB(24, 12, 24, 28),
   children: children,
-);
-
-Widget demoNotice() => const Notice(
-  'Wersja demonstracyjna. Miejsca i nagrody są przykładowe.',
-  icon: Icons.science_outlined,
 );
 
 AppBar adaptiveAppBar(

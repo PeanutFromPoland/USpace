@@ -71,7 +71,6 @@ class Login(ApiModel):
 class ProfilePatch(ApiModel):
     displayName: str | None = Field(default=None, min_length=1, max_length=80)
     appearance: Appearance | None = None
-    helperOptIn: bool | None = None
 
 
 class Rule(ApiModel):
@@ -86,10 +85,31 @@ class Rule(ApiModel):
         return self
 
 
+class NamedFilter(ApiModel):
+    name: str = Field(min_length=1, max_length=60)
+    rules: list[Rule] = Field(default_factory=list)
+    includeUnknownRequired: bool = False
+
+    @field_validator("name")
+    @classmethod
+    def nonblank_name(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Name must not be blank")
+        return value.strip()
+
+
 class Preferences(ApiModel):
     needIds: list[str] = Field(default_factory=list)
     presetIds: list[str] = Field(default_factory=list)
     rules: list[Rule] = Field(default_factory=list)
+    namedFilters: list[NamedFilter] = Field(default_factory=list, max_length=50)
+
+    @model_validator(mode="after")
+    def unique_filter_names(self) -> Preferences:
+        names = [item.name.casefold() for item in self.namedFilters]
+        if len(names) != len(set(names)):
+            raise ValueError("Duplicate filter name")
+        return self
 
 
 class PrivacyPatch(ApiModel):
@@ -97,7 +117,8 @@ class PrivacyPatch(ApiModel):
 
 
 class UiSettings(ApiModel):
-    colorThemeId: str = "default"
+    colorThemeId: str = "green"
+    darkMode: bool = False
     highContrast: bool = False
     reduceMotion: bool = False
     textScale: float = Field(default=1, ge=1, le=2)
@@ -123,7 +144,7 @@ class PlaceSearch(ApiModel):
     bbox: Bbox | None = None
     rules: list[Rule] = Field(default_factory=list)
     includeUnknownRequired: bool = False
-    sort: Literal["recommended", "name"] = "recommended"
+    sort: Literal["recommended", "name", "best_rated", "review_count"] = "recommended"
     cursor: str | None = None
     limit: int = Field(default=20, ge=1, le=100)
 
@@ -179,6 +200,7 @@ class ReviewCreate(ApiModel):
     visitedOn: date
     visitedAtLocalTime: time | None = None
     timeZone: str
+    recommendation: int | None = Field(default=None, ge=1, le=5)
     newParts: list[NewPart] = Field(default_factory=list, max_length=10)
     answers: list[ReviewAnswerCreate] = Field(min_length=1, max_length=50)
     temporaryIssues: list[TemporaryIssueCreate] = Field(default_factory=list)

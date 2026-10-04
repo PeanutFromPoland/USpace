@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../app_controller.dart';
 import '../domain/demo_shop.dart';
 import 'components.dart';
@@ -158,13 +160,50 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: KindSpotGraphic(
+                        reward.id == 'museum'
+                            ? 'thumbnail_culture'
+                            : reward.id == 'transport'
+                            ? 'thumbnail_transit'
+                            : reward.id == 'frame'
+                            ? 'thumbnail_frames'
+                            : 'thumbnail_avatars',
+                        width: 64,
+                        height: 64,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     Text(
                       reward.name,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
                     Text(reward.description),
-                    Text('${reward.exampleCost} pkt'),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${reward.exampleCost} pkt',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     FilledButton(
                       key: ValueKey('shop-buy-${reward.id}'),
@@ -256,7 +295,7 @@ class _ShopRewardsScreenState extends State<ShopRewardsScreen> {
               ),
             );
           },
-          icon: const Icon(Icons.menu_book_outlined),
+          icon: const KindSpotSymbol(Icons.menu_book_outlined),
           label: const Text('Punkty: poradnik i mini regulamin'),
         ),
       ]);

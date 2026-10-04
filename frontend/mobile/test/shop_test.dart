@@ -42,7 +42,6 @@ void main() {
       initial.profile.copyWith(
         needIds: ['wheelchair'],
         publicNeeds: true,
-        helper: true,
         cityId: 'warsaw',
         theme: 'pink',
         darkMode: true,
@@ -74,7 +73,7 @@ void main() {
       isTrue,
     );
     expect(restarted.profile.needIds, isEmpty);
-    expect(restarted.profile.helper || restarted.profile.publicNeeds, isFalse);
+    expect(restarted.profile.publicNeeds, isFalse);
     expect(restarted.profile.cityId, 'krakow');
     expect(restarted.profile.savedPlaceIds, ['garden']);
     expect(restarted.profile.reviewReports, isEmpty);

@@ -81,3 +81,6 @@ Przygotowano analizę i proponowaną checklistę. Do weryfikacji użytkownika: z
 ## Aktualizacja zakresu CP-02 — 2026-10-03
 
 Użytkownik odłożył końcową grafikę do późniejszej pracy innej osoby i zlecił sprawdzanie funkcjonalnych udogodnień względem WCAG. Aktualna pełna macierz A/AA i przegląd szkieletu: KindSpot-CP02-WCAG.md. Wcześniejsza analiza pozostaje materiałem odniesienia; CP-02 nie jest odebrany i wymaga poprawek oraz testów. Ankieta nadal odłożona.
+
+
+2026-10-04: nowe ekrany API sprawdzono testami logowania przy 200% tekstu i ankiety z zachowaniem odpowiedzi po błędzie. 175 testów Flutter przeszło. To częściowa weryfikacja; czytniki, urządzenie, klawiatura całego nowego przebiegu i pełny odbiór WCAG pozostają niewykonane. Raport KindSpot-integracja-FastAPI.md.

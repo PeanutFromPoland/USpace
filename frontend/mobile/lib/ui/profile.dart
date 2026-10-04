@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../app_controller.dart';
 import '../data/catalog.dart';
 
@@ -61,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const SectionTitle('Twój profil'),
       const CircleAvatar(
         radius: 36,
-        child: Icon(Icons.person_outline, size: 40),
+        child: KindSpotSymbol(Icons.person_outline, size: 40),
       ),
       const SizedBox(height: 16),
       Text(demoAccountName, style: Theme.of(context).textTheme.headlineMedium),
@@ -72,12 +74,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       const SectionTitle('Potrzeby i wygląd'),
       ListTile(
-        leading: const Icon(Icons.accessibility_new),
+        leading: const KindSpotSymbol(Icons.accessibility_new),
         title: const Text('Moje potrzeby'),
         subtitle: Text(
           controller.profile.publicNeeds ? 'Widoczne w podglądzie' : 'Prywatne',
         ),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const KindSpotSymbol(Icons.chevron_right),
         onTap: () {
           onOpenSection?.call();
           Navigator.push(
@@ -89,9 +91,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
       ListTile(
-        leading: const Icon(Icons.palette_outlined),
+        leading: const KindSpotSymbol(Icons.palette_outlined),
         title: const Text('Wygląd i dostępność'),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const KindSpotSymbol(Icons.chevron_right),
         onTap: () {
           onOpenSection?.call();
           Navigator.push(
@@ -107,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ListTile(
           title: Text(category),
           subtitle: const Text('W przygotowaniu'),
-          trailing: const Icon(Icons.chevron_right),
+          trailing: const KindSpotSymbol(Icons.chevron_right),
           onTap: () {
             onOpenSection?.call();
             Navigator.push(
@@ -121,18 +123,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           },
         ),
-      SwitchListTile(
-        title: const Text('Pomocnik'),
-        subtitle: const Text('Dobrowolnie, niezależnie od potrzeb i karty.'),
-        value: controller.profile.helper,
-        onChanged: controller.saving
-            ? null
-            : (value) => _save(
-                () => controller.saveProfile(
-                  controller.profile.copyWith(helper: value),
-                ),
-              ),
-      ),
       SwitchListTile(
         title: const Text('Pokaż potrzeby w publicznym profilu'),
         subtitle: const Text('Widoczność potrzeb w podglądzie profilu.'),
@@ -196,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const SectionTitle('Karta miejska'),
       ListTile(
         title: const Text('Stan karty miejskiej'),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const KindSpotSymbol(Icons.chevron_right),
         onTap: () {
           onOpenSection?.call();
           Navigator.push(
@@ -210,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       ListTile(
         title: const Text('Saldo i historia punktów'),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const KindSpotSymbol(Icons.chevron_right),
         onTap: () {
           onOpenSection?.call();
           Navigator.push(
@@ -224,10 +214,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const SizedBox(height: 16),
       ListTile(
         key: const ValueKey('account-settings'),
-        leading: const Icon(Icons.manage_accounts_outlined),
+        leading: const KindSpotSymbol(Icons.manage_accounts_outlined),
         title: const Text('Ustawienia konta'),
         subtitle: const Text('Sesja i lokalne dane'),
-        trailing: const Icon(Icons.chevron_right),
+        trailing: const KindSpotSymbol(Icons.chevron_right),
         onTap: () {
           onOpenSection?.call();
           Navigator.push(
@@ -251,7 +241,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             const Text('Lokalny przykład. Nie jest publikowany w sieci.'),
             const Text(demoAccountName),
-            if (controller.profile.helper) const Text('Pomocnik'),
             if (controller.profile.publicNeeds &&
                 controller.profile.needIds.isEmpty)
               const Text('Nie wskazano potrzeb.'),

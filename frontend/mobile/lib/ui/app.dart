@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'graphics.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -126,7 +129,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: pageBody([
         Row(
           children: [
-            Icon(
+            KindSpotSymbol(
               Icons.explore_outlined,
               color: Theme.of(context).colorScheme.primary,
               size: 32,
@@ -147,7 +150,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   builder: (_) => AccessibilityScreen(controller: controller),
                 ),
               ),
-              icon: const Icon(Icons.accessibility_new),
+              icon: const KindSpotSymbol(Icons.accessibility_new),
             ),
           ],
         ),
@@ -158,7 +161,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(28),
           ),
-          child: Icon(
+          child: KindSpotSymbol(
             Icons.travel_explore,
             size: 80,
             color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -199,7 +202,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           'To lokalna sesja Test Hackaton. Nie podawaj hasła ani danych prawdziwego konta. Ustawienia demo pozostają na tym urządzeniu.',
         ),
         const SizedBox(height: 20),
-        demoNotice(),
       ]),
     ),
   );

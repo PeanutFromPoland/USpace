@@ -118,7 +118,6 @@ class DemoProfile {
     this.onboarded = false,
     this.needIds = const [],
     this.rules = const [],
-    this.helper = false,
     this.publicNeeds = false,
     this.theme = 'green',
     this.darkMode = false,
@@ -132,7 +131,6 @@ class DemoProfile {
     this.namedFilters = const [],
   });
   final bool onboarded,
-      helper,
       publicNeeds,
       darkMode,
       highContrast,
@@ -148,7 +146,6 @@ class DemoProfile {
     bool? onboarded,
     List<String>? needIds,
     List<FilterRule>? rules,
-    bool? helper,
     bool? publicNeeds,
     String? theme,
     bool? darkMode,
@@ -164,7 +161,6 @@ class DemoProfile {
     onboarded: onboarded ?? this.onboarded,
     needIds: needIds ?? this.needIds,
     rules: rules ?? this.rules,
-    helper: helper ?? this.helper,
     publicNeeds: publicNeeds ?? this.publicNeeds,
     theme: theme ?? this.theme,
     darkMode: darkMode ?? this.darkMode,
@@ -181,7 +177,6 @@ class DemoProfile {
     'onboarded': onboarded,
     'needIds': needIds,
     'rules': rules.map((e) => e.toJson()).toList(),
-    'helper': helper,
     'publicNeeds': publicNeeds,
     'theme': theme,
     'darkMode': darkMode,
@@ -200,7 +195,6 @@ class DemoProfile {
     rules: (json['rules'] as List? ?? [])
         .map((e) => FilterRule.fromJson(Map<String, dynamic>.from(e as Map)))
         .toList(),
-    helper: json['helper'] as bool? ?? false,
     publicNeeds: json['publicNeeds'] as bool? ?? false,
     theme: json['theme'] as String? ?? 'green',
     darkMode: json['darkMode'] as bool? ?? false,

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'graphics.dart';
+
 import '../app_controller.dart';
 import '../data/survey_catalog.dart';
 import '../domain/models.dart';
@@ -21,12 +23,16 @@ class ReviewSurveyScreen extends StatefulWidget {
     required this.controller,
     required this.place,
     this.today,
+    this.providedQuestions,
+    this.providedWantedFeatures,
   });
   final AppController controller;
   final Place place;
 
   /// Dzisiejsza data; parametr ułatwia testy.
   final DateTime? today;
+  final List<SurveyQuestion>? providedQuestions;
+  final Set<String>? providedWantedFeatures;
 
   @override
   State<ReviewSurveyScreen> createState() => _ReviewSurveyScreenState();
@@ -38,13 +44,25 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
   bool showAll = false;
   int step = 0;
   String? error;
+  bool sending = false;
   Map<String, dynamic>? submitted;
   final scroll = ScrollController();
 
   DateTime get today => widget.today ?? DateTime.now();
 
-  List<SurveyQuestion> get questions =>
-      questionsForNeeds(widget.controller.profile.needIds, all: showAll);
+  List<SurveyQuestion> get allQuestions =>
+      widget.providedQuestions ?? surveyQuestions;
+  List<SurveyQuestion> catalogQuestions(bool all) {
+    final provided = widget.providedQuestions;
+    if (provided == null) {
+      return questionsForNeeds(widget.controller.profile.needIds, all: all);
+    }
+    final wanted = widget.providedWantedFeatures;
+    if (all || wanted == null || wanted.isEmpty) return provided;
+    return provided.where((q) => wanted.contains(q.featureId)).toList();
+  }
+
+  List<SurveyQuestion> get questions => catalogQuestions(showAll);
 
   // Kroki: 0 wstęp, 1 data, potem pytania, polecenie, podsumowanie, wynik.
   int get questionStart => 2;
@@ -75,7 +93,9 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
     }
     // Kolejność odpowiedzi zgodna z kolejnością pytań.
     final order = {
-      for (final (i, q) in surveyQuestions.indexed) q.featureId: i,
+      for (final (i, q)
+          in (widget.providedQuestions ?? surveyQuestions).indexed)
+        q.featureId: i,
     };
     draft.answers.sort(
       (a, b) => order[a.featureId]!.compareTo(order[b.featureId]!),
@@ -95,7 +115,8 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
     if (scroll.hasClients) scroll.jumpTo(0);
   }
 
-  void _next() {
+  Future<void> _next() async {
+    if (sending) return;
     if (step == 1 && draft.isFutureDate(today)) {
       setState(() => error = 'Data wizyty nie może być późniejsza niż dziś.');
       return;
@@ -114,8 +135,33 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
         setState(() => error = _missingAnswer);
         return;
       }
-      submitted = widget.controller.submitDemoReview(draft);
-      _goTo(resultStep);
+      if (widget.controller.isRemote &&
+          draft.answers
+              .where((a) => a.answered)
+              .every((a) => a.presence == Presence.unknown)) {
+        setState(
+          () => error = 'Podaj co najmniej jedną obserwację. Same niewiadome nie wystarczą.',
+        );
+        return;
+      }
+      setState(() {
+        sending = true;
+        error = null;
+      });
+      try {
+        submitted = await widget.controller.submitReview(draft);
+        if (mounted) _goTo(resultStep);
+      } catch (e) {
+        if (mounted) {
+          setState(
+            () => error = widget.controller.isRemote
+                ? 'Nie udało się wysłać recenzji. Odpowiedzi zostały. Spróbuj ponownie.'
+                : 'Nie udało się zapisać recenzji. Spróbuj ponownie.',
+          );
+        }
+      } finally {
+        if (mounted) setState(() => sending = false);
+      }
       return;
     }
     _goTo(step + 1);
@@ -131,6 +177,7 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
   }
 
   void _back() {
+    if (sending) return;
     if (step == 0 || step == resultStep) {
       Navigator.of(context).pop();
     } else {
@@ -142,7 +189,7 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
   Widget build(BuildContext context) {
     final inQuestions = step >= questionStart && step < recommendStep;
     return PopScope(
-      canPop: step == 0 || step == resultStep,
+      canPop: !sending && (step == 0 || step == resultStep),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _back();
       },
@@ -156,13 +203,16 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
                 total: questions.length,
               ),
             Expanded(
-              child: pageBody(
-                [
-                  if (error != null) _ErrorNotice(error!),
-                  ..._stepContent(context),
-                ],
-                key: ValueKey('step-$step'),
-                controller: scroll,
+              child: AbsorbPointer(
+                absorbing: sending,
+                child: pageBody(
+                  [
+                    if (error != null) _ErrorNotice(error!),
+                    ..._stepContent(context),
+                  ],
+                  key: ValueKey('step-$step'),
+                  controller: scroll,
+                ),
               ),
             ),
             if (step != resultStep) _bottomBar(context),
@@ -205,14 +255,17 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
             if (step > 0) ...[
               Expanded(
                 child: OutlinedButton(
-                  onPressed: _back,
+                  onPressed: sending ? null : _back,
                   child: const Text('Wstecz'),
                 ),
               ),
               const SizedBox(width: 12),
             ],
             Expanded(
-              child: FilledButton(onPressed: _next, child: Text(nextLabel)),
+              child: FilledButton(
+                onPressed: sending ? null : _next,
+                child: Text(sending ? 'Wysyłanie…' : nextLabel),
+              ),
             ),
           ],
         ),
@@ -223,15 +276,15 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
   // ---------- Wstęp ----------
 
   List<Widget> _intro(BuildContext context) {
-    final mine = questionsForNeeds(widget.controller.profile.needIds);
+    final mine = catalogQuestions(false);
     return [
       _Heading(widget.place.name),
       Text(widget.place.address),
       const SizedBox(height: 16),
-      const Notice(
-        'Wersja demonstracyjna. Recenzja nie jest wysyłana do systemu, '
-        'a punkty przyznaje tylko system.',
-        icon: Icons.science_outlined,
+      Notice(
+        widget.controller.isRemote
+            ? 'Recenzja trafi do systemu. Punkty przyznaje serwer po sprawdzeniu.'
+            : 'Wersja demonstracyjna. Recenzja nie jest wysyłana do systemu, a punkty przyznaje tylko system.',
       ),
       const SizedBox(height: 16),
       Text(
@@ -244,10 +297,10 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
         'Liczba pytań: ${questions.length}',
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      if (mine.length < surveyQuestions.length)
+      if (mine.length < allQuestions.length)
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text('Pokaż wszystkie pytania (${surveyQuestions.length})'),
+          title: Text('Pokaż wszystkie pytania (${allQuestions.length})'),
           subtitle: const Text('Także te spoza Twoich potrzeb.'),
           value: showAll,
           onChanged: (v) {
@@ -381,7 +434,14 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
         question.feature.label,
         style: Theme.of(context).textTheme.labelLarge,
       ),
-      _Heading(question.text),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          KindSpotFeatureIcon(question.featureId),
+          const SizedBox(width: 12),
+          Expanded(child: _Heading(question.text)),
+        ],
+      ),
       if (question.hint != null) Text(question.hint!),
       const SizedBox(height: 12),
       for (final (i, answer) in answers.indexed)
@@ -415,7 +475,7 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
               draft.answers.insert(lastIndex + 1, added);
               _changed();
             },
-            icon: const Icon(Icons.add),
+            icon: const KindSpotSymbol(Icons.add),
             label: const Text('Oceń inne wejście lub część'),
           ),
         ),
@@ -481,9 +541,18 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${question.feature.label} · ${partLabel(widget.place, answer)}',
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      KindSpotFeatureIcon(question.featureId, size: 32),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          '${question.feature.label} · ${partLabel(widget.place, answer)}',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                    ],
                   ),
                   Text(answerLabel(question, answer)),
                   if (answer.state case final state?
@@ -516,6 +585,30 @@ class _ReviewSurveyScreenState extends State<ReviewSurveyScreen> {
   // ---------- Wynik ----------
 
   List<Widget> _result(BuildContext context) {
+    if (widget.controller.isRemote) {
+      final award = submitted?['pointAward'] as Map<String, dynamic>?;
+      return [
+        const _Heading('Recenzja wysłana'),
+        const Text(
+          'Serwer odebrał recenzję. Statusy możesz sprawdzić na liście recenzji.',
+        ),
+        Text(
+          'Publikacja: ${submitted?['publicationStatus'] == 'visible' ? 'widoczna' : 'wstrzymana'}',
+        ),
+        Text(
+          'Sprawdzanie: ${submitted?['verificationStatus'] == 'accepted' ? 'zaakceptowana' : 'oczekuje'}',
+        ),
+        Text(
+          award?['status'] == 'granted'
+              ? 'Punkty przyznane: ${award?['amount']}'
+              : 'Punkty jeszcze nieprzyznane.',
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Wróć do miejsca'),
+        ),
+      ];
+    }
     final json = const JsonEncoder.withIndent('  ').convert(submitted);
     return [
       Semantics(
@@ -839,7 +932,7 @@ class _AnswerCardState extends State<_AnswerCard> {
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   onPressed: widget.onRemove,
-                  icon: const Icon(Icons.delete_outline),
+                  icon: const KindSpotSymbol(Icons.delete_outline),
                   label: const Text('Usuń tę odpowiedź'),
                 ),
               ),
@@ -901,7 +994,10 @@ class _ErrorNotice extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.error_outline, color: scheme.onErrorContainer),
+              KindSpotSymbol(
+                Icons.error_outline,
+                color: scheme.onErrorContainer,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -932,7 +1028,7 @@ class _StatusRow extends StatelessWidget {
   Widget build(BuildContext context) => MergeSemantics(
     child: ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon),
+      leading: KindSpotSymbol(icon),
       title: Text(title),
       subtitle: Text(text),
     ),

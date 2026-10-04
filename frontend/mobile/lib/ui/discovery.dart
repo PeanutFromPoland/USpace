@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import 'graphics.dart';
+
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -143,9 +146,9 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
       [
         Row(
           children: [
-            Icon(
+            KindSpotSymbol(
               Icons.explore_outlined,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
               size: 30,
             ),
             const SizedBox(width: 8),
@@ -165,7 +168,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
                       AccessibilityScreen(controller: widget.controller),
                 ),
               ),
-              icon: const Icon(Icons.accessibility_new),
+              icon: const KindSpotSymbol(Icons.accessibility_new),
             ),
           ],
         ),
@@ -187,7 +190,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
           isExpanded: true,
           decoration: const InputDecoration(
             labelText: 'Miasto',
-            prefixIcon: Icon(Icons.location_on_outlined),
+            prefixIcon: KindSpotSymbol(Icons.location_on_outlined),
           ),
           items: const [
             DropdownMenuItem(value: 'krakow', child: Text('Kraków')),
@@ -230,7 +233,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
         OutlinedButton.icon(
           key: const ValueKey('locate-city'),
           onPressed: locating || widget.controller.saving ? null : locateCity,
-          icon: const Icon(Icons.my_location),
+          icon: const KindSpotSymbol(Icons.my_location),
           label: Text(
             locating ? 'Ustalanie miasta…' : 'Użyj lokalizacji telefonu',
           ),
@@ -254,7 +257,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
           decoration: InputDecoration(
             hintText: 'Nazwa, rodzaj lub adres',
             labelText: 'Szukaj miejsc',
-            prefixIcon: const Icon(Icons.search),
+            prefixIcon: const KindSpotSymbol(Icons.search),
             suffixIcon: query.isEmpty
                 ? null
                 : IconButton(
@@ -264,7 +267,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
                       setState(() => query = '');
                       searchFocus.requestFocus();
                     },
-                    icon: const Icon(Icons.clear),
+                    icon: const KindSpotSymbol(Icons.clear),
                   ),
           ),
         ),
@@ -309,12 +312,12 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
             ButtonSegment(
               value: false,
               label: Text('Lista'),
-              icon: Icon(Icons.format_list_bulleted),
+              icon: KindSpotSymbol(Icons.format_list_bulleted),
             ),
             ButtonSegment(
               value: true,
               label: Text('Mapa'),
-              icon: Icon(Icons.map_outlined),
+              icon: KindSpotSymbol(Icons.map_outlined),
             ),
           ],
           selected: {showMap},
@@ -344,7 +347,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
                   builder: (_) => FiltersScreen(controller: widget.controller),
                 ),
               ),
-              icon: const Icon(Icons.tune),
+              icon: const KindSpotSymbol(Icons.tune),
               label: Text(active == 0 ? 'Dopasuj filtry' : 'Filtry · $active'),
             ),
             OutlinedButton.icon(
@@ -354,7 +357,7 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
                   builder: (_) => NeedsScreen(controller: widget.controller),
                 ),
               ),
-              icon: const Icon(Icons.person_outline),
+              icon: const KindSpotSymbol(Icons.person_outline),
               label: const Text('Moje potrzeby'),
             ),
           ],
@@ -369,11 +372,11 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
               ),
             ),
           ),
-          icon: const Icon(Icons.near_me_outlined),
+          icon: const KindSpotSymbol(Icons.near_me_outlined),
           label: const Text('Proponowane miejsca'),
         ),
         const SizedBox(height: 20),
-        demoNotice(),
+
         ResultsSummary(
           count: hits.length,
           cityId: profile.cityId,
@@ -388,7 +391,10 @@ class DiscoveryScreenState extends State<DiscoveryScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.search_off, size: 36),
+                  const KindSpotGraphic(
+                    'illustration_empty_results',
+                    height: 110,
+                  ),
                   const SectionTitle('Brak pasujących miejsc'),
                   const Text(
                     'Zmień miasto, tekst wyszukiwania lub filtry. Brak wyników nie oznacza awarii.',
@@ -463,13 +469,13 @@ class PlaceCard extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Icon(
+                    child: KindSpotSymbol(
                       place.category.startsWith('Park')
                           ? Icons.park_outlined
                           : place.category.startsWith('Kultura')
                           ? Icons.local_library_outlined
                           : Icons.place_outlined,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -512,12 +518,17 @@ class PlaceCard extends StatelessWidget {
                       vertical: 7,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF3F1FA),
+                      color: Theme.of(context).colorScheme.secondaryContainer,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Miejsce przykładowe',
-                      style: TextStyle(fontSize: 12, color: ink),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSecondaryContainer,
+                      ),
                     ),
                   ),
                 ],
@@ -569,7 +580,7 @@ class PlaceCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Icon(Icons.arrow_forward, size: 20),
+                  const KindSpotSymbol(Icons.arrow_forward, size: 20),
                 ],
               ),
             ],
@@ -711,9 +722,11 @@ class _PlacesMapState extends State<PlacesMap> {
                               ),
                               tooltip: 'Otwórz ${hit.place.name}',
                               onPressed: () => widget.onSelect(hit),
-                              icon: Icon(
+                              icon: KindSpotSymbol(
                                 Icons.location_on,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
                                 size: 28,
                               ),
                             ),
@@ -740,7 +753,7 @@ class _PlacesMapState extends State<PlacesMap> {
                             map.camera.center,
                             (map.camera.zoom + 1).clamp(10, 18),
                           ),
-                          icon: const Icon(Icons.add),
+                          icon: const KindSpotSymbol(Icons.add),
                         ),
                         IconButton(
                           constraints: const BoxConstraints(
@@ -752,7 +765,7 @@ class _PlacesMapState extends State<PlacesMap> {
                             map.camera.center,
                             (map.camera.zoom - 1).clamp(10, 18),
                           ),
-                          icon: const Icon(Icons.remove),
+                          icon: const KindSpotSymbol(Icons.remove),
                         ),
                       ],
                     ),

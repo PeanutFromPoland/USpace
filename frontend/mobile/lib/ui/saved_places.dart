@@ -56,7 +56,7 @@ class _KindSpotSavedPlacesScreenState extends State<KindSpotSavedPlacesScreen> {
           'Zapisane miejsca',
           subtitle: 'Ostatnio zapisane na początku',
         ),
-        demoNotice(),
+
         const SizedBox(height: 12),
         const Text(
           'Lokalne zapisy konta demo. Pokazujemy wszystkie miasta niezależnie od aktywnych filtrów. Dopasowanie uwzględnia bieżące filtry.',

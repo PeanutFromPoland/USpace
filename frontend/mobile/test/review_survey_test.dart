@@ -6,6 +6,7 @@ import 'package:uspace/data/demo_repository.dart';
 import 'package:uspace/domain/models.dart';
 import 'package:uspace/ui/place_details.dart';
 import 'package:uspace/ui/review_survey.dart';
+import 'package:uspace/ui/graphics.dart';
 import 'package:uspace/ui/theme.dart';
 
 import 'domain_test.dart' show MemoryStore;
@@ -38,6 +39,47 @@ Future<void> _tapText(WidgetTester tester, String text) async {
 }
 
 void main() {
+  testWidgets('Reviewed feature icon and question fit 320px at 200 percent', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final controller = await _controller(['stairs']);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kindSpotTheme(controller.profile),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: ReviewSurveyScreen(controller: controller, place: _library),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _tapText(tester, 'Zaczynam');
+    await _tapText(tester, 'Dalej');
+    expect(find.text('Czy da się wejść bez schodów?'), findsOneWidget);
+    expect(find.byType(KindSpotFeatureIcon), findsOneWidget);
+    expect(
+      tester
+          .widget<KindSpotFeatureIcon>(find.byType(KindSpotFeatureIcon))
+          .featureId,
+      'step_free_entrance',
+    );
+    expect(
+      KindSpotFeatureIcon.ids['elevator'],
+      KindSpotFeatureIcon.ids['lift'],
+    );
+    expect(
+      KindSpotFeatureIcon.ids['quiet_environment'],
+      KindSpotFeatureIcon.ids['quiet'],
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Every shown question needs an answer before moving on', (
     tester,
   ) async {

@@ -585,3 +585,32 @@ Ten zapis zastępuje wcześniejszy status WIP sklepu oraz dawny przebieg nagród
 - Niezależny moduł ankiety z dev zachowany. Test integracji przekazuje go przez opcjonalny SurveyBuilder; domyślne PoC nadal go nie włącza. API nie jest podłączone.
 
 Szczegóły i protokół sprawdzeń: KindSpot-sklep-testowy.md. Historyczne raporty i APK przed wznowieniem nie są wynikiem nowych zmian. Emulator uruchamia tylko użytkownik.
+
+## Integracja Flutter i FastAPI — decyzje 2026-10-04
+
+Ten zapis zastępuje wcześniejsze odłożenie ankiety/API oraz reset konta przy starcie. Użytkownik zlecił połączenie istniejącej ankiety i backendu. Główne wejście aplikacji korzysta z API, wymaga adresu serwera i logowania; dane konta, zapisane miejsca, punkty i zakupy są trwałe po stronie serwera. Test Hackaton otrzymuje 1000 punktów oraz Ogród ciszy tylko przy przygotowaniu konta lub ręcznym resecie operatora. Restart aplikacji nie dodaje punktów. Reset zachowuje nazwane filtry i dostępność; recenzje/głosy społeczności nie są usuwane w resecie portfela.
+
+Decyzja użytkownika: średnia całego miejsca wynika ze wszystkich pomniejszych ocen recenzji. Implementacja liczy wszystkie oceny wymiarów 1–5 zaakceptowanych widocznych recenzji, wyłączając absent/unknown i techniczne average_rating; osobne recommendation nie zastępuje średniej. Priorytet średniej i liczby recenzji przy remisie zachowany.
+
+Włączono transport HTTP, sesję, profil/filtry, miejsca/listę/mapę/zapisane, istniejącą ankietę, recenzje/głosy/zgłoszenia, punkty/sklep/moje nagrody i stany weryfikacji. Katalog 12 istniejących pytań jest dostarczany przez API. Backend wymaga jawnej migracji 3. Punkty/publikacja/uprawnienia nie są nadawane przez klienta. Operator karty pozostaje jawnie demonstracyjny. Nie zmieniono reguł rankingu komentarzy przy zerowych dislajkach.
+
+Sprawdzenia: 175 testów Flutter, analiza bez uwag; 32 testy backendu bez bazy i Ruff poprawne. Próba HTTP konfiguracji/OpenAPI/health oraz ochrony /me przeszła bez PostgreSQL. Pełny przebieg z bazą i urządzeniem pozostaje do wykonania: brak konfiguracji PostgreSQL i wskazanego adresu serwera. Nie uruchamiano emulatora. Zmiany lokalne Frontend, bez commita/push. Pełny zakres, polecenia i checklista: frontend/docs/KindSpot-integracja-FastAPI.md.
+
+## Wprowadzenie przy pierwszym uruchomieniu — 2026-10-04
+
+Decyzja użytkownika: krótkie wprowadzenie do PoC z trzema automatycznie przewijanymi slajdami i analogicznymi grafikami. Treści: znajdowanie miejsc dla swoich potrzeb; pomoc przez recenzowanie dostępności; punkty za szczery i rzetelny wkład. Użyto istniejących SVG onboarding_places, onboarding_reviews oraz illustration_reward_received z kolorami motywu. Slajd punktowy wyjaśnia, że punkty są po weryfikacji; intro samo ich nie przyznaje.
+
+Wprowadzenie poprzedza połączenie z API i logowanie; nie wymaga serwera. Slajdy co 5 sekund z łagodnym przejściem 300 ms, po trzecim wejście do aplikacji. Można pominąć, zatrzymać/wznowić lub przejść ręcznie Wstecz/Dalej/Zaczynamy. Ręczna zmiana zatrzymuje automat. Tło aplikacji zatrzymuje zegar; powrót rozpoczyna pełny czas slajdu. Czytnik ekranu lub systemowe ograniczenie animacji wyłącza automatyczne przejścia i animację.
+
+Ukończenie lub pominięcie zapisywane niezależnie od konta/backendu, w lokalnym kluczu kindspot.introduction.seen.v1. Kolejne starty pomijają intro; przerwanie przed ukończeniem nie zapisuje flagi. Błąd zapisu pokazuje ponowienie lub Kontynuuj bez zapisu (wtedy możliwe ponowne intro przy następnym starcie). Nie zmienia sesji ani danych konta.
+
+Sprawdzenie: 4 testy nowych scenariuszy, 179 testów całej aplikacji poprawnych, flutter analyze bez uwag; podglądy trzech slajdów z widgetów Flutter. Testy obejmują ręczny tryb dostępności, 320 px i tekst 200%, tło, pominięcie, trwałą flagę i awarię zapisu. Testy na urządzeniu/czytniku nadal wymagają użytkownika; emulatora nie uruchamiano.
+
+
+## Wspólna społeczność i czytelność ankiety — 2026-10-04
+
+Decyzja użytkownika zastępuje wcześniejszy zamysł Pomocnika: każdy może wyszukiwać miejsca, recenzować i weryfikować niezależnie od potrzeb. Usunięto przełączniki, oznaczenie oraz pole roli z modeli klienta i kontraktu konta API. Historyczna kolumna helper_opt_in w bazie pozostaje nieużywana dla zgodności danych; nie ma znaczenia dla uprawnień. Brak potrzeb nie nadaje osobnej roli. Nazwa obramowania zmieniona na „Wspólna przestrzeń”.
+
+Usunięto powtarzane banery wersji demonstracyjnej z ikoną kolby. Adnotacja konta testowego w profilu pozostaje. Informacje o rzeczywistych ograniczeniach operacji (nieważny kod/testowy operator karty/lokalny zapis) pozostają przy tych operacjach; nie oznacza to wdrożenia produkcyjnego.
+
+Pytania ankiety używają zatwierdzonych SVG cech (12 pytań; aliasy elevator/lift oraz quiet_environment/quiet). Ikona uzupełnia tekst, nie zastępuje etykiety. Kolory wynikają z motywu, ikony dekoracyjne nie powtarzają treści czytnikowi; nagłówek zawija się przy powiększonym tekście. Dane i punktacja ankiety bez zmian.

@@ -1,4 +1,4 @@
-# Uruchom przez dot-sourcing: . ..\scripts\Use-USpaceEnvironment.ps1
+﻿# Uruchom przez dot-sourcing: . ..\scripts\Use-USpaceEnvironment.ps1
 $ErrorActionPreference = 'Stop'
 $uspaceToolsRoot = Join-Path $env:USERPROFILE 'develop'
 $uspaceFlutterRoot = Join-Path $uspaceToolsRoot 'flutter'
