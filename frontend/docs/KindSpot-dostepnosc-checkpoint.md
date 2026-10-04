@@ -84,3 +84,6 @@ Użytkownik odłożył końcową grafikę do późniejszej pracy innej osoby i z
 
 
 2026-10-04: nowe ekrany API sprawdzono testami logowania przy 200% tekstu i ankiety z zachowaniem odpowiedzi po błędzie. 175 testów Flutter przeszło. To częściowa weryfikacja; czytniki, urządzenie, klawiatura całego nowego przebiegu i pełny odbiór WCAG pozostają niewykonane. Raport KindSpot-integracja-FastAPI.md.
+
+
+Weryfikacja zmiany społeczności/ikon 2026-10-04: 180 testów Flutter przeszło, flutter analyze bez uwag, 32 testy backendu bez bazy poprawne i Ruff bez uwag. Sprawdzono pytanie z zatwierdzoną ikoną przy 320 px i tekście 200%, zachowano etykietę i nagłówek czytnika. Usunięcie roli nie usuwa prywatnych potrzeb ani ustawień dostępności. Aktualne APK jest budowane; wynik należy potwierdzić osobno. Testy urządzenia/czytnika oraz PostgreSQL nadal niewykonane. Emulatora nie uruchamiano.

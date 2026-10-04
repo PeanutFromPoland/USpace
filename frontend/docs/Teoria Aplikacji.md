@@ -253,3 +253,9 @@ Decyzja użytkownika zastępuje wcześniejszy zamysł Pomocnika: każdy może wy
 Usunięto powtarzane banery wersji demonstracyjnej z ikoną kolby. Adnotacja konta testowego w profilu pozostaje. Informacje o rzeczywistych ograniczeniach operacji (nieważny kod/testowy operator karty/lokalny zapis) pozostają przy tych operacjach; nie oznacza to wdrożenia produkcyjnego.
 
 Pytania ankiety używają zatwierdzonych SVG cech (12 pytań; aliasy elevator/lift oraz quiet_environment/quiet). Ikona uzupełnia tekst, nie zastępuje etykiety. Kolory wynikają z motywu, ikony dekoracyjne nie powtarzają treści czytnikowi; nagłówek zawija się przy powiększonym tekście. Dane i punktacja ankiety bez zmian.
+
+## Dopracowanie ilustracji wprowadzenia — 2026-10-04
+
+Na prośbę użytkownika symbole w kafelkach zastąpiono małymi ilustracjami scen w stylu dostarczonego przykładu: mapa z zakładką i roślinami, ankieta z ołówkiem, prezent z punktami. Obszar grafiki 256 × 176 px. Usunięto tło-kafelek widgetu oraz biały panel z grafiki nagrody; SVG mają transparentną przestrzeń wokół sceny. Kolory i delikatne wypełnienia nadal wynikają z ról motywu; nie wymagają kolejnych eksportów przy dodaniu koloru. Zachowano warianty spokojne i monochromatyczne. Źródło scen: frontend/design/graphics/source/refresh_introduction_art.py.
+
+Zachowanie pierwszego uruchomienia, automatyka, flaga ukończenia i punktacja bez zmian. Sprawdzenie: 8 testów wprowadzenia, zasobów i podglądu poprawnych; flutter analyze bez uwag. Oceniono rzeczywiste zrzuty trzech slajdów Flutter. Testy na urządzeniu nadal wymagają użytkownika; emulatora nie uruchamiano.
