@@ -11,6 +11,55 @@ frontend/.packages
 infra/release*.env
 .deps/
 .pip-cache/
+.docker-test/
 backend/*.egg-info/
 backend/build/
 .worktrees/
+# Lokalne ustawienia
+.obsidian/
+**/.idea/
+**/*.iml
+**/*.ipr
+**/*.iws
+**/.vscode/settings.json
+**/.dev-tools.local.json
+
+# Flutter: pliki generowane i kompilacja
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/.pub/
+**/build/
+**/coverage/
+**/artifacts/
+*.log
+*.apk
+*.aab
+# Android: lokalne SDK, cache i podpisywanie
+**/.gradle/
+**/.cxx/
+**/local.properties
+**/key.properties
+**/*.keystore
+**/*.jks
+**/GeneratedPluginRegistrant.java
+# iOS: zależności i wygenerowana konfiguracja
+**/Pods/
+**/.symlinks/
+**/DerivedData/
+**/xcuserdata/
+**/Flutter/ephemeral/
+**/Flutter/Generated.xcconfig
+**/Flutter/flutter_export_environment.sh
+**/Runner/GeneratedPluginRegistrant.*
+# Lokalne pliki systemowe
+.DS_Store
+Thumbs.db
+# Lokalne konfiguracje i artefakty
+.dev-tools.local.json
+# Ustawienia lokalnych edytorów (nie publikujemy w repozytorium)
+# Pamięć podręczna, wyniki kompilacji i logi Fluttera
+
+# Kotlin build cache
+**/.kotlin/

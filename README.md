@@ -1,23 +1,29 @@
-# USpace
+# KindSpot
 
-Platforma dla osób o szczególnych potrzebach poszukujących miejsca dla siebie w metropoliach.
+Mobilna aplikacja dla osób z potrzebami dostępności i ich bliskich, pomagająca znaleźć odpowiednie miejsca w mieście. Wcześniejsza nazwa: USpace.
 
-Repozytorium zawiera szkielet Fluttera, FastAPI oraz środowisko Docker Compose
-z PostgreSQL i pgvector. Publiczne demo uruchamia wersję webową Fluttera, a
-kod aplikacji pozostaje przeznaczony także dla urządzeń mobilnych. Strona
-startowa i API pokazują wyłącznie gotowość infrastruktury; funkcje produktu
-powstaną po uzgodnieniu zaktualizowanego kontraktu.
+## Uruchomienie / Getting started
 
-## Lokalnie
+- [Polska instrukcja uruchomienia](docs/RUNNING.pl.md)
+- [English setup and run guide](docs/RUNNING.en.md)
 
-1. Skopiuj `.env.example` do `.env` i ustaw własne hasło bazy oraz nazwę
-   modelu Ollama.
-2. Uruchom `docker compose up --build -d`.
-3. Pobierz wybrany model przez `docker compose exec ollama ollama pull <model>`.
-4. Sprawdź `http://localhost:8000/health/ready`.
-5. W katalogu `frontend` uruchom `flutter create --platforms=web,android
-   --project-name=uspace_app .`, następnie `flutter run -d chrome` albo
-   uruchom aplikację na urządzeniu Android.
+Instrukcje obejmują Androida, połączenie z gotowym API, lokalny backend Docker Compose, konta, budowę APK i rozwiązywanie problemów. Nie wymagają lokalnych ścieżek zespołu. / The guides cover Android, an existing API or a local Docker Compose backend, accounts, APK builds and troubleshooting without team-specific paths.
 
-Proces CI/CD, konfiguracja VPS, sekrety i sposób odzyskania wdrożenia są
-opisane w [instrukcji infrastruktury](infra/README.md).
+## Frontend mobilny
+
+Aplikacja Flutter znajduje się w `frontend/mobile`, dokumentacja w `frontend/docs`, a skrypty w `frontend/scripts`. Uruchomienie i ograniczenia PoC: [instrukcja frontendu](frontend/README.md).
+
+- [Opis produktu](frontend/docs/Teoria%20Aplikacji.md)
+- [Przypadki użycia](frontend/docs/use-cases.md)
+- [Propozycja kontraktu frontend–backend](frontend/docs/KindSpot-kontrakt-frontend-backend-v0.1.md)
+- [Plan i checkpointy](frontend/docs/KindSpot-checkpointy.md)
+
+Mobilny PoC korzysta z API FastAPI i wymaga konta. Dane konta, recenzje, punkty i zakupy przechowuje backend. Integracja karty miejskiej i realizacja rzeczywistych nagród pozostają demonstracyjne. Instrukcje dla agentów: AGENTS.md.
+
+## Backend, demo webowe i infrastruktura
+
+Repozytorium zawiera FastAPI oraz Docker Compose z PostgreSQL i pgvector. Usługa `migrate` przygotowuje bazę przed startem API. Własny backend uruchom według [instrukcji](docs/RUNNING.pl.md#b-własny-backend-przez-docker-compose).
+
+Osobny szkielet Fluttera bezpośrednio w `frontend/` jest używany przez istniejące demo webowe, Dockerfile i CI/CD. Nie jest mobilnym projektem w `frontend/mobile/`.
+
+Proces CI/CD, konfiguracja VPS, sekrety i odzyskanie wdrożenia: [instrukcja infrastruktury](infra/README.md). Instrukcje generowania platform i budowania demo webowego: `.github/workflows/ci-cd.yml`.
