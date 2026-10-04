@@ -27,3 +27,8 @@ Testy statusu mieszkańca tworzą cztery logowalne konta syntetyczne i wykonują
 żądania HTTP z fikcyjnym numerem karty do prywatnego mocka przez transport ASGI. Sprawdzają wynik
 potwierdzony, wygasły, odrzucony, awarię operatora oraz zachowanie wcześniej
 potwierdzonego statusu. Testowe hasło i token mocka istnieją tylko w fixture.
+
+`test_demo_business_seed_e2e.py` sprawdza ponadto wypełnienie wszystkich
+istotnych tabel biznesowych, sporną cechę miejsca, saldo i profil Anny oraz
+powtórne uruchomienie seedera bez duplikatów. Tabele techniczne pozostają
+bez nowych rekordów demonstracyjnych.

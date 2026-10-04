@@ -11,6 +11,7 @@ frontend/.packages
 infra/release*.env
 .deps/
 .pip-cache/
+.docker-test/
 backend/*.egg-info/
 backend/build/
 .worktrees/

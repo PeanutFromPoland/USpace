@@ -97,6 +97,10 @@ docker compose exec ollama ollama pull NAZWA_MODELU
 
 Zastąp `NAZWA_MODELU` wartością `OLLAMA_MODEL` z `.env`, dobraną do zasobów komputera. Brak działającego modelu może pozostawić tekstową recenzję w oczekiwaniu na weryfikację; nie oznacza przyznania punktów. Wariant OpenAI i wdrożenie publiczne opisuje [dokumentacja infrastruktury](../infra/README.md).
 
+**Syntetyczne dane biznesowe.** Ustaw `KINDSPOT_ENABLE_DEMO_RESIDENTS=true` i własne hasło w `KINDSPOT_DEMO_ACCOUNT_PASSWORD` (12–256 znaków), a następnie uruchom usługę `migrate`. Powstaną cztery logowalne konta z końcówką `.invalid`: `anna.mieszkanka@kindspot.invalid`, `jan.mieszkaniec@kindspot.invalid`, `wygasla.karta@kindspot.invalid` i `turysta@kindspot.invalid`. Wszystkie używają ustawionego hasła. Operator karty jest osobną usługą demonstracyjną; jej token ustaw w `KINDSPOT_RESIDENT_API_TOKEN`. Numery kart, statusy i zdarzenia w bazie są fikcyjne.
+
+Przygotowanie danych wypełnia tabele produktu: użytkowników, miejsc i części miejsc, recenzji i odpowiedzi, moderacji, problemów tymczasowych, wizyt, głosów, zgłoszeń, punktów, nagród i wymian, weryfikacji kart, zapisanych miejsc oraz tytułów. Obejmuje też przykładową sporną cechę i wygasłą kartę. Seeder można uruchomić ponownie: ma stałe identyfikatory i nie dubluje przykładowych zdarzeń. Ponowne przygotowanie kont aktualizuje ich hasło do wartości z konfiguracji; preferencje są uzupełniane tylko wtedy, gdy mają wartość domyślną. Seeder nie tworzy przykładowych sesji, prób logowania ani innych technicznych zapisów. Dane demonstracyjne służą do prezentacji; nie potwierdzają rzeczywistej dostępności miejsc ani statusu mieszkańca.
+
 **Opcjonalne konto Test Hackaton.** Zwykłe konto można utworzyć przez aplikację. Do prezentacji portfela testowego przygotuj osobne konto syntetyczne:
 
 ```sh
