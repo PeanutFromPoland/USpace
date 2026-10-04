@@ -138,6 +138,8 @@ class ProductApi {
         'INVALID_CREDENTIALS' => 'Nieprawidłowy e-mail lub hasło.',
         'EMAIL_TAKEN' => 'Ten e-mail ma już konto. Wybierz logowanie.',
         'INSUFFICIENT_POINTS' => 'Za mało punktów.',
+        'ALREADY_OWNED' => 'Ten element jest już na Twoim koncie.',
+        'PURCHASE_PENDING' => 'Ten zakup jest już przetwarzany.',
         'PRICE_CHANGED' => 'Cena się zmieniła. Odśwież nagrodę.',
         'NOT_ELIGIBLE' => 'Ta czynność jest teraz niedostępna dla konta.',
         'ALREADY_VERIFIED' => 'Ta obserwacja ma już Twój głos.',

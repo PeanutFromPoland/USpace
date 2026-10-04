@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import '../data/product_api.dart';
 import '../integration/api_controller.dart';
 import 'api_app.dart';
+import 'api_personalization.dart';
 import 'components.dart';
+import 'graphics.dart';
 import 'filter_name_dialog.dart';
 
 class ApiLogin extends StatefulWidget {
@@ -78,14 +80,26 @@ class _ApiLoginState extends State<ApiLogin> {
                 AutofillHints.username,
                 AutofillHints.email,
               ],
-              decoration: const InputDecoration(labelText: 'E-mail'),
+              decoration: const InputDecoration(
+                labelText: 'E-mail',
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: KindSpotGraphic('email', width: 24, height: 24),
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             if (register) ...[
               TextField(
                 controller: name,
                 enabled: !widget.controller.saving,
-                decoration: const InputDecoration(labelText: 'Nazwa konta'),
+                decoration: const InputDecoration(
+                  labelText: 'Nazwa konta',
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: KindSpotGraphic('account', width: 24, height: 24),
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
             ],
@@ -99,7 +113,13 @@ class _ApiLoginState extends State<ApiLogin> {
               autofillHints: [
                 register ? AutofillHints.newPassword : AutofillHints.password,
               ],
-              decoration: const InputDecoration(labelText: 'Hasło'),
+              decoration: const InputDecoration(
+                labelText: 'Hasło',
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: KindSpotGraphic('password', width: 24, height: 24),
+                ),
+              ),
               onSubmitted: (_) => submit(),
             ),
           ],
@@ -257,6 +277,7 @@ class _ApiPreferencesState extends State<ApiPreferences> {
         const Text('Domyślnie prywatne. Możesz wskazać kilka potrzeb.'),
         for (final need in (c.configuration['needs'] as List).cast<Json>())
           CheckboxListTile(
+            secondary: KindSpotNeedIcon(need['id'] as String),
             title: Text(need['label'] as String),
             value: needs.contains(need['id']),
             onChanged: busy
@@ -316,6 +337,10 @@ class _ApiPreferencesState extends State<ApiPreferences> {
                     initialValue: rule(f['id'])['importance'] as String,
                     decoration: InputDecoration(
                       labelText: f['label'] as String,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: KindSpotFeatureIcon(f['id'] as String, size: 24),
+                      ),
                     ),
                     items: const [
                       DropdownMenuItem(
@@ -412,12 +437,24 @@ class _ApiRewardState extends State<ApiReward> {
           reward['availability'] == 'available' &&
           reward['eligibility']['eligible'] == true;
       return [
+        if (reward['cosmetic'] != null)
+          Center(child: cosmeticPreview(reward['cosmetic'] as Json, size: 104)),
         SectionTitle(reward['name'] as String),
         Text(reward['description'] as String),
         Text('Koszt: ${reward['costPoints']} pkt'),
         if (!eligible)
-          const Notice(
-            'Nagroda jest niedostępna lub wymaga potwierdzonej karty.',
+          Notice(switch (reward['eligibility']['reasonCode']) {
+            'ALREADY_OWNED' => 'Ten element jest już na Twoim koncie.',
+            'PURCHASE_PENDING' => 'Ten zakup jest już przetwarzany.',
+            _ => 'Nagroda jest niedostępna lub wymaga potwierdzonej karty.',
+          }),
+        if (reward['owned'] == true)
+          OutlinedButton(
+            onPressed: () => apiOpen(
+              context,
+              ApiCosmeticPicker(controller: widget.controller),
+            ),
+            child: const Text('Wybierz w profilu'),
           ),
         DropdownButtonFormField<String>(
           isExpanded: true,
@@ -473,7 +510,13 @@ class _ApiRewardState extends State<ApiReward> {
                     body,
                     requestKey!,
                   );
-                  if (!context.mounted) return;
+                  // Purchase is already confirmed. A refresh failure must not suggest buying again.
+                  try {
+                    await widget.controller.refreshMe();
+                  } catch (_) {}
+                  if (!context.mounted || !widget.controller.isDemoSignedIn) {
+                    return;
+                  }
                   apiOpen(
                     context,
                     apiRedemption(widget.controller, result['id'] as String),
@@ -646,6 +689,8 @@ class _ApiAccessibilityState extends State<ApiAccessibility> {
             'orange',
             'pink',
             'blue',
+            'explorer',
+            'gardener',
           ].contains(widget.controller.profile.theme)
           ? 'green'
           : widget.controller.profile.theme,
@@ -664,14 +709,24 @@ class _ApiAccessibilityState extends State<ApiAccessibility> {
         isExpanded: true,
         initialValue: settings['colorThemeId'] as String,
         decoration: const InputDecoration(labelText: 'Kolor'),
-        items: const [
-          DropdownMenuItem(value: 'green', child: Text('Pastelowy zielony')),
-          DropdownMenuItem(
+        items: [
+          if (settings['colorThemeId'] == 'explorer')
+            const DropdownMenuItem(value: 'explorer', child: Text('Odkrywca')),
+          if (settings['colorThemeId'] == 'gardener')
+            const DropdownMenuItem(value: 'gardener', child: Text('Ogrodnik')),
+          const DropdownMenuItem(
+            value: 'green',
+            child: Text('Pastelowy zielony'),
+          ),
+          const DropdownMenuItem(
             value: 'orange',
             child: Text('Pastelowy pomarańczowy'),
           ),
-          DropdownMenuItem(value: 'pink', child: Text('Pastelowy różowy')),
-          DropdownMenuItem(value: 'blue', child: Text('Jasnoniebieski')),
+          const DropdownMenuItem(
+            value: 'pink',
+            child: Text('Pastelowy różowy'),
+          ),
+          const DropdownMenuItem(value: 'blue', child: Text('Jasnoniebieski')),
         ],
         onChanged: state.busy
             ? null

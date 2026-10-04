@@ -79,6 +79,14 @@ class KindSpotSymbol extends Icon {
     Icons.light_mode_outlined: 'theme_light',
     Icons.dark_mode_outlined: 'theme_dark',
     Icons.search_off: 'search',
+    Icons.bookmark_add_outlined: 'nav_saved',
+    Icons.bookmark_remove_outlined: 'nav_saved',
+    Icons.accessible: 'need_wheelchair',
+    Icons.family_restroom: 'need_child_stroller',
+    Icons.spa_outlined: 'garden_leaf',
+    Icons.travel_explore: 'nav_map',
+    Icons.pause: 'pause',
+    Icons.play_arrow: 'play',
   };
 
   @override
@@ -188,10 +196,219 @@ class KindSpotFeatureIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ExcludeSemantics(
     child: KindSpotGraphic(
-      ids[featureId] ?? 'unknown',
+      ids[featureId] ??
+          (kindSpotGraphics.containsKey('feature_$featureId')
+              ? 'feature_$featureId'
+              : 'unknown'),
       width: size,
       height: size,
       monochrome: true,
     ),
   );
+}
+
+/// Avatar content and an optional frame are separate layers; no ownership logic.
+class KindSpotAvatar extends StatelessWidget {
+  const KindSpotAvatar(
+    this.avatarId, {
+    super.key,
+    this.frameId,
+    this.size = 80,
+    this.label,
+  });
+  final String avatarId;
+  final String? frameId, label;
+  final double size;
+  @override
+  Widget build(BuildContext context) => Semantics(
+    image: true,
+    label: label ?? 'Awatar użytkownika',
+    excludeSemantics: true,
+    child: SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(size * .12),
+            child: ClipOval(
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                child: SizedBox.expand(
+                  child: Padding(
+                    padding: EdgeInsets.all(size * .04),
+                    child:
+                        kindSpotGraphics.containsKey(avatarId) &&
+                            avatarId.startsWith('avatar_')
+                        ? KindSpotGraphic(avatarId)
+                        : KindSpotSymbol(Icons.person_outline, size: size * .5),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (frameId == 'frame_bow')
+            Positioned.fill(child: KindSpotGraphic('frame_bow')),
+        ],
+      ),
+    ),
+  );
+}
+
+/// Static, non-interactive patterns sit below routes with transparent scaffolds.
+class KindSpotBackdrop extends StatelessWidget {
+  const KindSpotBackdrop({
+    super.key,
+    required this.themeId,
+    required this.child,
+  });
+  final String themeId;
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final decorated = themeId == 'explorer' || themeId == 'gardener';
+    final quiet =
+        MediaQuery.disableAnimationsOf(context) ||
+        MediaQuery.accessibleNavigationOf(context) ||
+        MediaQuery.highContrastOf(context) ||
+        (Theme.of(context).extension<KindSpotPatternSettings>()?.quiet ??
+            false);
+    final ids = themeId == 'explorer'
+        ? const ['nav_map', 'search']
+        : const ['garden_leaf', 'garden_flower'];
+    return ColoredBox(
+      color: scheme.surface,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (decorated && !quiet)
+            Positioned.fill(
+              child: ExcludeSemantics(
+                child: IgnorePointer(
+                  child: Opacity(
+                    opacity: .045,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final columns = (constraints.maxWidth / 112)
+                            .ceil()
+                            .clamp(1, 20);
+                        final rows = (constraints.maxHeight / 112).ceil().clamp(
+                          1,
+                          40,
+                        );
+                        return GridView.builder(
+                          primary: false,
+                          padding: const EdgeInsets.all(18),
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: columns,
+                              ),
+                          itemCount: columns * rows,
+                          itemBuilder: (context, i) => Center(
+                            child: SizedBox(
+                              width: 32,
+                              height: 32,
+                              child: KindSpotGraphic(
+                                ids[i % ids.length],
+                                monochrome: true,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class KindSpotPatternSettings extends ThemeExtension<KindSpotPatternSettings> {
+  const KindSpotPatternSettings({required this.quiet});
+  final bool quiet;
+  @override
+  KindSpotPatternSettings copyWith({bool? quiet}) =>
+      KindSpotPatternSettings(quiet: quiet ?? this.quiet);
+  @override
+  KindSpotPatternSettings lerp(
+    covariant KindSpotPatternSettings? other,
+    double t,
+  ) => t < .5 || other == null ? this : other;
+}
+
+/// Reusable empty states keep the useful instruction in text, not in the picture.
+class KindSpotEmptyState extends StatelessWidget {
+  const KindSpotEmptyState(this.id, this.message, {super.key});
+  final String id, message;
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    child: Column(
+      children: [
+        KindSpotGraphic(id, width: 220, height: 130),
+        const SizedBox(height: 12),
+        Text(message, textAlign: TextAlign.center),
+      ],
+    ),
+  );
+}
+
+class KindSpotNeedIcon extends StatelessWidget {
+  const KindSpotNeedIcon(this.needId, {super.key, this.size = 28});
+  final String needId;
+  final double size;
+  static const aliases = <String, String>{
+    'walking_difficulty': 'walking',
+    'walking': 'walking',
+    'low_vision': 'vision',
+    'vision': 'vision',
+    'noise': 'low_noise',
+    'crowds': 'low_crowd',
+    'light': 'gentle_light',
+    'quiet': 'calm',
+    'simple_text': 'simple_information',
+    'assisted_travel': 'companion',
+    'companion': 'companion',
+    'guide_dog': 'guide_dog',
+    'dog': 'guide_dog',
+    'child': 'child_stroller',
+  };
+  @override
+  Widget build(BuildContext context) {
+    final candidate = 'need_${aliases[needId] ?? needId}';
+    return ExcludeSemantics(
+      child: KindSpotGraphic(
+        kindSpotGraphics.containsKey(candidate) ? candidate : 'accessibility',
+        width: size,
+        height: size,
+        monochrome: true,
+      ),
+    );
+  }
+}
+
+class KindSpotCategoryIcon extends StatelessWidget {
+  const KindSpotCategoryIcon(this.categoryId, {super.key, this.size = 32});
+  final String categoryId;
+  final double size;
+  @override
+  Widget build(BuildContext context) {
+    final candidate = 'category_$categoryId';
+    return ExcludeSemantics(
+      child: KindSpotGraphic(
+        kindSpotGraphics.containsKey(candidate) ? candidate : 'place_building',
+        width: size,
+        height: size,
+        monochrome: true,
+      ),
+    );
+  }
 }

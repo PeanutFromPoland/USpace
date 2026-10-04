@@ -13,6 +13,12 @@ from psycopg import AsyncConnection
 
 from uspace_api.catalog import PRESETS
 from uspace_api.errors import ApiError
+from uspace_api.personalization import (
+    REWARD_COSMETICS,
+    earned_titles,
+    public_title,
+    reward_category,
+)
 
 
 def new_id(prefix: str) -> str:
@@ -76,6 +82,8 @@ async def membership_views(conn: AsyncConnection, user_id: str) -> list[dict]:
     ]
 
 
+
+
 async def me_view(conn: AsyncConnection, user: dict) -> dict:
     stats = await (
         await conn.execute(
@@ -89,7 +97,7 @@ async def me_view(conn: AsyncConnection, user: dict) -> dict:
         "appearance": user["appearance"],
         "memberships": await membership_views(conn, user["id"]),
         "stats": {"reviewCount": stats["review_count"], "verificationCount": stats["verification_count"]},
-        "achievements": [], "pointsBalance": await balance(conn, user["id"]),
+        "achievements": [{"id": t["title_id"], "label": t["label"], "earnedAt": iso(t["earned_at"])} for t in await earned_titles(conn, user["id"])], "pointsBalance": await balance(conn, user["id"]),
         "preferences": user["preferences"], "uiSettings": user["ui_settings"],
         "privacy": user["privacy"],
     }
@@ -108,6 +116,7 @@ async def public_profile_view(conn: AsyncConnection, user: dict) -> dict:
         "appearance": user["appearance"], "badges": [],
         "stats": {"reviewCount": stats["review_count"], "verificationCount": stats["verification_count"]},
     }
+    body["title"] = await public_title(conn, user)
     if user["privacy"]["needsVisibility"] == "public":
         body["needs"] = user["preferences"]["needIds"]
     return body
@@ -322,7 +331,7 @@ async def review_view(conn: AsyncConnection, review: dict, viewer_id: str | None
                 allowed.insert(0, "vote")
     body = {
         "id": review["id"], "placeId": review["place_id"],
-        "author": {"id": author["id"], "displayName": author["display_name"], "appearance": author["appearance"], "badges": []},
+        "author": {"id": author["id"], "displayName": author["display_name"], "appearance": author["appearance"], "title": await public_title(conn, author), "badges": []},
         "visitedOn": iso(review["visited_on"]),
         "visitedAtLocalTime": review["visited_at_local_time"].strftime("%H:%M") if review["visited_at_local_time"] else None,
         "timeZone": review["time_zone"], "createdAt": iso(review["created_at"]),
@@ -354,7 +363,19 @@ async def reward_view(conn: AsyncConnection, reward: dict, user_id: str | None) 
                 for item in memberships
             )
             reason = None if eligible else "CARD_REQUIRED"
+    owned = False
+    pending = False
+    if user_id and reward["id"] in REWARD_COSMETICS:
+        existing = await (await conn.execute(
+            "SELECT status,points_status FROM redemptions WHERE user_id=%s AND reward_id=%s AND status IN ('processing','ready','fulfilled')",
+            (user_id, reward["id"]))).fetchall()
+        owned = any(r["status"] in {"ready", "fulfilled"} and r["points_status"] == "charged" for r in existing)
+        pending = any(r["status"] == "processing" for r in existing)
+        if owned or pending:
+            eligible, reason = False, "ALREADY_OWNED" if owned else "PURCHASE_PENDING"
     return {
+        "categoryId": reward_category(reward), "owned": owned,
+        "cosmetic": REWARD_COSMETICS.get(reward["id"]),
         "id": reward["id"], "name": reward["name"], "description": reward["description"],
         "kind": reward["kind"], "costPoints": reward["cost_points"],
         "cityId": reward["city_id"], "availability": reward["availability"],
@@ -365,6 +386,7 @@ async def reward_view(conn: AsyncConnection, reward: dict, user_id: str | None) 
 
 def redemption_view(row: dict, *, points_balance: int | None = None) -> dict:
     body = {
+        "cosmetic": REWARD_COSMETICS.get(row["reward_id"]),
         "id": row["id"], "rewardId": row["reward_id"], "rewardName": row["reward_name"],
         "costPoints": row["cost_points"], "deliveryMethod": row["delivery_method"],
         "status": row["status"], "createdAt": iso(row["created_at"]),

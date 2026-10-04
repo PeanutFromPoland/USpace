@@ -5,6 +5,7 @@ import '../data/catalog.dart';
 import '../domain/matching.dart';
 import '../domain/models.dart';
 import 'components.dart';
+import 'graphics.dart';
 import 'place_details.dart';
 import 'survey_entry.dart';
 
@@ -80,7 +81,8 @@ class _KindSpotSavedPlacesScreenState extends State<KindSpotSavedPlacesScreen> {
             child: const Text('Ponów usunięcie'),
           ),
         if (ids.isEmpty)
-          const Notice(
+          const KindSpotEmptyState(
+            'illustration_empty_saved',
             'Nie masz zapisanych miejsc. Otwórz szczegóły miejsca na mapie lub liście i wybierz „Zapisz miejsce”.',
           ),
         for (final id in ids) _savedCard(context, id),

@@ -98,6 +98,7 @@ class _NeedsScreenState extends State<NeedsScreen> {
                 CheckboxListTile(
                   value: selected.contains(need.id),
                   controlAffinity: ListTileControlAffinity.leading,
+                  secondary: KindSpotNeedIcon(need.id),
                   title: Text(need.label),
                   onChanged: busy
                       ? null
@@ -330,9 +331,17 @@ class _FiltersScreenState extends State<FiltersScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    feature.label,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Row(
+                    children: [
+                      KindSpotFeatureIcon(feature.id, size: 28),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          feature.label,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   Semantics(

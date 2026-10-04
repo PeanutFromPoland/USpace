@@ -1,9 +1,13 @@
 """RED state-transition contracts requiring deterministic synthetic DB fixtures."""
 
+import asyncio
 import os
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
+from test_api_e2e import _new_authenticated_user
+
+from uspace_api.db import connect
 
 API = "/api/v1"
 
@@ -54,8 +58,13 @@ def test_uc08_hidden_review_does_not_claim_successful_verification(client: TestC
     assert review.json()["pointAward"]["status"] != "granted"
 
 
-def test_uc11_funded_purchase_starts_once_with_processing_status(client: TestClient) -> None:
-    headers = _seeded_headers(client, "USPACE_E2E_FUNDED_USER")
+def test_uc11_funded_purchase_is_charged_once_with_server_status(client: TestClient, credentials) -> None:
+    user_id, headers = _new_authenticated_user(client, credentials)
+    async def fund():
+        async with await connect(migration=True) as conn:
+            await conn.execute("INSERT INTO points_entries(id,user_id,delta,reason_code) VALUES (%s,%s,1000,'test_funding')",
+                               (uuid4().hex, user_id))
+    asyncio.run(fund())
     points = client.get(f"{API}/me/points", headers=headers)
     catalogue = client.get(f"{API}/rewards", headers=headers)
     assert points.status_code == catalogue.status_code == 200
@@ -79,7 +88,7 @@ def test_uc11_funded_purchase_starts_once_with_processing_status(client: TestCli
     repeated = client.post(f"{API}/me/redemptions", headers=purchase_headers, json=payload)
     assert first.status_code == repeated.status_code == 201
     assert first.json()["id"] == repeated.json()["id"]
-    assert first.json()["status"] == "processing"
+    assert first.json()["status"] == ("fulfilled" if reward.get("cosmetic") else "processing")
     assert first.json()["pointsStatus"] in {"reserved", "charged"}
     assert first.json()["code"] is None
 

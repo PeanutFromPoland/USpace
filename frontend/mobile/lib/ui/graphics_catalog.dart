@@ -430,4 +430,8 @@ const kindSpotGraphics = <String, String>{
       'assets/graphics/variants/mono/presentation_review_mono.svg',
   'presentation_reward_mono':
       'assets/graphics/variants/mono/presentation_reward_mono.svg',
+  'avatar_lemur': 'assets/graphics/avatars/avatar_lemur.svg',
+  'frame_bow': 'assets/graphics/frames/frame_bow.svg',
+  'thumbnail_explorer': 'assets/graphics/thumbnails/thumbnail_explorer.svg',
+  'thumbnail_gardener': 'assets/graphics/thumbnails/thumbnail_gardener.svg',
 };

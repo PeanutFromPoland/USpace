@@ -5,6 +5,7 @@ import '../data/demo_reviews.dart';
 import '../domain/models.dart';
 import '../domain/reviews.dart';
 import 'components.dart';
+import 'graphics.dart';
 
 class ReviewsScreen extends StatefulWidget {
   const ReviewsScreen({
@@ -203,6 +204,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         const Notice(
           'Ankietę i dodawanie recenzji przygotowuje inna osoba. W tym demo odczytujesz gotowe przykłady.',
         ),
+        if (reviews.isEmpty)
+          const KindSpotGraphic('illustration_empty_reviews', height: 130),
         if (reviews.isEmpty)
           const SectionTitle(
             'Brak przykładowych recenzji',

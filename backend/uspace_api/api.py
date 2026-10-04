@@ -39,6 +39,12 @@ from uspace_api.models import (
     UiSettings,
     VoteCreate,
 )
+from uspace_api.personalization import (
+    REWARD_COSMETICS,
+    REWARD_THEMES,
+    owned_cosmetics,
+    validate_appearance,
+)
 from uspace_api.similarity import review_vector
 from uspace_api.views import (
     balance,
@@ -168,35 +174,19 @@ async def me(user: dict = Depends(current_user)) -> dict:
 
 @router.patch("/me/profile")
 async def patch_profile(body: ProfilePatch, user: dict = Depends(current_user)) -> dict:
-    appearance = user["appearance"].copy()
-    if body.appearance is not None:
-        changes = body.appearance.model_dump(exclude_none=True)
-        owned = {"avatar_default", "frame_default", "title_default"}
-        async with await connect() as conn:
-            rows = await (
-                await conn.execute(
-                    """SELECT reward_id FROM redemptions WHERE user_id=%s
-                    AND status IN ('ready','fulfilled')""",
-                    (user["id"],),
-                )
-            ).fetchall()
-        if any(row["reward_id"] == "reward_frame" for row in rows):
-            owned.add("frame_reward")
-        if any(item not in owned for item in changes.values()):
-            raise ApiError(403, "NOT_ELIGIBLE", "Ten element wyglądu nie należy do konta.")
-        appearance.update(changes)
-    updates = {
-        "display_name": body.displayName.strip() if body.displayName is not None else user["display_name"],
-        "appearance": appearance,
-    }
     async with await connect() as conn:
-        updated = await (
-            await conn.execute(
-                """UPDATE users SET display_name=%s,appearance=%s
-                WHERE id=%s RETURNING *""",
-                (updates["display_name"], Jsonb(appearance), user["id"]),
-            )
-        ).fetchone()
+        current = await (await conn.execute("SELECT * FROM users WHERE id=%s FOR UPDATE", (user["id"],))).fetchone()
+        appearance = current["appearance"].copy()
+        if body.appearance is not None:
+            changes = body.appearance.model_dump(exclude_none=True)
+            validate_appearance(changes, await owned_cosmetics(conn, user["id"]))
+            appearance.update(changes)
+        name = body.displayName.strip() if body.displayName is not None else current["display_name"]
+        if not name:
+            raise ApiError(422, "VALIDATION_ERROR", "Nazwa nie może być pusta.")
+        updated = await (await conn.execute(
+            "UPDATE users SET display_name=%s,appearance=%s WHERE id=%s RETURNING *",
+            (name, Jsonb(appearance), user["id"]))).fetchone()
         return await me_view(conn, updated)
 
 
@@ -205,21 +195,8 @@ async def cosmetics(
     cursor: str | None = None, limit: int = Query(20, ge=1, le=100),
     user: dict = Depends(current_user),
 ) -> dict:
-    items = [
-        {"id": "avatar_default", "kind": "avatar", "label": "Domyślny awatar", "imageUrl": None},
-        {"id": "frame_default", "kind": "frame", "label": "Domyślna ramka", "imageUrl": None},
-        {"id": "title_default", "kind": "title", "label": "Domyślny tytuł", "imageUrl": None},
-    ]
     async with await connect() as conn:
-        row = await (
-            await conn.execute(
-                """SELECT 1 FROM redemptions WHERE user_id=%s AND reward_id='reward_frame'
-                AND status IN ('ready','fulfilled') LIMIT 1""",
-                (user["id"],),
-            )
-        ).fetchone()
-    if row:
-        items.append({"id": "frame_reward", "kind": "frame", "label": "Ramka nagrody", "imageUrl": None})
+        items = await owned_cosmetics(conn, user["id"])
     key = fingerprint({"resource": "cosmetics", "user": user["id"]})
     offset = parse_cursor(cursor, key)
     return page(items[offset:offset + limit + 1], offset=offset, limit=limit, fingerprint=key)
@@ -252,9 +229,14 @@ async def patch_privacy(body: PrivacyPatch, user: dict = Depends(current_user)) 
 @router.put("/me/ui-settings")
 async def put_ui_settings(body: UiSettings, user: dict = Depends(current_user)) -> dict:
     settings = body.model_dump()
-    if settings["colorThemeId"] not in CONFIGURATION["uiOptions"]["themeIds"] or settings["textScale"] not in CONFIGURATION["uiOptions"]["textScales"]:
+    if settings["colorThemeId"] not in [*CONFIGURATION["uiOptions"]["themeIds"], *REWARD_THEMES] or settings["textScale"] not in CONFIGURATION["uiOptions"]["textScales"]:
         raise ApiError(422, "VALIDATION_ERROR", "Niepoprawne ustawienia wyglądu.")
     async with await connect() as conn:
+        await conn.execute("SELECT id FROM users WHERE id=%s FOR UPDATE", (user["id"],))
+        if settings["colorThemeId"] in REWARD_THEMES:
+            owned = await owned_cosmetics(conn, user["id"])
+            if not any(row["kind"] == "theme" and row["id"] == settings["colorThemeId"] for row in owned):
+                raise ApiError(403, "NOT_ELIGIBLE", "Najpierw kup ten motyw.")
         await conn.execute("UPDATE users SET ui_settings=%s WHERE id=%s", (Jsonb(settings), user["id"]))
     return settings
 
@@ -736,23 +718,25 @@ async def create_redemption(
             raise ApiError(422, "NOT_ELIGIBLE", "Nieobsługiwany sposób odbioru.")
         viewed = await reward_view(conn, reward, user["id"])
         if not viewed["eligibility"]["eligible"]:
-            raise ApiError(403, "NOT_ELIGIBLE", "Brak uprawnień do tej nagrody.")
+            raise ApiError(403, viewed["eligibility"]["reasonCode"] or "NOT_ELIGIBLE", "Nagroda jest niedostępna dla konta.")
         current_balance = await balance(conn, user["id"])
         if current_balance < reward["cost_points"]:
             raise ApiError(422, "INSUFFICIENT_POINTS", "Za mało punktów.")
+        immediate = reward["id"] in REWARD_COSMETICS and body.deliveryMethod == "account_item"
+        status, points_status = ("fulfilled", "charged") if immediate else ("processing", "reserved")
         redemption_id = new_id("redemption")
         row = await (
             await conn.execute(
                 """INSERT INTO redemptions(id,user_id,reward_id,reward_name,cost_points,
                 delivery_method,status,points_status)
-                VALUES (%s,%s,%s,%s,%s,%s,'processing','reserved') RETURNING *""",
-                (redemption_id, user["id"], reward["id"], reward["name"], reward["cost_points"], body.deliveryMethod),
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *""",
+                (redemption_id, user["id"], reward["id"], reward["name"], reward["cost_points"], body.deliveryMethod, status, points_status),
             )
         ).fetchone()
         await conn.execute(
             """INSERT INTO points_entries(id,user_id,delta,reason_code,related_redemption_id)
-            VALUES (%s,%s,%s,'reward_reserved',%s)""",
-            (new_id("pts"), user["id"], -reward["cost_points"], redemption_id),
+            VALUES (%s,%s,%s,%s,%s)""",
+            (new_id("pts"), user["id"], -reward["cost_points"], "reward_purchased" if immediate else "reward_reserved", redemption_id),
         )
         result = redemption_view(row, points_balance=current_balance - reward["cost_points"])
         await _complete(conn, user["id"], "redemption", key, result, 201)

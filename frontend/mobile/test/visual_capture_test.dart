@@ -11,6 +11,7 @@ import 'package:uspace/ui/app.dart';
 
 import 'package:uspace/ui/introduction.dart';
 import 'package:uspace/ui/theme.dart';
+import 'package:uspace/ui/graphics.dart';
 import 'package:uspace/domain/models.dart';
 
 import 'domain_test.dart' show MemoryStore;
@@ -139,6 +140,82 @@ void main() {
     await tester.tap(find.text('Dalej'));
     await tester.pumpAndSettle();
     await capture('introduction-3');
+    for (final id in ['explorer', 'gardener']) {
+      final profile = DemoProfile(theme: id, darkMode: id == 'gardener');
+      await tester.pumpWidget(
+        RepaintBoundary(
+          key: key,
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: kindSpotTheme(profile),
+            builder: (context, child) =>
+                KindSpotBackdrop(themeId: id, child: child!),
+            home: Scaffold(
+              appBar: AppBar(
+                title: Text(id == 'explorer' ? 'Odkrywca' : 'Ogrodnik'),
+              ),
+              body: ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  const SizedBox(height: 24),
+                  const Center(
+                    child: KindSpotAvatar(
+                      'avatar_lemur',
+                      frameId: 'frame_bow',
+                      size: 120,
+                      label: 'Lemur z kokardą',
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Personalizacja profilu',
+                            style: TextStyle(
+                              fontSize: 21,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              KindSpotAvatar(
+                                'avatar_lemur',
+                                size: 80,
+                                label: 'Lemur',
+                              ),
+                              KindSpotAvatar(
+                                'avatar_cat',
+                                size: 80,
+                                label: 'Kot',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          KindSpotGraphic('thumbnail_$id', height: 100),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Podgląd elementów graficznych. Wybór przedmiotów następuje po zakupie.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await capture('reward-theme-$id');
+    }
+
     expect(tester.takeException(), isNull);
   });
 }

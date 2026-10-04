@@ -230,7 +230,7 @@ illustration_privacy,illustrations/illustration_privacy.svg,illustrations,P2,Pry
 illustration_helping,illustrations/illustration_helping.svg,illustrations,P2,Wspólne pomaganie,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
 garden_scene,garden/garden_scene.svg,garden,P2,Spokojny ogród,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
 avatar_bird,avatars/avatar_bird.svg,avatars,P2,Ptak,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
-avatar_cat,avatars/avatar_cat.svg,avatars,P2,Kot,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_cat,avatars/avatar_cat.svg,avatars,P1,Awatar — minimalistyczny kot,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
 avatar_leaf,avatars/avatar_leaf.svg,avatars,P2,Liść,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
 avatar_flower,avatars/avatar_flower.svg,avatars,P2,Kwiat,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
 avatar_cloud,avatars/avatar_cloud.svg,avatars,P2,Chmura,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
@@ -336,3 +336,7 @@ presentation_opening_mono,variants/mono/presentation_opening_mono.svg,variants/m
 presentation_find_mono,variants/mono/presentation_find_mono.svg,variants/mono,P3,Odnajdywanie miejsc — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
 presentation_review_mono,variants/mono/presentation_review_mono.svg,variants/mono,P3,Dzielenie się wiedzą — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
 presentation_reward_mono,variants/mono/presentation_reward_mono.svg,variants/mono,P3,Nagrody — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_lemur,avatars/avatar_lemur.svg,avatars,P1,Awatar — minimalistyczny lemur,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+frame_bow,frames/frame_bow.svg,frames,P1,Ramka profilu — obręcz z małą kokardą,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+thumbnail_explorer,thumbnails/thumbnail_explorer.svg,thumbnails,P1,Motyw Odkrywca — mapa i lupa,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+thumbnail_gardener,thumbnails/thumbnail_gardener.svg,thumbnails,P1,Motyw Ogrodnik — liście i kwiaty,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC

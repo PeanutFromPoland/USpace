@@ -58,7 +58,7 @@ class _KindSpotAppState extends State<KindSpotApp> {
                 profile.reduceMotion ||
                 MediaQuery.of(context).disableAnimations,
           ),
-          child: child!,
+          child: KindSpotBackdrop(themeId: profile.theme, child: child!),
         ),
         home: widget.controller.loading
             ? const Scaffold(

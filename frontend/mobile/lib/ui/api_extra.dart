@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/product_api.dart';
 import '../integration/api_controller.dart';
 import 'api_app.dart';
+import 'graphics.dart';
 
 class ApiOwnedRewards extends StatefulWidget {
   const ApiOwnedRewards({super.key, required this.controller});
@@ -54,7 +55,7 @@ class _ApiOwnedRewardsState extends State<ApiOwnedRewards> {
             subtitle: Text(
               '${apiStatus(item['status'])} · ${item['costPoints']} pkt',
             ),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: const KindSpotSymbol(Icons.chevron_right),
             onTap: () => apiOpen(
               context,
               apiRedemption(widget.controller, item['id'] as String),

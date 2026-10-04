@@ -318,3 +318,14 @@ Decyzja użytkownika zastępuje wcześniejszy zamysł Pomocnika: każdy może wy
 Usunięto powtarzane banery wersji demonstracyjnej z ikoną kolby. Adnotacja konta testowego w profilu pozostaje. Informacje o rzeczywistych ograniczeniach operacji (nieważny kod/testowy operator karty/lokalny zapis) pozostają przy tych operacjach; nie oznacza to wdrożenia produkcyjnego.
 
 Pytania ankiety używają zatwierdzonych SVG cech (12 pytań; aliasy elevator/lift oraz quiet_environment/quiet). Ikona uzupełnia tekst, nie zastępuje etykiety. Kolory wynikają z motywu, ikony dekoracyjne nie powtarzają treści czytnikowi; nagłówek zawija się przy powiększonym tekście. Dane i punktacja ankiety bez zmian.
+
+
+## Personalizacja PoC za nagrody — 2026-10-04
+
+Decyzja użytkownika przekazana przez chat współpracujący: dwa profilowe (Lemur/Kot), jedna obręcz z kokardą, zakupione motywy Odkrywca i Ogrodnik, tło profilu z motywu, kategorie sklepu i mała sekcja Osiągnięcia z wyborem potwierdzonego publicznego tytułu. Grafiki/motywy dostarcza osobny chat; warstwa działania używa KindSpotAvatar i KindSpotBackdrop. Brak osobnej roli Pomocnika.
+
+Wdrożono kontrolę własności i rodzaju pola w API, katalog pięciu kosmetyków oraz natychmiastowe rozliczenie ich zakupów przez serwer (fulfilled/charged). Drugi zakup posiadanego/przetwarzanego kosmetyku blokowany; ponowienie tego samego Idempotency-Key bez drugiego obciążenia. Wyposażenie jest trwałe na koncie. Motywy explorer/gardener wymagają zakupu także przez PUT ui-settings. Ogrodnik włącza darkMode=true; użytkownik zachowuje możliwość zmiany wariantu, kontrastu i ułatwień.
+
+Nie ustanowiono automatycznych reguł zdobywania osiągnięć. Tytuły przechowuje earned_titles, nadanie przez operatora po potwierdzeniu. Klient może wybrać tylko zdobyty tytuł lub zrezygnować z publicznego tytułu. Publiczny profil i review.author.title zawierają wyłącznie wybrany potwierdzony tytuł; prywatne potrzeby nie są ujawniane. Wymagana migracja4 i bootstrap uprawnień, w tym poprawione granty saved_places. Konto nie dostaje nowych punktów z klienta.
+
+Raport, ceny PoC, polecenie operatora, zakres i testy: frontend/docs/KindSpot-personalizacja-PoC.md. Backend/PostgreSQL i urządzenie nadal niezweryfikowane w rzeczywistym środowisku; nie deklarować odbioru produkcyjnego. Bez APK/emulatora/commita/push w tym etapie — końcowa integracja w chacie graficznym.

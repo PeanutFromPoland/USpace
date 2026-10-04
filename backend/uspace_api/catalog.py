@@ -60,6 +60,6 @@ CONFIGURATION = {
     "presets": PRESETS,
     "cities": CITIES,
     "cardTypes": CARD_TYPES,
-    "uiOptions": {"themeIds": ["default", "high_contrast", "green", "orange", "pink", "blue"], "textScales": [1, 1.25, 1.5, 2]},
+    "uiOptions": {"themeIds": ["default", "high_contrast", "green", "orange", "pink", "blue"], "rewardThemeIds": ["explorer", "gardener"], "textScales": [1, 1.25, 1.5, 2]},
     "limits": {"maxReviewAnswers": 50, "maxNewParts": 10, "maxCommentLength": 2000, "maxPartNameLength": 120, "maxReportDescriptionLength": 1000, "maxSearchLimit": 100},
 }

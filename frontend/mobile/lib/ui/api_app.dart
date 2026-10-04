@@ -17,6 +17,7 @@ import 'review_survey.dart';
 import 'theme.dart';
 import 'api_forms.dart';
 import 'api_extra.dart';
+import 'api_personalization.dart';
 
 import 'package:flutter/services.dart';
 
@@ -63,11 +64,13 @@ class _ConnectedKindSpotAppState extends State<ConnectedKindSpotApp> {
               MediaQuery.textScalerOf(context).scale(1) *
                   ((ui['textScale'] as num?)?.toDouble() ?? 1),
             ),
+            highContrast:
+                c.profile.highContrast || MediaQuery.of(context).highContrast,
             disableAnimations:
                 c.profile.reduceMotion ||
                 MediaQuery.of(context).disableAnimations,
           ),
-          child: child!,
+          child: KindSpotBackdrop(themeId: c.profile.theme, child: child!),
         ),
         home: c.loading
             ? const Scaffold(
@@ -80,6 +83,10 @@ class _ConnectedKindSpotAppState extends State<ConnectedKindSpotApp> {
             : c.loadError != null
             ? Scaffold(
                 body: pageBody([
+                  const KindSpotGraphic(
+                    'illustration_connection_problem',
+                    height: 130,
+                  ),
                   const SectionTitle('Nie można połączyć aplikacji'),
                   Notice(c.loadError!),
                   FilledButton(
@@ -195,13 +202,15 @@ class RemotePageState extends State<RemotePage> {
         IconButton(
           tooltip: 'Odśwież dane',
           onPressed: busy ? null : reload,
-          icon: const Icon(Icons.refresh),
+          icon: const KindSpotSymbol(Icons.refresh),
         ),
       ],
     ),
     body: pageBody([
       if (error != null) ...[
-        Notice(error!),
+        if (data == null)
+          const KindSpotGraphic('illustration_connection_problem', height: 130),
+        Notice(error!, icon: Icons.error_outline),
         FilledButton(
           onPressed: busy ? null : reload,
           child: const Text('Odśwież dane'),
@@ -383,7 +392,13 @@ class _ApiBrowseState extends State<ApiBrowse> {
         DropdownButtonFormField<String>(
           initialValue: c.selectedCity,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Miasto'),
+          decoration: const InputDecoration(
+            labelText: 'Miasto',
+            prefixIcon: Padding(
+              padding: EdgeInsets.all(12),
+              child: KindSpotGraphic('city', width: 24, height: 24),
+            ),
+          ),
           items: [
             for (final city in (c.configuration['cities'] as List).cast<Json>())
               DropdownMenuItem(
@@ -406,7 +421,13 @@ class _ApiBrowseState extends State<ApiBrowse> {
         DropdownButtonFormField<String>(
           initialValue: c.placeSort,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Kolejność miejsc'),
+          decoration: const InputDecoration(
+            labelText: 'Kolejność miejsc',
+            prefixIcon: Padding(
+              padding: EdgeInsets.all(12),
+              child: KindSpotGraphic('sort', width: 24, height: 24),
+            ),
+          ),
           items: const [
             DropdownMenuItem(
               value: 'best_rated',
@@ -423,7 +444,13 @@ class _ApiBrowseState extends State<ApiBrowse> {
         ),
         TextField(
           controller: query,
-          decoration: const InputDecoration(labelText: 'Nazwa lub adres'),
+          decoration: const InputDecoration(
+            labelText: 'Nazwa lub adres',
+            prefixIcon: Padding(
+              padding: EdgeInsets.all(12),
+              child: KindSpotGraphic('search', width: 24, height: 24),
+            ),
+          ),
           onSubmitted: (_) => setState(() => submitted = query.text),
         ),
         FilledButton(
@@ -436,7 +463,11 @@ class _ApiBrowseState extends State<ApiBrowse> {
           onPressed: () => setState(() => map = !map),
           child: Text(map ? 'Pokaż listę miejsc' : 'Pokaż mapę'),
         ),
-        if (items(data).isEmpty) const Notice('Brak miejsc dla tych filtrów.'),
+        if (items(data).isEmpty)
+          const KindSpotEmptyState(
+            'illustration_empty_results',
+            'Brak miejsc dla tych filtrów.',
+          ),
         if (map && items(data).isNotEmpty) ...[
           const Notice(
             'Podkład mapy: OpenStreetMap. Lista poniżej zapewnia te same przejścia.',
@@ -492,6 +523,9 @@ class _ApiBrowseState extends State<ApiBrowse> {
 
 Widget apiPlaceTile(BuildContext context, ApiController c, Json place) => Card(
   child: ListTile(
+    leading: KindSpotCategoryIcon(
+      (place['categoryId'] ?? place['category'] ?? 'other') as String,
+    ),
     title: Text(place['name'] as String),
     subtitle: Text(
       '${place['address']}\n${apiStatus(place['match']?['status'])}\n${place['aggregateRating'] == null ? 'Brak średniej oceny' : 'Średnia: ${(place['aggregateRating'] as num).toStringAsFixed(2)}'} · Recenzje: ${place['reviewCount'] ?? 0}',
@@ -507,7 +541,11 @@ Widget apiSaved(ApiController c) => RemotePage(
   next: (cursor) =>
       c.api.call('GET', 'me/saved-places', query: {'cursor': cursor}),
   content: (context, state, data) => [
-    if (items(data).isEmpty) const Notice('Nie masz zapisanych miejsc.'),
+    if (items(data).isEmpty)
+      const KindSpotEmptyState(
+        'illustration_empty_saved',
+        'Nie masz zapisanych miejsc.',
+      ),
     for (final place in items(data)) ...[
       apiPlaceTile(context, c, place),
       OutlinedButton(
@@ -560,7 +598,17 @@ Widget apiPlaceDetails(ApiController c, String id) => RemotePage(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(apiFeatureLabel(c, feature['featureId'] as String)),
+              Row(
+                children: [
+                  KindSpotFeatureIcon(feature['featureId'] as String, size: 28),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      apiFeatureLabel(c, feature['featureId'] as String),
+                    ),
+                  ),
+                ],
+              ),
               Text(apiStatus(feature['presence'])),
               if (feature['operationalState'] != null)
                 Text(apiStatus(feature['operationalState'])),
@@ -603,10 +651,12 @@ Widget apiReviews(ApiController c, String placeId) => RemotePage(
   next: (cursor) =>
       c.api.call('GET', 'places/$placeId/reviews', query: {'cursor': cursor}),
   content: (context, state, data) => [
-    if (items(data).isEmpty) const Notice('Brak recenzji.'),
+    if (items(data).isEmpty)
+      const KindSpotEmptyState('illustration_empty_reviews', 'Brak recenzji.'),
     for (final review in items(data))
       ListTile(
         title: Text(review['author']['displayName'] as String),
+        leading: const KindSpotGraphic('review', width: 28, height: 28),
         subtitle: Text(
           '${review['visitedOn']} · ${apiStatus(review['verificationStatus'])}',
         ),
@@ -622,6 +672,8 @@ Widget apiReviewDetails(ApiController c, String id) => RemotePage(
   load: () => c.api.call('GET', 'reviews/$id'),
   content: (context, state, review) => [
     SectionTitle(review['author']['displayName'] as String),
+    if (review['author']['title'] != null)
+      Text('Tytuł: ${review['author']['title']['label']}'),
     Text('Wizyta: ${review['visitedOn']}'),
     Text('Publikacja: ${apiStatus(review['publicationStatus'])}'),
     Text('Sprawdzanie: ${apiStatus(review['verificationStatus'])}'),
@@ -641,7 +693,17 @@ Widget apiReviewDetails(ApiController c, String id) => RemotePage(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(apiFeatureLabel(c, answer['featureId'] as String)),
+              Row(
+                children: [
+                  KindSpotFeatureIcon(answer['featureId'] as String, size: 28),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      apiFeatureLabel(c, answer['featureId'] as String),
+                    ),
+                  ),
+                ],
+              ),
               Text(apiStatus(answer['presence'])),
               if (answer['comment'] != null) Text(answer['comment'] as String),
               Text(
@@ -694,7 +756,7 @@ Widget apiPublicProfile(ApiController c, String id) => RemotePage(
   title: 'Publiczny profil',
   load: () => c.api.call('GET', 'users/$id/public-profile'),
   content: (context, state, data) => [
-    SectionTitle(data['displayName'] as String),
+    ApiProfileIdentity(data: data),
     Text(
       'Recenzje: ${data['stats']['reviewCount']}. Weryfikacje: ${data['stats']['verificationCount']}.',
     ),
@@ -725,20 +787,42 @@ Widget apiRewards(ApiController c) => RemotePage(
       onPressed: () => apiOpen(context, apiPoints(c)),
       child: const Text('Saldo i historia punktów'),
     ),
-    for (final reward in items(data))
-      Card(
-        child: ListTile(
-          title: Text(reward['name'] as String),
-          subtitle: Text(
-            '${reward['costPoints']} pkt · ${reward['description']}',
-          ),
-          trailing: const KindSpotSymbol(Icons.chevron_right),
-          onTap: () => apiOpen(
-            context,
-            ApiReward(controller: c, id: reward['id'] as String),
-          ),
-        ),
+    if (items(data).isEmpty)
+      const KindSpotEmptyState(
+        'illustration_empty_rewards',
+        'Brak nagród w katalogu.',
       ),
+    for (final category in cosmeticCategories.entries)
+      if (items(data).any(
+        (r) =>
+            (r['categoryId'] ??
+                (r['kind'] == 'city_benefit' ? 'city' : 'other')) ==
+            category.key,
+      )) ...[
+        SectionTitle(category.value),
+        for (final reward in items(data).where(
+          (r) =>
+              (r['categoryId'] ??
+                  (r['kind'] == 'city_benefit' ? 'city' : 'other')) ==
+              category.key,
+        ))
+          Card(
+            child: ListTile(
+              leading: reward['cosmetic'] == null
+                  ? const KindSpotSymbol(Icons.redeem_outlined)
+                  : cosmeticPreview(reward['cosmetic'] as Json),
+              title: Text(reward['name'] as String),
+              subtitle: Text(
+                '${reward['costPoints']} pkt · ${reward['owned'] == true ? 'Na Twoim koncie' : reward['description']}',
+              ),
+              trailing: const KindSpotSymbol(Icons.chevron_right),
+              onTap: () => apiOpen(
+                context,
+                ApiReward(controller: c, id: reward['id'] as String),
+              ),
+            ),
+          ),
+      ],
     OutlinedButton(
       onPressed: () => apiOpen(
         context,
@@ -793,6 +877,7 @@ Widget apiPoints(ApiController c) => RemotePage(
 String pointReason(dynamic code) => switch (code) {
   'test_account_initial' => 'Saldo startowe konta testowego',
   'reward_reserved' => 'Rezerwacja nagrody',
+  'reward_purchased' => 'Zakup elementu wyglądu',
   'observation_confirmed' => 'Obserwacja potwierdzona',
   'observation_disputed' => 'Obserwacja zakwestionowana',
   _ => 'Rozliczenie punktów przez system',
@@ -804,6 +889,11 @@ Widget apiRedemption(ApiController c, String id) => RemotePage(
     SectionTitle(data['rewardName'] as String),
     Text(apiStatus(data['status'])),
     Text('Punkty: ${apiStatus(data['pointsStatus'])}'),
+    if (data['cosmetic'] != null && data['status'] == 'fulfilled')
+      OutlinedButton(
+        onPressed: () => apiOpen(context, ApiCosmeticPicker(controller: c)),
+        child: const Text('Wybierz w profilu'),
+      ),
     if (data['code'] != null) SelectableText('Kod: ${data['code']}'),
     if (data['instructions'] != null) Text(data['instructions'] as String),
     if (data['expiresAt'] != null) Text('Ważność: ${data['expiresAt']}'),
@@ -818,12 +908,23 @@ Widget apiProfile(ApiController c) => RemotePage(
   title: 'Profil',
   load: c.api.me,
   content: (context, state, me) => [
-    SectionTitle(me['displayName'] as String),
+    ApiProfileIdentity(data: me),
     if (me['displayName'] == 'Test Hackaton') const Text('Konto testowe'),
-    Text('Saldo: ${me['pointsBalance']} pkt'),
-    Text(
-      'Recenzje: ${me['stats']['reviewCount']}. Weryfikacje: ${me['stats']['verificationCount']}.',
+    Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Saldo: ${me['pointsBalance']} pkt'),
+            Text(
+              'Recenzje: ${me['stats']['reviewCount']}. Weryfikacje: ${me['stats']['verificationCount']}.',
+            ),
+          ],
+        ),
+      ),
     ),
+    apiAchievements(c, me, context),
     for (final member in (me['memberships'] as List).cast<Json>())
       Text(apiStatus(member['status'])),
     SwitchListTile(
@@ -862,45 +963,18 @@ Widget apiProfile(ApiController c) => RemotePage(
     ),
   ],
 );
-Widget apiCosmetics(ApiController c) => RemotePage(
-  title: 'Wygląd konta',
-  load: () => c.api.call('GET', 'me/cosmetics'),
-  next: (cursor) =>
-      c.api.call('GET', 'me/cosmetics', query: {'cursor': cursor}),
-  content: (context, state, data) => [
-    for (final item in items(data))
-      ListTile(
-        title: Text(item['label'] as String),
-        trailing: OutlinedButton(
-          onPressed: state.busy
-              ? null
-              : () => state.act(() async {
-                  final field = switch (item['kind']) {
-                    'avatar' => 'avatarId',
-                    'frame' => 'frameId',
-                    _ => 'titleId',
-                  };
-                  await c.api.call(
-                    'PATCH',
-                    'me/profile',
-                    body: {
-                      'appearance': {field: item['id']},
-                    },
-                  );
-                  await c.refreshMe();
-                }, success: 'Wygląd zapisany.'),
-          child: const Text('Użyj'),
-        ),
-      ),
-  ],
-);
+Widget apiCosmetics(ApiController c) => ApiCosmeticPicker(controller: c);
 Widget apiTasks(ApiController c) => RemotePage(
   title: 'Zadania weryfikacji',
   load: () => c.api.call('GET', 'me/verification-tasks'),
   next: (cursor) =>
       c.api.call('GET', 'me/verification-tasks', query: {'cursor': cursor}),
   content: (context, state, data) => [
-    if (items(data).isEmpty) const Text('Brak dostępnych zadań.'),
+    if (items(data).isEmpty)
+      const KindSpotEmptyState(
+        'illustration_helping',
+        'Brak dostępnych zadań.',
+      ),
     for (final task in items(data))
       ListTile(
         title: Text(apiFeatureLabel(c, task['featureId'] as String)),

@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS idempotency_records (
 """
 
 INITIAL_SCHEMA_VERSION = 1
-CURRENT_SCHEMA_VERSION = 3
+CURRENT_SCHEMA_VERSION = 4
 
 
 async def install_schema() -> None:
@@ -212,6 +212,16 @@ async def install_schema() -> None:
             )""")
             await conn.execute("INSERT INTO schema_versions(version) VALUES (3)")
 
+        row = await (await conn.execute("SELECT 1 FROM schema_versions WHERE version=4")).fetchone()
+        if row is None:
+            await conn.execute("""CREATE TABLE IF NOT EXISTS earned_titles (
+                user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                title_id text NOT NULL CHECK (title_id ~ '^title_[a-z0-9_]{1,54}$' AND title_id <> 'title_default'),
+                label text NOT NULL CHECK (char_length(label) BETWEEN 1 AND 60),
+                earned_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(user_id,title_id)
+            )""")
+            await conn.execute("INSERT INTO schema_versions(version) VALUES (4)")
+
 
 async def seed_demo() -> None:
     """Only synthetic records. Safe to repeat without erasing user-created data."""
@@ -240,10 +250,16 @@ async def seed_demo() -> None:
         ),
     ]
     rewards = [
-        ("reward_frame", "Ramka profilu", "Element wyglądu profilu", "cosmetic", 5, None, "available", ["account_item"]),
+        ("reward_frame", "Obręcz z kokardą", "Ramka wokół awatara", "cosmetic", 5, None, "available", ["account_item"]),
         ("reward_code", "Kod demonstracyjny", "Syntetyczny kod odbioru", "city_benefit", 10, "city_krakow", "available", ["pickup_code"]),
         ("reward_sold_out", "Niedostępna nagroda", "Przykład wyczerpanej nagrody", "cosmetic", 5, None, "sold_out", ["account_item"]),
     ]
+    rewards.extend([
+        ("reward_avatar_lemur", "Profilowe: Lemur", "Minimalistyczny awatar lemura", "cosmetic", 100, None, "available", ["account_item"]),
+        ("reward_avatar_cat", "Profilowe: Kot", "Minimalistyczny awatar kota", "cosmetic", 100, None, "available", ["account_item"]),
+        ("reward_theme_explorer", "Motyw Odkrywca", "Pergamin, mapy i lupy", "cosmetic", 100, None, "available", ["account_item"]),
+        ("reward_theme_gardener", "Motyw Ogrodnik", "Ciemnozielona paleta, liście i kwiaty", "cosmetic", 100, None, "available", ["account_item"]),
+    ])
     async with await connect(migration=True) as conn:
         for place in places:
             await conn.execute(
@@ -296,10 +312,10 @@ async def grant_app_role() -> None:
             sql.SQL("REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM {}").format(identifier)
         )
         grants = {
-            "SELECT": "places,rewards,visit_attestations,demo_card_entitlements",
+            "SELECT": "places,rewards,visit_attestations,demo_card_entitlements,earned_titles",
             "SELECT,INSERT": "place_parts,review_answers,temporary_issues,votes,reports,points_entries,moderation_events",
             "SELECT,INSERT,UPDATE": "users,sessions,reviews,redemptions,card_verifications,idempotency_records",
-            "SELECT,INSERT,DELETE": "login_attempts",
+            "SELECT,INSERT,DELETE": "login_attempts,saved_places",
         }
         for privileges, table_names in grants.items():
             await conn.execute(

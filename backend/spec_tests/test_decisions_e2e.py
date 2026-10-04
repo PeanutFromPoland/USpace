@@ -227,11 +227,12 @@ def test_expired_city_entitlement_does_not_unlock_reward(client: TestClient) -> 
 
 
 def test_demo_reward_settles_without_second_debit(client: TestClient) -> None:
-    login = client.post(
-        f"{API}/auth/login",
-        json={"email": os.environ["USPACE_E2E_FUNDED_USER_EMAIL"], "password": os.environ["USPACE_E2E_FUNDED_USER_PASSWORD"]},
-    )
-    headers = {"Authorization": f"Bearer {login.json()['accessToken']}"}
+    user_id, headers = _user(client)
+    async def fund():
+        async with await connect(migration=True) as conn:
+            await conn.execute("INSERT INTO points_entries(id,user_id,delta,reason_code) VALUES (%s,%s,100,'test_funding')",
+                               (uuid4().hex, user_id))
+    asyncio.run(fund())
     before = client.get(f"{API}/me/points", headers=headers).json()["balance"]
     created = client.post(
         f"{API}/me/redemptions",
@@ -240,7 +241,8 @@ def test_demo_reward_settles_without_second_debit(client: TestClient) -> None:
     )
     assert created.status_code == 201, created.text
     redemption_id = created.json()["id"]
-    assert asyncio.run(process_one_redemption(redemption_id)) is True
+    assert created.json()["status"] == "fulfilled"
+    assert asyncio.run(process_one_redemption(redemption_id)) is False
     assert asyncio.run(process_one_redemption(redemption_id)) is False
     result = client.get(f"{API}/me/redemptions/{redemption_id}", headers=headers).json()
     assert result["status"] == "fulfilled"

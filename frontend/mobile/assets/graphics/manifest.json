@@ -2775,13 +2775,13 @@
     "id": "avatar_cat",
     "plik": "avatars/avatar_cat.svg",
     "kategoria": "avatars",
-    "priorytet": "P2",
-    "znaczenie_pl": "Kot",
-    "wariant": "mono",
-    "role_kolorow": "foreground",
+    "priorytet": "P1",
+    "znaczenie_pl": "Awatar — minimalistyczny kot",
+    "wariant": "themed",
+    "role_kolorow": "foreground/accent/accentSoft/surface",
     "wspoldzielone_uzycie": "",
-    "zrodlo_licencja": "Własne wektory projektu KindSpot",
-    "pakiet": "KindSpot_corrected_v3"
+    "zrodlo_licencja": "Nowy własny wektor KindSpot, 2026-10-04",
+    "pakiet": "personalizacja_PoC"
   },
   {
     "id": "avatar_leaf",
@@ -4042,5 +4042,53 @@
     "wspoldzielone_uzycie": "",
     "zrodlo_licencja": "Własne wektory projektu KindSpot",
     "pakiet": "KindSpot_corrected_v3"
+  },
+  {
+    "id": "avatar_lemur",
+    "plik": "avatars/avatar_lemur.svg",
+    "kategoria": "avatars",
+    "priorytet": "P1",
+    "znaczenie_pl": "Awatar — minimalistyczny lemur",
+    "wariant": "themed",
+    "role_kolorow": "foreground/accent/accentSoft/surface",
+    "wspoldzielone_uzycie": "",
+    "zrodlo_licencja": "Nowy własny wektor KindSpot, 2026-10-04",
+    "pakiet": "personalizacja_PoC"
+  },
+  {
+    "id": "frame_bow",
+    "plik": "frames/frame_bow.svg",
+    "kategoria": "frames",
+    "priorytet": "P1",
+    "znaczenie_pl": "Ramka profilu — obręcz z małą kokardą",
+    "wariant": "themed",
+    "role_kolorow": "foreground/accent/accentSoft/surface",
+    "wspoldzielone_uzycie": "",
+    "zrodlo_licencja": "Nowy własny wektor KindSpot, 2026-10-04",
+    "pakiet": "personalizacja_PoC"
+  },
+  {
+    "id": "thumbnail_explorer",
+    "plik": "thumbnails/thumbnail_explorer.svg",
+    "kategoria": "thumbnails",
+    "priorytet": "P1",
+    "znaczenie_pl": "Motyw Odkrywca — mapa i lupa",
+    "wariant": "themed",
+    "role_kolorow": "foreground/accent/accentSoft/surface",
+    "wspoldzielone_uzycie": "",
+    "zrodlo_licencja": "Nowy własny wektor KindSpot, 2026-10-04",
+    "pakiet": "personalizacja_PoC"
+  },
+  {
+    "id": "thumbnail_gardener",
+    "plik": "thumbnails/thumbnail_gardener.svg",
+    "kategoria": "thumbnails",
+    "priorytet": "P1",
+    "znaczenie_pl": "Motyw Ogrodnik — liście i kwiaty",
+    "wariant": "themed",
+    "role_kolorow": "foreground/accent/accentSoft/surface",
+    "wspoldzielone_uzycie": "",
+    "zrodlo_licencja": "Nowy własny wektor KindSpot, 2026-10-04",
+    "pakiet": "personalizacja_PoC"
   }
 ]
