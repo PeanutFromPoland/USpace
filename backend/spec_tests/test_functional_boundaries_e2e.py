@@ -13,7 +13,6 @@ from fastapi.testclient import TestClient
 from uspace_api.db import connect
 from uspace_api.worker import process_one_review
 
-
 API = "/api/v1"
 PLACE = "place_krakow_library"
 

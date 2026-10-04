@@ -90,12 +90,15 @@ class NamedFilter(ApiModel):
     rules: list[Rule] = Field(default_factory=list)
     includeUnknownRequired: bool = False
 
-    @field_validator("name")
+    @field_validator("name", mode="before")
     @classmethod
-    def nonblank_name(cls, value: str) -> str:
-        if not value.strip():
+    def nonblank_name(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+        name = value.strip()
+        if not name:
             raise ValueError("Name must not be blank")
-        return value.strip()
+        return name
 
 
 class Preferences(ApiModel):

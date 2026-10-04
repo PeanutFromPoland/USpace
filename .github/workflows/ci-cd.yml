@@ -64,11 +64,20 @@ jobs:
       - name: Install Flutter packages
         working-directory: frontend
         run: flutter pub get
-      - name: Analyze Flutter source
+      - name: Analyze web demo source
         working-directory: frontend
         run: flutter analyze
-      - name: Test Flutter widgets
+      - name: Test web demo widgets
         working-directory: frontend
+        run: flutter test
+      - name: Install mobile app packages
+        working-directory: frontend/mobile
+        run: flutter pub get
+      - name: Analyze mobile app source
+        working-directory: frontend/mobile
+        run: flutter analyze
+      - name: Test mobile app widgets
+        working-directory: frontend/mobile
         run: flutter test
       - name: Build web demo
         working-directory: frontend
