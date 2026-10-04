@@ -97,13 +97,9 @@ docker compose exec ollama ollama pull MODEL_NAME
 
 Replace `MODEL_NAME` with the `OLLAMA_MODEL` value from `.env`, choosing a model suitable for your hardware. Without a working model, a text review may remain pending verification; this does not award points. See the [infrastructure guide](../infra/README.md) for the OpenAI option and public deployment.
 
-**Optional Test Hackaton account.** You can register a regular account through the app. To demonstrate the test wallet, prepare a separate synthetic account:
+**Demo accounts after the resident operator update.** In `.env`, set `KINDSPOT_ENABLE_DEMO_RESIDENTS=true`, your own `KINDSPOT_DEMO_ACCOUNT_PASSWORD` (12–256 characters, without a `replace-` prefix) and a random `KINDSPOT_RESIDENT_API_TOKEN` (at least 32 characters, without a `replace-` prefix). Compose requires the operator token even when demo account seeding is disabled. Do not publish these values.
 
-```sh
-docker compose run --rm --no-deps -e KINDSPOT_TEST_PASSWORD="REPLACE_WITH_YOUR_TEST_PASSWORD" migrate python -m uspace_api.test_account
-```
-
-Replace the value with your own password of at least 12 characters. Login: `hackaton@example.invalid`. There is no default password. Initial preparation gives this account 1000 test points and a saved Ogród ciszy place; restarting the app does not reset them. Do not add `--reset` for normal startup: it is a separate operation that resets the test account's wallet and purchases.
+Migration creates `anna.mieszkanka@kindspot.invalid`, `jan.mieszkaniec@kindspot.invalid`, `wygasla.karta@kindspot.invalid` and `turysta@kindspot.invalid`; all use your configured demo password. These are synthetic identities and cards. These accounts start with a zero balance. The former Test Hackaton preparation module was removed in the update; do not run `uspace_api.test_account`. You can also register a regular account through the app.
 
 ## 4. Run the Android app
 
@@ -203,7 +199,7 @@ This preserves data in volumes. Do not use `docker compose down -v` if you want 
 | Connection refused | `docker compose ps -a`, API readiness, emulator host address or `adb reverse`. |
 | API is running but the database is not ready | `docker compose logs --tail=100 db migrate api`; credentials, roles and successful migrations. Editing a password in `.env` does not automatically change the password in an existing PostgreSQL volume. |
 | Review is pending verification | Worker process, API logs and availability of the configured model. |
-| No test points | Regular registration does not prepare Test Hackaton; use the dedicated account preparation command. |
+| No test points | New demo and regular accounts have a zero balance; the former automatic 1000 points are not part of the current seed. |
 | Build runs out of disk space or memory | Close unnecessary programs or use a phone instead of an emulator; avoid changing project files for one computer. |
 
 Do not commit passwords, `.env`, local SDK settings or `build`/`.dart_tool` directories. This guide was checked against the source code and Compose configuration; it does not replace a complete clean-machine installation test or an accessibility audit.

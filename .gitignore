@@ -60,3 +60,6 @@ Thumbs.db
 .dev-tools.local.json
 # Ustawienia lokalnych edytorów (nie publikujemy w repozytorium)
 # Pamięć podręczna, wyniki kompilacji i logi Fluttera
+
+# Kotlin build cache
+**/.kotlin/

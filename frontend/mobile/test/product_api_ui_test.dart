@@ -12,6 +12,53 @@ import 'package:uspace/ui/review_survey.dart';
 import 'product_api_test.dart' show Sessions, config, me, place, jsonResponse;
 
 void main() {
+  testWidgets('Shop loads its own catalogue after saved tab without refresh', (
+    tester,
+  ) async {
+    var rewardRequests = 0;
+    final api = ProductApi(
+      Uri.parse('https://api.example/api/v1/'),
+      client: MockClient((r) async {
+        if (r.url.path.endsWith('/configuration')) return jsonResponse(config);
+        if (r.url.path.endsWith('/me')) return jsonResponse(me);
+        if (r.url.path.endsWith('/rewards')) {
+          rewardRequests++;
+          return jsonResponse({
+            'items': [
+              {
+                'id': 'reward_test',
+                'name': 'Nagroda testowa',
+                'description': 'Opis',
+                'kind': 'cosmetic',
+                'categoryId': 'other',
+                'costPoints': 10,
+              },
+            ],
+            'nextCursor': null,
+          });
+        }
+        return jsonResponse({'items': [], 'nextCursor': null});
+      }),
+    );
+    addTearDown(api.close);
+    final controller = ApiController(api, Sessions()..token = 'session');
+    await controller.load();
+    await tester.pumpWidget(MaterialApp(home: ApiHome(controller: controller)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('navigation-0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('navigation-1')));
+    await tester.pumpAndSettle();
+    expect(rewardRequests, 1);
+    expect(find.text('Nagroda testowa'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('navigation-0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('navigation-1')));
+    await tester.pumpAndSettle();
+    expect(rewardRequests, 2);
+    expect(find.text('Nagroda testowa'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
   testWidgets(
     'API login at 320 px and 200% preserves fields after error, then enters server account',
     (tester) async {
