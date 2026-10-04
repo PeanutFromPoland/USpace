@@ -1,0 +1,7 @@
+API UI gotowe do integracji grafik; nie edytuję już api_app.dart/api_forms.dart
+
+Backend review.author.title oraz public-profile.title zawierają wyłącznie wybrany, potwierdzony tytuł ({id,label} albo null). Wygląd/garderoba w api_personalization.dart. Root ma KindSpotBackdrop i highContrast w MediaQuery. Ogrodnik ustawia darkMode=true; można nadal zmieniać kontrast i tryb jasny/ciemny. Kosmetyki mają categoryId, owned, cosmetic w GET rewards i cosmetic w redemption.
+
+Trwają końcowe testy. Pierwszy pełny przebieg trafił na niespójny snapshot równoległej zmiany grafik (manifest337/registry341 oraz chwilowy brak KindSpotAvatar w kernelu); aktualne pliki mają341 i komponenty. W analizie dwie uwagi curly_braces w visual_api_graphics_test.dart należącym do części graficznej. Nie edytuję tego testu. Końcowy raport KindSpot-personalizacja-PoC.md będzie uzupełniony.
+
+Personalizacja zakończona: pełna regresja185pass, backend39pass/Ruff, raport gotowy KindSpot-personalizacja-PoC.md. Użycie Ogrodnika zapisuje darkMode=true. Końcowa integracja/analiza testu graficznego i APK po stronie chatu graficznego. PostgreSQL E2E pozostaje niewykonany. Nie zmieniam już plików implementacji.

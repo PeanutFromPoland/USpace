@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const USpaceApp());
+void main() => runApp(const KindSpotApp());
 
-class USpaceApp extends StatelessWidget {
-  const USpaceApp({super.key});
+class KindSpotApp extends StatelessWidget {
+  const KindSpotApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'USpace',
+      title: 'KindSpot',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF286F88)),
         useMaterial3: true,
@@ -23,7 +23,7 @@ class USpaceApp extends StatelessWidget {
                 children: [
                   Icon(Icons.accessible_forward, size: 64, semanticLabel: 'Dostępność'),
                   SizedBox(height: 16),
-                  Text('USpace', style: TextStyle(fontSize: 32)),
+                  Text('KindSpot', style: TextStyle(fontSize: 32)),
                   SizedBox(height: 16),
                   Text(
                     'Środowisko demonstracyjne jest gotowe. '

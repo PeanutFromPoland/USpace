@@ -1,0 +1,342 @@
+﻿id,plik,kategoria,priorytet,znaczenie_pl,wariant,role_kolorow,wspoldzielone_uzycie,zrodlo_licencja,pakiet
+nav_map,icons/navigation/nav_map.svg,navigation,P1,Mapa,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_map_filled,icons/navigation/nav_map_filled.svg,navigation,P1,Mapa — wybrana,filled,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_saved,icons/navigation/nav_saved.svg,navigation,P1,Zapisane miejsca,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_saved_filled,icons/navigation/nav_saved_filled.svg,navigation,P1,Zapisane — wybrane,filled,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_rewards,icons/navigation/nav_rewards.svg,navigation,P1,Nagrody,outline,foreground,my_rewards,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_rewards_filled,icons/navigation/nav_rewards_filled.svg,navigation,P1,Nagrody — wybrane,filled,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_filters,icons/navigation/nav_filters.svg,navigation,P1,Filtry,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_filters_filled,icons/navigation/nav_filters_filled.svg,navigation,P1,Filtry — wybrane,filled,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_profile,icons/navigation/nav_profile.svg,navigation,P1,Profil,outline,foreground,account,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+nav_profile_filled,icons/navigation/nav_profile_filled.svg,navigation,P1,Profil — wybrany,filled,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+places_nearby,icons/actions/places_nearby.svg,actions,P1,Miejsca w okolicy,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+view_list,icons/actions/view_list.svg,actions,P1,Lista miejsc,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+search,icons/actions/search.svg,actions,P1,Wyszukiwanie,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+search_clear,icons/actions/search_clear.svg,actions,P1,Wyczyść wyszukiwanie,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+back,icons/actions/back.svg,actions,P1,Wstecz,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+forward,icons/actions/forward.svg,actions,P1,Dalej,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+chevron_down,icons/actions/chevron_down.svg,actions,P1,Rozwiń,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+chevron_up,icons/actions/chevron_up.svg,actions,P1,Zwiń,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+close,icons/actions/close.svg,actions,P1,Zamknij,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+add,icons/actions/add.svg,actions,P1,Dodaj,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+remove,icons/actions/remove.svg,actions,P1,Usuń element,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+edit,icons/actions/edit.svg,actions,P1,Edytuj,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+delete,icons/actions/delete.svg,actions,P1,Usuń,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+save,icons/actions/save.svg,actions,P1,Zapisz,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+refresh,icons/actions/refresh.svg,actions,P1,Odśwież,outline,foreground,retry,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+retry,icons/actions/retry.svg,actions,P1,Ponów,outline,foreground,refresh,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+settings,icons/actions/settings.svg,actions,P1,Ustawienia,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+more,icons/actions/more.svg,actions,P1,Więcej,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+help,icons/actions/help.svg,actions,P1,Pomoc,outline,foreground,unknown,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+info,icons/actions/info.svg,actions,P1,Informacja,outline,foreground,status_info,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+calendar,icons/actions/calendar.svg,actions,P1,Data,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+clock,icons/actions/clock.svg,actions,P1,Godzina,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+history,icons/actions/history.svg,actions,P1,Historia,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+copy,icons/actions/copy.svg,actions,P1,Kopiuj,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+exit,icons/actions/exit.svg,actions,P1,Wyjście,outline,foreground,logout,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+logout,icons/actions/logout.svg,actions,P1,Wylogowanie,outline,foreground,exit,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+map_pin,icons/map/map_pin.svg,map,P1,Miejsce na mapie,outline,foreground,address,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+map_pin_selected,icons/map/map_pin_selected.svg,map,P1,Wybrane miejsce,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+map_cluster,icons/map/map_cluster.svg,map,P1,Grupa miejsc,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+current_location,icons/map/current_location.svg,map,P1,Moja pozycja,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+recenter,icons/map/recenter.svg,map,P1,Wyśrodkuj mapę,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+zoom_in,icons/map/zoom_in.svg,map,P1,Powiększ,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+zoom_out,icons/map/zoom_out.svg,map,P1,Pomniejsz,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+city,icons/map/city.svg,map,P1,Miasto,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+address,icons/map/address.svg,map,P1,Adres,outline,foreground,map_pin,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+place_building,icons/map/place_building.svg,map,P1,Obiekt,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+entrance,icons/map/entrance.svg,map,P1,Wejście główne,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+entrance_side,icons/map/entrance_side.svg,map,P1,Inne wejście,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+building_part,icons/map/building_part.svg,map,P1,Część obiektu,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+place_closed,icons/map/place_closed.svg,map,P1,Miejsce zamknięte,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+temporary_works,icons/map/temporary_works.svg,map,P1,Prace tymczasowe,outline,foreground,construction,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_wheelchair,icons/needs/need_wheelchair.svg,needs,P1,Poruszam się na wózku,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_walking,icons/needs/need_walking.svg,needs,P1,Trudności z chodzeniem,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_no_stairs,icons/needs/need_no_stairs.svg,needs,P1,Bez schodów,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_rest,icons/needs/need_rest.svg,needs,P1,Potrzebuję odpoczynku,outline,foreground,feature_rest; garden_bench,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_vision,icons/needs/need_vision.svg,needs,P1,Potrzeby dotyczące wzroku,outline,foreground,password_show,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_hearing,icons/needs/need_hearing.svg,needs,P1,Potrzeby dotyczące słuchu,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_low_noise,icons/needs/need_low_noise.svg,needs,P1,Mniej hałasu,outline,foreground,feature_quiet,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_low_crowd,icons/needs/need_low_crowd.svg,needs,P1,Mniejszy tłum,outline,foreground,feature_low_crowd,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_gentle_light,icons/needs/need_gentle_light.svg,needs,P1,Łagodne światło,outline,foreground,feature_gentle_light,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_calm,icons/needs/need_calm.svg,needs,P1,Spokojne miejsca,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_orientation,icons/needs/need_orientation.svg,needs,P1,Łatwiejsza orientacja,outline,foreground,feature_orientation,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_simple_information,icons/needs/need_simple_information.svg,needs,P1,Proste informacje,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_hand_mobility,icons/needs/need_hand_mobility.svg,needs,P1,Łatwiejsza obsługa rękami,outline,foreground,feature_easy_controls,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_companion,icons/needs/need_companion.svg,needs,P1,Podróż z osobą potrzebującą pomocy,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_child_stroller,icons/needs/need_child_stroller.svg,needs,P1,Dziecko lub wózek dziecięcy,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_guide_dog,icons/needs/need_guide_dog.svg,needs,P1,Pies przewodnik,outline,foreground,feature_guide_dog,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+helper,icons/needs/helper.svg,needs,P1,Pomocnik,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_step_free_entrance,icons/features/feature_step_free_entrance.svg,features,P1,Wejście bez schodów,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_ramp,icons/features/feature_ramp.svg,features,P1,Podjazd,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_lift,icons/features/feature_lift.svg,features,P1,Winda,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_accessible_toilet,icons/features/feature_accessible_toilet.svg,features,P1,Dostosowana toaleta,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_rest,icons/features/feature_rest.svg,features,P1,Miejsca odpoczynku,outline,foreground,need_rest; garden_bench,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_quiet,icons/features/feature_quiet.svg,features,P1,Spokojne otoczenie,outline,foreground,need_low_noise,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_low_crowd,icons/features/feature_low_crowd.svg,features,P1,Niewielki tłum,outline,foreground,need_low_crowd,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_gentle_light,icons/features/feature_gentle_light.svg,features,P1,Łagodne oświetlenie,outline,foreground,need_gentle_light,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_guide_dog,icons/features/feature_guide_dog.svg,features,P1,Pies przewodnik,outline,foreground,need_guide_dog,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_orientation,icons/features/feature_orientation.svg,features,P1,Czytelne oznaczenia,outline,foreground,need_orientation,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_hearing_loop,icons/features/feature_hearing_loop.svg,features,P1,Pętla indukcyjna,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_easy_controls,icons/features/feature_easy_controls.svg,features,P1,Łatwa obsługa,outline,foreground,need_hand_mobility,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+filter_required,icons/filters/filter_required.svg,filters,P1,Warunek konieczny,outline,foreground,private,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+filter_preferred,icons/filters/filter_preferred.svg,filters,P1,Preferencja,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+filter_any,icons/filters/filter_any.svg,filters,P1,Bez znaczenia,outline,foreground,feature_absent,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+filter_preset,icons/filters/filter_preset.svg,filters,P1,Gotowy filtr,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+filter_saved,icons/filters/filter_saved.svg,filters,P1,Zapisany filtr,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+filter_reset,icons/filters/filter_reset.svg,filters,P1,Reset filtrów,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+sort,icons/filters/sort.svg,filters,P1,Sortowanie,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+sort_rating,icons/filters/sort_rating.svg,filters,P1,Według oceny,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+sort_review_count,icons/filters/sort_review_count.svg,filters,P1,Według liczby recenzji,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+review,icons/reviews/review.svg,reviews,P1,Recenzja,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+review_add,icons/reviews/review_add.svg,reviews,P1,Dodaj recenzję,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+comment,icons/reviews/comment.svg,reviews,P1,Komentarz,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+survey,icons/reviews/survey.svg,reviews,P1,Ankieta,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+survey_summary,icons/reviews/survey_summary.svg,reviews,P1,Podsumowanie ankiety,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+star_outline,icons/reviews/star_outline.svg,reviews,P1,Gwiazdka pusta,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+star_filled,icons/reviews/star_filled.svg,reviews,P1,Gwiazdka pełna,filled,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_absent,icons/reviews/feature_absent.svg,reviews,P1,Brak funkcji,outline,foreground,filter_any,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+unknown,icons/reviews/unknown.svg,reviews,P1,Brak danych,outline,foreground,help,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+not_checked,icons/reviews/not_checked.svg,reviews,P1,Nie mogłem sprawdzić,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+operational,icons/reviews/operational.svg,reviews,P1,Działa,outline,foreground,verification_accepted; published; status_success,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+not_operational,icons/reviews/not_operational.svg,reviews,P1,Nie działa,outline,foreground,verification_rejected; status_error,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+limited_availability,icons/reviews/limited_availability.svg,reviews,P1,Ograniczona dostępność,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+thumb_up,icons/reviews/thumb_up.svg,reviews,P1,Zgadzam się,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+thumb_down,icons/reviews/thumb_down.svg,reviews,P1,Nie zgadzam się,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+report,icons/reviews/report.svg,reviews,P1,Zgłoś,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+verification_pending,icons/reviews/verification_pending.svg,reviews,P1,Oczekuje na sprawdzenie,outline,foreground,status_pending,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+verification_accepted,icons/reviews/verification_accepted.svg,reviews,P1,Przyjęta,outline,foreground,operational; published; status_success,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+verification_rejected,icons/reviews/verification_rejected.svg,reviews,P1,Odrzucona,outline,foreground,not_operational; status_error,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+published,icons/reviews/published.svg,reviews,P1,Opublikowana,outline,foreground,operational; verification_accepted; status_success,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+hidden,icons/reviews/hidden.svg,reviews,P1,Ukryta,outline,foreground,password_hide,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+draft,icons/reviews/draft.svg,reviews,P1,Szkic,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+temporary_failure,icons/reviews/temporary_failure.svg,reviews,P1,Awaria,outline,foreground,status_warning,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+construction,icons/reviews/construction.svg,reviews,P1,Prace budowlane,outline,foreground,temporary_works,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+recommend,icons/reviews/recommend.svg,reviews,P1,Polecam,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+account,icons/account/account.svg,account,P1,Konto,outline,foreground,nav_profile,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+account_settings,icons/account/account_settings.svg,account,P1,Ustawienia konta,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+email,icons/account/email.svg,account,P1,E-mail,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+password,icons/account/password.svg,account,P1,Hasło,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+password_show,icons/account/password_show.svg,account,P1,Pokaż hasło,outline,foreground,need_vision,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+password_hide,icons/account/password_hide.svg,account,P1,Ukryj hasło,outline,foreground,hidden,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+privacy,icons/account/privacy.svg,account,P1,Prywatność,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+private,icons/account/private.svg,account,P1,Prywatne,outline,foreground,filter_required,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+public,icons/account/public.svg,account,P1,Publiczne,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+city_card,icons/account/city_card.svg,account,P1,Karta miejska,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+card_link,icons/account/card_link.svg,account,P1,Połącz kartę,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+card_unlinked,icons/account/card_unlinked.svg,account,P1,Karta niepołączona,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+card_pending,icons/account/card_pending.svg,account,P1,Sprawdzanie karty,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+tourist,icons/account/tourist.svg,account,P1,Turysta,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+local_status,icons/account/local_status.svg,account,P1,Status dla miasta,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+accessibility,icons/account/accessibility.svg,account,P1,Dostępność,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+palette,icons/account/palette.svg,account,P1,Kolor motywu,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+theme_light,icons/account/theme_light.svg,account,P1,Jasny motyw,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+theme_dark,icons/account/theme_dark.svg,account,P1,Ciemny motyw,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+high_contrast,icons/account/high_contrast.svg,account,P1,Wyższy kontrast,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+text_size,icons/account/text_size.svg,account,P1,Rozmiar tekstu,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reduce_motion,icons/account/reduce_motion.svg,account,P1,Ogranicz animacje,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+calm_mode,icons/account/calm_mode.svg,account,P1,Tryb spokojny,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+status_info,icons/status/status_info.svg,status,P1,Informacja,outline,foreground,info,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+status_success,icons/status/status_success.svg,status,P1,Sukces,outline,foreground,operational; verification_accepted; published,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+status_warning,icons/status/status_warning.svg,status,P1,Ostrzeżenie,outline,foreground,temporary_failure,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+status_error,icons/status/status_error.svg,status,P1,Błąd,outline,foreground,not_operational; verification_rejected,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+status_pending,icons/status/status_pending.svg,status,P1,Oczekiwanie,outline,foreground,verification_pending,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+status_unavailable,icons/status/status_unavailable.svg,status,P1,Niedostępne,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+network_offline,icons/status/network_offline.svg,status,P1,Brak połączenia,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+location_denied,icons/status/location_denied.svg,status,P1,Brak lokalizacji,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+session_expired,icons/status/session_expired.svg,status,P1,Koniec sesji,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+demo,icons/status/demo.svg,status,P1,Dane demonstracyjne,outline,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+points,icons/rewards/points.svg,rewards,P2,Punkty,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+points_history,icons/rewards/points_history.svg,rewards,P2,Historia punktów,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+points_pending,icons/rewards/points_pending.svg,rewards,P2,Punkty oczekujące,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+shop,icons/rewards/shop.svg,rewards,P2,Sklep,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+my_rewards,icons/rewards/my_rewards.svg,rewards,P2,Moje nagrody,mono,foreground,nav_rewards,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_ticket_transit,icons/rewards/reward_ticket_transit.svg,rewards,P2,Bilet komunikacji,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_ticket_museum,icons/rewards/reward_ticket_museum.svg,rewards,P2,Bilet do muzeum,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_ticket_event,icons/rewards/reward_ticket_event.svg,rewards,P2,Bilet na wydarzenie,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_avatar,icons/rewards/reward_avatar.svg,rewards,P2,Awatar,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_frame,icons/rewards/reward_frame.svg,rewards,P2,Ramka profilu,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_title,icons/rewards/reward_title.svg,rewards,P2,Tytuł profilu,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_code,icons/rewards/reward_code.svg,rewards,P2,Kod odbioru,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_on_card,icons/rewards/reward_on_card.svg,rewards,P2,Nagroda na karcie,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_pickup,icons/rewards/reward_pickup.svg,rewards,P2,Odbiór nagrody,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+purchase_confirm,icons/rewards/purchase_confirm.svg,rewards,P2,Zakup potwierdzony,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+purchase_pending,icons/rewards/purchase_pending.svg,rewards,P2,Zakup w toku,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+purchase_failed,icons/rewards/purchase_failed.svg,rewards,P2,Zakup nieudany,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_available,icons/rewards/reward_available.svg,rewards,P2,Nagroda dostępna,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_used,icons/rewards/reward_used.svg,rewards,P2,Nagroda wykorzystana,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_expired,icons/rewards/reward_expired.svg,rewards,P2,Nagroda wygasła,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+reward_unavailable,icons/rewards/reward_unavailable.svg,rewards,P2,Nagroda niedostępna,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+achievement,icons/rewards/achievement.svg,rewards,P2,Osiągnięcie,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+achievement_helper,icons/rewards/achievement_helper.svg,rewards,P2,Osiągnięcie Pomocnika,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+achievement_verifier,icons/rewards/achievement_verifier.svg,rewards,P2,Osiągnięcie weryfikatora,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_park,icons/categories_p3/category_park.svg,categories_p3,P3,Park,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_cafe,icons/categories_p3/category_cafe.svg,categories_p3,P3,Kawiarnia,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_restaurant,icons/categories_p3/category_restaurant.svg,categories_p3,P3,Restauracja,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_museum,icons/categories_p3/category_museum.svg,categories_p3,P3,Muzeum,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_cinema,icons/categories_p3/category_cinema.svg,categories_p3,P3,Kino,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_library,icons/categories_p3/category_library.svg,categories_p3,P3,Biblioteka,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_office,icons/categories_p3/category_office.svg,categories_p3,P3,Urząd,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_health,icons/categories_p3/category_health.svg,categories_p3,P3,Placówka zdrowia,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_shop,icons/categories_p3/category_shop.svg,categories_p3,P3,Sklep,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+category_transit,icons/categories_p3/category_transit.svg,categories_p3,P3,Transport,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_approach_path,icons/features_extended_p3/feature_approach_path.svg,features_extended_p3,P3,Dojście do wejścia,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_accessible_door,icons/features_extended_p3/feature_accessible_door.svg,features_extended_p3,P3,Dostępne drzwi,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_interior_circulation,icons/features_extended_p3/feature_interior_circulation.svg,features_extended_p3,P3,Przestrzeń wewnątrz,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_accessible_parking,icons/features_extended_p3/feature_accessible_parking.svg,features_extended_p3,P3,Dostępny parking,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_contrast_markings,icons/features_extended_p3/feature_contrast_markings.svg,features_extended_p3,P3,Oznaczenia kontrastowe,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_tactile_braille,icons/features_extended_p3/feature_tactile_braille.svg,features_extended_p3,P3,Informacja dotykowa,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_staff_orientation_help,icons/features_extended_p3/feature_staff_orientation_help.svg,features_extended_p3,P3,Pomoc w orientacji,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_non_verbal_communication,icons/features_extended_p3/feature_non_verbal_communication.svg,features_extended_p3,P3,Komunikacja bez mówienia,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_visual_information,icons/features_extended_p3/feature_visual_information.svg,features_extended_p3,P3,Informacje wizualne,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_quiet_room,icons/features_extended_p3/feature_quiet_room.svg,features_extended_p3,P3,Cicha strefa,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_simple_information,icons/features_extended_p3/feature_simple_information.svg,features_extended_p3,P3,Proste informacje,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_baby_changing,icons/features_extended_p3/feature_baby_changing.svg,features_extended_p3,P3,Przewijak,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+feature_helpful_staff,icons/features_extended_p3/feature_helpful_staff.svg,features_extended_p3,P3,Pomocny personel,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+camera,icons/media_controls_p3/camera.svg,media_controls_p3,P3,Aparat,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+image_add,icons/media_controls_p3/image_add.svg,media_controls_p3,P3,Dodaj zdjęcie,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+image_remove,icons/media_controls_p3/image_remove.svg,media_controls_p3,P3,Usuń zdjęcie,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+screen_reader,icons/media_controls_p3/screen_reader.svg,media_controls_p3,P3,Czytnik ekranu,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+need_therapy_dog,icons/media_controls_p3/need_therapy_dog.svg,media_controls_p3,P3,Pies terapeutyczny,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+play,icons/media_controls_p3/play.svg,media_controls_p3,P3,Odtwórz,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+pause,icons/media_controls_p3/pause.svg,media_controls_p3,P3,Pauza,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+stop,icons/media_controls_p3/stop.svg,media_controls_p3,P3,Zatrzymaj,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+sound_on,icons/media_controls_p3/sound_on.svg,media_controls_p3,P3,Dźwięk włączony,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+sound_off,icons/media_controls_p3/sound_off.svg,media_controls_p3,P3,Dźwięk wyłączony,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_leaf,icons/garden/garden_leaf.svg,garden,P3,Liść,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_flower,icons/garden/garden_flower.svg,garden,P3,Kwiat,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_tree,icons/garden/garden_tree.svg,garden,P3,Drzewo,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_cloud,icons/garden/garden_cloud.svg,garden,P3,Chmura,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_sun,icons/garden/garden_sun.svg,garden,P3,Słońce,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_stone,icons/garden/garden_stone.svg,garden,P3,Kamień,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_pond,icons/garden/garden_pond.svg,garden,P3,Staw,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_bench,icons/garden/garden_bench.svg,garden,P3,Ławka,mono,foreground,need_rest; feature_rest,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+garden_breath_circle,icons/garden/garden_breath_circle.svg,garden,P3,Krąg oddechu,mono,foreground,,Materiał użytkownika; poprawki własne projektu KindSpot,KindSpot_corrected_v3
+illustration_welcome,illustrations/illustration_welcome.svg,illustrations,P2,Witaj w KindSpot,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_results,illustrations/illustration_empty_results.svg,illustrations,P2,Brak wyników,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_saved,illustrations/illustration_empty_saved.svg,illustrations,P2,Brak zapisanych miejsc,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_reviews,illustrations/illustration_empty_reviews.svg,illustrations,P2,Brak recenzji,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_rewards,illustrations/illustration_empty_rewards.svg,illustrations,P2,Brak nagród,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_unknown_accessibility,illustrations/illustration_unknown_accessibility.svg,illustrations,P2,Brak danych dostępności,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_no_location,illustrations/illustration_no_location.svg,illustrations,P2,Wybierz miasto ręcznie,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_connection_problem,illustrations/illustration_connection_problem.svg,illustrations,P2,Problem z połączeniem,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_map_problem,illustrations/illustration_map_problem.svg,illustrations,P2,Lista zamiast mapy,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_temporary_works,illustrations/illustration_temporary_works.svg,illustrations,P2,Prace tymczasowe,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_review_saved,illustrations/illustration_review_saved.svg,illustrations,P2,Recenzja zapisana lokalnie,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_waiting_verification,illustrations/illustration_waiting_verification.svg,illustrations,P2,Oczekiwanie na sprawdzenie,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_reward_received,illustrations/illustration_reward_received.svg,illustrations,P2,Nagroda odebrana,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_session_ended,illustrations/illustration_session_ended.svg,illustrations,P2,Sesja zakończona,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_privacy,illustrations/illustration_privacy.svg,illustrations,P2,Prywatność,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_helping,illustrations/illustration_helping.svg,illustrations,P2,Wspólne pomaganie,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+garden_scene,garden/garden_scene.svg,garden,P2,Spokojny ogród,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_bird,avatars/avatar_bird.svg,avatars,P2,Ptak,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_cat,avatars/avatar_cat.svg,avatars,P1,Awatar — minimalistyczny kot,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+avatar_leaf,avatars/avatar_leaf.svg,avatars,P2,Liść,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_flower,avatars/avatar_flower.svg,avatars,P2,Kwiat,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_cloud,avatars/avatar_cloud.svg,avatars,P2,Chmura,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_sun,avatars/avatar_sun.svg,avatars,P2,Słońce,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_dog,avatars/avatar_dog.svg,avatars,P2,Pies,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_friend,avatars/avatar_friend.svg,avatars,P2,Przyjazna postać,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_1,frames/frame_1.svg,frames,P2,Ramka Prosta,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_2,frames/frame_2.svg,frames,P2,Ramka Podwójna,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_3,frames/frame_3.svg,frames,P2,Ramka Liście,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_4,frames/frame_4.svg,frames,P2,Ramka Kwiaty,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_5,frames/frame_5.svg,frames,P2,Ramka Chmury,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_6,frames/frame_6.svg,frames,P2,Ramka Punkty,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+badge_helper,badges/badge_helper.svg,badges,P2,Pomocnik,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+badge_verifier,badges/badge_verifier.svg,badges,P2,Weryfikator,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+badge_reviewer,badges/badge_reviewer.svg,badges,P2,Autor recenzji,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_transit,thumbnails/thumbnail_transit.svg,thumbnails,P2,Transport,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_culture,thumbnails/thumbnail_culture.svg,thumbnails,P2,Kultura,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_avatars,thumbnails/thumbnail_avatars.svg,thumbnails,P2,Awatary,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_frames,thumbnails/thumbnail_frames.svg,thumbnails,P2,Ramki,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_mark,brand/brand_mark.svg,brand,P1,Znak KindSpot,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_mark_leaf,brand/brand_mark_leaf.svg,brand,P1,Propozycja znaku — liść,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_mark_open,brand/brand_mark_open.svg,brand,P1,Propozycja znaku — otwarta przestrzeń,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_wordmark,brand/brand_wordmark.svg,brand,P1,Logotyp KindSpot — własne liternictwo,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_horizontal,brand/brand_horizontal.svg,brand,P1,Logo poziome,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_compact,brand/brand_compact.svg,brand,P1,Logo kompaktowe,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+app_icon,brand/app_icon.svg,brand,P1,Ikona aplikacji — źródło,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+adaptive_foreground,brand/adaptive_foreground.svg,brand,P1,Pierwszy plan ikony adaptacyjnej,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+adaptive_background,brand/adaptive_background.svg,brand,P1,Tło ikony adaptacyjnej,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+splash_mark,brand/splash_mark.svg,brand,P1,Znak ekranu startowego,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+onboarding_needs,onboarding/onboarding_needs.svg,onboarding,P3,Wskaż potrzeby,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+onboarding_places,onboarding/onboarding_places.svg,onboarding,P3,Znajdź miejsce,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+onboarding_reviews,onboarding/onboarding_reviews.svg,onboarding,P3,Pomóż recenzją,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_opening,presentation/presentation_opening.svg,presentation,P3,Grafika otwierająca,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_find,presentation/presentation_find.svg,presentation,P3,Odnajdywanie miejsc,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_review,presentation/presentation_review.svg,presentation,P3,Dzielenie się wiedzą,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_reward,presentation/presentation_reward.svg,presentation,P3,Nagrody,layered,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_welcome_mono,variants/mono/illustration_welcome_mono.svg,variants/mono,P2,Witaj w KindSpot — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_welcome_calm,variants/calm/illustration_welcome_calm.svg,variants/calm,P2,Witaj w KindSpot — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_results_mono,variants/mono/illustration_empty_results_mono.svg,variants/mono,P2,Brak wyników — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_results_calm,variants/calm/illustration_empty_results_calm.svg,variants/calm,P2,Brak wyników — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_saved_mono,variants/mono/illustration_empty_saved_mono.svg,variants/mono,P2,Brak zapisanych miejsc — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_saved_calm,variants/calm/illustration_empty_saved_calm.svg,variants/calm,P2,Brak zapisanych miejsc — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_reviews_mono,variants/mono/illustration_empty_reviews_mono.svg,variants/mono,P2,Brak recenzji — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_reviews_calm,variants/calm/illustration_empty_reviews_calm.svg,variants/calm,P2,Brak recenzji — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_rewards_mono,variants/mono/illustration_empty_rewards_mono.svg,variants/mono,P2,Brak nagród — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_empty_rewards_calm,variants/calm/illustration_empty_rewards_calm.svg,variants/calm,P2,Brak nagród — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_unknown_accessibility_mono,variants/mono/illustration_unknown_accessibility_mono.svg,variants/mono,P2,Brak danych dostępności — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_unknown_accessibility_calm,variants/calm/illustration_unknown_accessibility_calm.svg,variants/calm,P2,Brak danych dostępności — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_no_location_mono,variants/mono/illustration_no_location_mono.svg,variants/mono,P2,Wybierz miasto ręcznie — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_no_location_calm,variants/calm/illustration_no_location_calm.svg,variants/calm,P2,Wybierz miasto ręcznie — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_connection_problem_mono,variants/mono/illustration_connection_problem_mono.svg,variants/mono,P2,Problem z połączeniem — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_connection_problem_calm,variants/calm/illustration_connection_problem_calm.svg,variants/calm,P2,Problem z połączeniem — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_map_problem_mono,variants/mono/illustration_map_problem_mono.svg,variants/mono,P2,Lista zamiast mapy — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_map_problem_calm,variants/calm/illustration_map_problem_calm.svg,variants/calm,P2,Lista zamiast mapy — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_temporary_works_mono,variants/mono/illustration_temporary_works_mono.svg,variants/mono,P2,Prace tymczasowe — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_temporary_works_calm,variants/calm/illustration_temporary_works_calm.svg,variants/calm,P2,Prace tymczasowe — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_review_saved_mono,variants/mono/illustration_review_saved_mono.svg,variants/mono,P2,Recenzja zapisana lokalnie — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_review_saved_calm,variants/calm/illustration_review_saved_calm.svg,variants/calm,P2,Recenzja zapisana lokalnie — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_waiting_verification_mono,variants/mono/illustration_waiting_verification_mono.svg,variants/mono,P2,Oczekiwanie na sprawdzenie — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_waiting_verification_calm,variants/calm/illustration_waiting_verification_calm.svg,variants/calm,P2,Oczekiwanie na sprawdzenie — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_reward_received_mono,variants/mono/illustration_reward_received_mono.svg,variants/mono,P2,Nagroda odebrana — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_reward_received_calm,variants/calm/illustration_reward_received_calm.svg,variants/calm,P2,Nagroda odebrana — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_session_ended_mono,variants/mono/illustration_session_ended_mono.svg,variants/mono,P2,Sesja zakończona — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_session_ended_calm,variants/calm/illustration_session_ended_calm.svg,variants/calm,P2,Sesja zakończona — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_privacy_mono,variants/mono/illustration_privacy_mono.svg,variants/mono,P2,Prywatność — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_privacy_calm,variants/calm/illustration_privacy_calm.svg,variants/calm,P2,Prywatność — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_helping_mono,variants/mono/illustration_helping_mono.svg,variants/mono,P2,Wspólne pomaganie — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+illustration_helping_calm,variants/calm/illustration_helping_calm.svg,variants/calm,P2,Wspólne pomaganie — spokojna wersja,calm,foreground;accent;accentSoft;surface;outline,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+garden_scene_mono,variants/mono/garden_scene_mono.svg,variants/mono,P2,Spokojny ogród — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_leaf_mono,variants/mono/avatar_leaf_mono.svg,variants/mono,P2,Liść — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_flower_mono,variants/mono/avatar_flower_mono.svg,variants/mono,P2,Kwiat — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_cloud_mono,variants/mono/avatar_cloud_mono.svg,variants/mono,P2,Chmura — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_sun_mono,variants/mono/avatar_sun_mono.svg,variants/mono,P2,Słońce — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_dog_mono,variants/mono/avatar_dog_mono.svg,variants/mono,P2,Pies — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_friend_mono,variants/mono/avatar_friend_mono.svg,variants/mono,P2,Przyjazna postać — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_1_mono,variants/mono/frame_1_mono.svg,variants/mono,P2,Ramka Prosta — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_2_mono,variants/mono/frame_2_mono.svg,variants/mono,P2,Ramka Podwójna — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_3_mono,variants/mono/frame_3_mono.svg,variants/mono,P2,Ramka Liście — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_4_mono,variants/mono/frame_4_mono.svg,variants/mono,P2,Ramka Kwiaty — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_5_mono,variants/mono/frame_5_mono.svg,variants/mono,P2,Ramka Chmury — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+frame_6_mono,variants/mono/frame_6_mono.svg,variants/mono,P2,Ramka Punkty — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+badge_helper_mono,variants/mono/badge_helper_mono.svg,variants/mono,P2,Pomocnik — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+badge_verifier_mono,variants/mono/badge_verifier_mono.svg,variants/mono,P2,Weryfikator — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+badge_reviewer_mono,variants/mono/badge_reviewer_mono.svg,variants/mono,P2,Autor recenzji — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_transit_mono,variants/mono/thumbnail_transit_mono.svg,variants/mono,P2,Transport — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_culture_mono,variants/mono/thumbnail_culture_mono.svg,variants/mono,P2,Kultura — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_avatars_mono,variants/mono/thumbnail_avatars_mono.svg,variants/mono,P2,Awatary — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+thumbnail_frames_mono,variants/mono/thumbnail_frames_mono.svg,variants/mono,P2,Ramki — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_mark_mono,variants/mono/brand_mark_mono.svg,variants/mono,P1,Znak KindSpot — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_mark_leaf_mono,variants/mono/brand_mark_leaf_mono.svg,variants/mono,P1,Propozycja znaku — liść — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_mark_open_mono,variants/mono/brand_mark_open_mono.svg,variants/mono,P1,Propozycja znaku — otwarta przestrzeń — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_wordmark_mono,variants/mono/brand_wordmark_mono.svg,variants/mono,P1,Logotyp KindSpot — własne liternictwo — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_horizontal_mono,variants/mono/brand_horizontal_mono.svg,variants/mono,P1,Logo poziome — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+brand_compact_mono,variants/mono/brand_compact_mono.svg,variants/mono,P1,Logo kompaktowe — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+app_icon_mono,variants/mono/app_icon_mono.svg,variants/mono,P1,Ikona aplikacji — źródło — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+adaptive_foreground_mono,variants/mono/adaptive_foreground_mono.svg,variants/mono,P1,Pierwszy plan ikony adaptacyjnej — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+adaptive_background_mono,variants/mono/adaptive_background_mono.svg,variants/mono,P1,Tło ikony adaptacyjnej — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+splash_mark_mono,variants/mono/splash_mark_mono.svg,variants/mono,P1,Znak ekranu startowego — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+onboarding_needs_mono,variants/mono/onboarding_needs_mono.svg,variants/mono,P3,Wskaż potrzeby — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+onboarding_places_mono,variants/mono/onboarding_places_mono.svg,variants/mono,P3,Znajdź miejsce — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+onboarding_reviews_mono,variants/mono/onboarding_reviews_mono.svg,variants/mono,P3,Pomóż recenzją — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_opening_mono,variants/mono/presentation_opening_mono.svg,variants/mono,P3,Grafika otwierająca — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_find_mono,variants/mono/presentation_find_mono.svg,variants/mono,P3,Odnajdywanie miejsc — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_review_mono,variants/mono/presentation_review_mono.svg,variants/mono,P3,Dzielenie się wiedzą — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+presentation_reward_mono,variants/mono/presentation_reward_mono.svg,variants/mono,P3,Nagrody — monochromatycznie,mono,foreground,,Własne wektory projektu KindSpot,KindSpot_corrected_v3
+avatar_lemur,avatars/avatar_lemur.svg,avatars,P1,Awatar — minimalistyczny lemur,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+frame_bow,frames/frame_bow.svg,frames,P1,Ramka profilu — obręcz z małą kokardą,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+thumbnail_explorer,thumbnails/thumbnail_explorer.svg,thumbnails,P1,Motyw Odkrywca — mapa i lupa,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC
+thumbnail_gardener,thumbnails/thumbnail_gardener.svg,thumbnails,P1,Motyw Ogrodnik — liście i kwiaty,themed,foreground/accent/accentSoft/surface,,"Nowy własny wektor KindSpot, 2026-10-04",personalizacja_PoC

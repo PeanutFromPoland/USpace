@@ -15,33 +15,79 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks: [backend]
 
   ollama:
     image: ollama/ollama:latest
     volumes:
       - ollama_data:/root/.ollama
+    networks: [backend]
 
-  api:
+  migrate:
     build: ./backend
+    command: ["python", "-m", "uspace_api.bootstrap"]
     environment:
       POSTGRES_HOST: db
       POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
+      KINDSPOT_ENABLE_DEMO_RESIDENTS: ${KINDSPOT_ENABLE_DEMO_RESIDENTS:-false}
+      KINDSPOT_DEMO_ACCOUNT_PASSWORD: ${KINDSPOT_DEMO_ACCOUNT_PASSWORD:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [backend]
+
+  resident-mock:
+    build: ./backend
+    command: ["uvicorn", "uspace_api.mock_resident_api:app", "--host", "0.0.0.0", "--port", "8010"]
+    environment:
+      KINDSPOT_RESIDENT_API_TOKEN: ${KINDSPOT_RESIDENT_API_TOKEN:?set KINDSPOT_RESIDENT_API_TOKEN}
+    read_only: true
+    tmpfs: [/tmp]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8010/health/live', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks: [resident_operator]
+
+  api:
+    build: ./backend
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB}
+      APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-}
       USE_CHATGPT_API: ${USE_CHATGPT_API:-false}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      USPACE_REQUIRE_VISIT_FOR_VOTE: ${USPACE_REQUIRE_VISIT_FOR_VOTE:-false}
+      USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT: ${USPACE_ALLOW_EXTERNAL_REVIEW_CONTENT:-false}
+      USPACE_RUN_WORKERS: "true"
+      KINDSPOT_RESIDENT_API_URL: http://resident-mock:8010/verifications
+      KINDSPOT_RESIDENT_API_TOKEN: ${KINDSPOT_RESIDENT_API_TOKEN:?set KINDSPOT_RESIDENT_API_TOKEN}
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
-      db:
+      migrate:
+        condition: service_completed_successfully
+      resident-mock:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready', timeout=3)"]
       interval: 15s
       timeout: 5s
       retries: 5
+    networks: [backend, resident_operator]
+
+networks:
+  backend:
+  resident_operator:
+    internal: true
 
 volumes:
   postgres_data:
