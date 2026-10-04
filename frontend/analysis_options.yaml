@@ -1,0 +1,6 @@
+# The web demo and mobile app are separate Flutter packages.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - mobile/**
