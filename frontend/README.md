@@ -28,34 +28,18 @@ Dokumentacja:
 - [Problem i statystyki](docs/KindSpot-problem-i-statystyki.md) oraz [istniejące rozwiązania](docs/KindSpot-konkurencja.md).
 - [Szczegółowa instrukcja aplikacji](mobile/README.md).
 
-## Polecenia na Windows
+## Uruchomienie
 
-```powershell
-cd D:\Github\KindSpot\frontend\mobile
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned -Force
-. ..\scripts\Use-USpaceEnvironment.ps1
-flutter pub get
-flutter analyze
-flutter test --concurrency=1
-```
+- [Instrukcja po polsku](../docs/RUNNING.pl.md)
+- [English setup and run guide](../docs/RUNNING.en.md)
 
-Skrypt środowiska domyślnie korzysta z narzędzi w `%USERPROFILE%\develop`. Własne ścieżki można podać w ignorowanym `frontend/.dev-tools.local.json` (flutterSdk, androidSdk, javaHome, opcjonalnie gradleHome). Nie zapisuj ustawień konkretnego komputera w repozytorium.
-
-Emulator uruchamia wyłącznie użytkownik. Z katalogu `frontend/mobile`:
-
-```powershell
-..\scripts\Start-USpaceEmulator.ps1 -Preview
-# Uruchomienie lub restart wykonuje użytkownik:
-..\scripts\Start-USpaceEmulator.ps1 -Restart
-```
-
-Launcher zachowuje 1 vCPU i 1536 MB RAM Androida. Aktualne APK po kompilacji znajduje się w `mobile/build/app/outputs/flutter-apk/app-debug.apk`.
+Instrukcje są niezależne od lokalnych ścieżek i obejmują wymagania, backend, emulator/telefon, budowę APK i testy. Polecenia Fluttera wykonuj w `frontend/mobile`. Windowsowy skrypt `scripts/Use-USpaceEnvironment.ps1` jest opcjonalny; konfigurację konkretnego komputera zapisuj w ignorowanym `.dev-tools.local.json`.
 
 ## Co trafia do Gita
 
 Kod, testy, konfiguracja platform, dokumentacja, skrypty i `pubspec.lock`. Lokalne ustawienia Obsidiana/IDE, `.dart_tool`, katalogi `build`, logi oraz lokalna konfiguracja narzędzi są ignorowane. Nie dodawaj ignorowanych plików przez `git add -f`.
 
-Przeniesienie katalogów nie zmienia reguł aplikacji ani stanu checkpointów. Ankieta recenzji działa w wersji demonstracyjnej, bez wysyłania do systemu. Dane i konto testowe są demonstracyjne; backend i nagrody nie są zintegrowane.
+Aktywne wejście mobilnej aplikacji korzysta z API i logowania. Ankieta wysyła recenzję do backendu; punkty i zakupy są stanem serwera. Konto syntetyczne przygotowuje operator, a restart nie resetuje portfela. Karta miejska i rzeczywista realizacja nagród pozostają demonstracyjne. Historyczne ustalenia w raportach należy czytać z uwzględnieniem późniejszych decyzji.
 
 ## Istniejące demo webowe zespołu
 
