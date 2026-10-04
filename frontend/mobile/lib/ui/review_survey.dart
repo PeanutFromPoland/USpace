@@ -670,8 +670,8 @@ String choiceLabel(SurveyQuestion question, AnswerChoice choice) =>
     switch (choice) {
       RatedChoice(:final rating) =>
         '$rating – ${question.feature.ratingLabels[rating - 1]}',
-      PresentChoice() => 'Tak, jest',
-      AbsentChoice() => '0 – Brak funkcji',
+      PresentChoice() => 'Tak',
+      AbsentChoice() => 'Nie',
       UnknownChoice() => 'Nie mogłem sprawdzić',
     };
 
@@ -727,7 +727,9 @@ class _AnswerCardState extends State<_AnswerCard> {
         for (var i = 5; i >= 1; i--) RatedChoice(i)
       else
         const PresentChoice(),
-      if (!widget.question.environmental) const AbsentChoice(),
+      if (!widget.question.environmental &&
+          widget.question.featureId != 'easy_controls')
+        const AbsentChoice(),
       const UnknownChoice(),
     ];
   }

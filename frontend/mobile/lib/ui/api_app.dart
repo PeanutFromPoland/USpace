@@ -312,13 +312,16 @@ class _ApiHomeState extends State<ApiHome> {
       );
     },
     child: Scaffold(
-      body: switch (selected) {
-        0 => apiSaved(widget.controller),
-        1 => apiRewards(widget.controller),
-        3 => ApiPreferences(controller: widget.controller),
-        4 => apiProfile(widget.controller),
-        _ => ApiBrowse(controller: widget.controller),
-      },
+      body: KeyedSubtree(
+        key: ValueKey(selected),
+        child: switch (selected) {
+          0 => apiSaved(widget.controller),
+          1 => apiRewards(widget.controller),
+          3 => ApiPreferences(controller: widget.controller),
+          4 => apiProfile(widget.controller),
+          _ => ApiBrowse(controller: widget.controller),
+        },
+      ),
       bottomNavigationBar: KindSpotNavigation(
         selected: selected,
         onSelect: (value) => setState(() => selected = value),

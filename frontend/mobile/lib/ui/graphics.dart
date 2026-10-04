@@ -288,7 +288,7 @@ class KindSpotBackdrop extends StatelessWidget {
               child: ExcludeSemantics(
                 child: IgnorePointer(
                   child: Opacity(
-                    opacity: .045,
+                    opacity: .16,
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         final columns = (constraints.maxWidth / 112)
@@ -309,8 +309,8 @@ class KindSpotBackdrop extends StatelessWidget {
                           itemCount: columns * rows,
                           itemBuilder: (context, i) => Center(
                             child: SizedBox(
-                              width: 32,
-                              height: 32,
+                              width: 44,
+                              height: 44,
                               child: KindSpotGraphic(
                                 ids[i % ids.length],
                                 monochrome: true,
